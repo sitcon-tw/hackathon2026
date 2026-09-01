@@ -92,30 +92,70 @@ function updateProgress() {
   currentTimeLabel.dateTime = `PT${Math.floor(audio.currentTime)}S`;
   durationLabel.textContent = total;
   if (Number.isFinite(duration)) durationLabel.dateTime = `PT${Math.floor(duration)}S`;
-  updateActiveLyric(progress);
+  updateActiveLyric(audio.currentTime);
 }
 
-function createLyricTimings() {
-  if (!lyricLines.length) return;
-  const totalWeight = lyricLines.reduce((sum, line) => sum + line.weight, 0);
-  let elapsedWeight = 0;
+function parseLRC(source) {
+  const entries = [];
+  const timestampPattern = /\[(\d{2,}):(\d{2}(?:\.\d+)?)\]/g;
+  let breakBefore = false;
 
-  lyricLines.forEach((line) => {
-    line.startRatio = elapsedWeight / totalWeight;
-    elapsedWeight += line.weight;
-    line.endRatio = elapsedWeight / totalWeight;
+  source.replaceAll("\r", "").split("\n").forEach((row) => {
+    const timestamps = [...row.matchAll(timestampPattern)];
+    if (!timestamps.length) {
+      if (!row.trim() && entries.length) breakBefore = true;
+      return;
+    }
+
+    const text = row.replace(timestampPattern, "").trim();
+    if (!text) return;
+    timestamps.forEach((timestamp, index) => {
+      entries.push({
+        text,
+        time: Number(timestamp[1]) * 60 + Number(timestamp[2]),
+        breakBefore: breakBefore && index === 0,
+      });
+    });
+    breakBefore = false;
   });
+
+  return entries.sort((first, second) => first.time - second.time);
 }
 
-function updateActiveLyric(progress) {
-  if (!lyricLines.length || !Number.isFinite(progress)) return;
-  let nextIndex = lyricLines.findIndex((line) => progress < line.endRatio);
-  if (nextIndex < 0) nextIndex = lyricLines.length - 1;
-  if (nextIndex === activeLyricIndex) return;
+function updateActiveLyric(currentTime) {
+  if (!lyricLines.length || !Number.isFinite(currentTime)) return;
+  let low = 0;
+  let high = lyricLines.length - 1;
+  let nextIndex = -1;
+
+  while (low <= high) {
+    const middle = Math.floor((low + high) / 2);
+    if (lyricLines[middle].time <= currentTime) {
+      nextIndex = middle;
+      low = middle + 1;
+    } else {
+      high = middle - 1;
+    }
+  }
+
+  if (nextIndex === activeLyricIndex) {
+    if (nextIndex < 0) {
+      lyricPosition.textContent = "000";
+      currentLyric.textContent = "前奏 / SIGNAL INCOMING";
+    }
+    return;
+  }
 
   lyricLines[activeLyricIndex]?.element.classList.remove("is-active");
   lyricLines[activeLyricIndex]?.element.removeAttribute("aria-current");
-  lyricLines.forEach((line, index) => line.element.classList.toggle("is-near", Math.abs(index - nextIndex) <= 2));
+  lyricLines.forEach((line, index) => line.element.classList.toggle("is-near", nextIndex >= 0 && Math.abs(index - nextIndex) <= 2));
+
+  if (nextIndex < 0) {
+    activeLyricIndex = -1;
+    lyricPosition.textContent = "000";
+    currentLyric.textContent = "前奏 / SIGNAL INCOMING";
+    return;
+  }
 
   const activeLine = lyricLines[nextIndex];
   activeLine.element.classList.add("is-active");
@@ -131,57 +171,57 @@ function updateActiveLyric(progress) {
 }
 
 function renderLyrics(source) {
-  const rows = source.replaceAll("\r", "").split("\n");
+  const entries = parseLRC(source);
   const fragment = document.createDocumentFragment();
-  let lineNumber = 0;
   lyricsList.innerHTML = "";
   lyricLines = [];
 
-  rows.forEach((row) => {
-    const text = row.trim();
-    if (!text) {
+  entries.forEach((entry) => {
+    if (entry.breakBefore) {
       const breakElement = document.createElement("li");
       breakElement.className = "lyric-break";
       breakElement.setAttribute("aria-hidden", "true");
       fragment.append(breakElement);
-      return;
     }
 
-    lineNumber += 1;
     const item = document.createElement("li");
     const button = document.createElement("button");
     item.className = "lyric-line";
-    item.dataset.number = String(lineNumber).padStart(3, "0");
+    item.dataset.time = formatTime(entry.time);
     button.type = "button";
-    button.textContent = text;
-    button.setAttribute("aria-label", `跳至歌詞第 ${lineNumber} 句：${text}`);
+    button.textContent = entry.text;
+    button.setAttribute("aria-label", `跳至 ${formatTime(entry.time)}：${entry.text}`);
     item.append(button);
     fragment.append(item);
 
     const line = {
-      text,
+      text: entry.text,
+      time: entry.time,
       element: item,
-      weight: 1 + Math.min(Array.from(text).length, 24) * 0.095,
-      startRatio: 0,
-      endRatio: 0,
     };
-    button.addEventListener("click", () => {
+    button.addEventListener("click", async () => {
       if (!Number.isFinite(audio.duration)) return;
-      audio.currentTime = line.startRatio * audio.duration;
-      updateProgress();
+      try {
+        await ensureAudioGraph();
+        audio.currentTime = line.time;
+        updateActiveLyric(line.time);
+        await audio.play();
+      } catch {
+        setStatus("SEEK FAILED", "error");
+        currentLyric.textContent = "無法跳轉播放，請再按一次。";
+      }
     });
     lyricLines.push(line);
   });
 
   lyricsList.append(fragment);
   lyricTotal.textContent = String(lyricLines.length).padStart(3, "0");
-  createLyricTimings();
-  updateActiveLyric(0);
+  updateActiveLyric(audio.currentTime);
 }
 
 async function loadLyrics() {
   try {
-    const response = await fetch("lyrics.txt");
+    const response = await fetch("lyric.lrc");
     if (!response.ok) throw new Error("Lyrics unavailable");
     renderLyrics(await response.text());
   } catch {
@@ -301,6 +341,7 @@ audio.addEventListener("error", () => {
   currentLyric.textContent = "音訊載入失敗，請確認網路後重新整理。";
 });
 audio.addEventListener("loadedmetadata", updateProgress);
+audio.addEventListener("seeked", updateProgress);
 seekControl.addEventListener("input", () => {
   if (!Number.isFinite(audio.duration)) return;
   audio.currentTime = (Number(seekControl.value) / 1000) * audio.duration;

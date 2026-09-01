@@ -339,18 +339,34 @@ select {
   content: "";
 }
 
-.hero::after {
+.anthem-easter-egg {
   position: absolute;
-  z-index: 0;
+  z-index: 1;
   top: 20%;
   right: 11%;
+  display: block;
   width: clamp(80px, 10vw, 150px);
   aspect-ratio: 1;
+  opacity: 0.88;
+}
+
+.anthem-easter-egg::before {
+  position: absolute;
+  inset: 0;
   background: var(--orange);
   clip-path: polygon(50% 0, 62% 37%, 100% 50%, 62% 63%, 50% 100%, 38% 63%, 0 50%, 38% 37%);
   content: "";
-  opacity: 0.88;
   animation: spin-slow 22s linear infinite;
+}
+
+.anthem-easter-egg:hover,
+.anthem-easter-egg:focus-visible {
+  opacity: 1;
+}
+
+.anthem-easter-egg:hover::before,
+.anthem-easter-egg:focus-visible::before {
+  animation-duration: 3s;
 }
 
 .hero-grid {
@@ -2779,7 +2795,7 @@ body.score-explorer-open {
     width: min(100%, 650px);
   }
 
-  .hero::after {
+  .anthem-easter-egg {
     top: 12%;
     right: 6%;
   }
@@ -2856,7 +2872,7 @@ body.score-explorer-open {
     width: 85vw;
   }
 
-  .hero::after {
+  .anthem-easter-egg {
     top: 13%;
     right: 8%;
     width: 70px;
