@@ -228,7 +228,6 @@ function renderTimeline(now) {
       const isPast = now >= item.endAt;
       const isNext = !isCurrent && index === nextIndex;
       const stateClass = isCurrent ? " is-current" : isPast ? " is-past" : isNext ? " is-next" : "";
-      const stateLabel = isCurrent ? "進行中" : isNext ? "下一項" : item.tag;
       return `
         <article class="timeline-item${stateClass}">
           <time class="timeline-time" datetime="${day.date}T${item.start}:00+08:00">
@@ -239,7 +238,7 @@ function renderTimeline(now) {
             <h3>${escapeHTML(item.title)}</h3>
             <p>${escapeHTML(item.detail)}</p>
           </div>
-          <span class="timeline-tag">${escapeHTML(stateLabel)}</span>
+          ${isNext ? '<span class="timeline-tag">下一場</span>' : ""}
         </article>`;
     })
     .join("");

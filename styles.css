@@ -1100,12 +1100,6 @@ select {
   box-shadow: 0 0 0 5px rgba(17, 18, 15, 0.18);
 }
 
-.timeline-item.is-current .timeline-tag {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: #fff;
-}
-
 .timeline-item.is-next .timeline-rail i {
   background: var(--violet);
   box-shadow: 0 0 0 4px rgba(141, 121, 255, 0.18);
@@ -1328,9 +1322,57 @@ select {
 }
 
 .track-list .is-special {
+  align-items: start;
   padding-right: 14px;
   padding-left: 14px;
   background: rgba(217, 255, 67, 0.24);
+}
+
+.track-special-content {
+  min-width: 0;
+}
+
+.track-special-rules {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.track-special-rules > div {
+  padding: 16px;
+  border: 1px solid rgba(17, 18, 15, 0.34);
+  background: rgba(255, 255, 255, 0.44);
+}
+
+.track-special-rules strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.track-special-rules small {
+  margin-left: 5px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+}
+
+.track-special-rules p {
+  margin: 0;
+  color: rgba(17, 18, 15, 0.78);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.track-special-content > a {
+  display: inline-block;
+  margin-top: 16px;
+  padding-bottom: 2px;
+  border-bottom: 2px solid currentcolor;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
 }
 
 .tracks-head {
@@ -1338,25 +1380,6 @@ select {
   align-items: end;
   justify-content: space-between;
   margin-bottom: 18px;
-}
-
-.tracks-note {
-  max-width: 460px;
-}
-
-.tracks-note p {
-  margin: 0 0 7px;
-  font-size: 14px;
-}
-
-.tracks-note a {
-  display: inline-block;
-  margin-top: 7px;
-  padding-bottom: 2px;
-  border-bottom: 2px solid currentcolor;
-  font-size: 12px;
-  font-weight: 900;
-  text-decoration: none;
 }
 
 .tracks-head h3 {
@@ -2888,6 +2911,10 @@ body.score-explorer-open {
     justify-self: start;
   }
 
+  .track-special-rules {
+    grid-template-columns: 1fr;
+  }
+
   .schedule-notice {
     grid-template-columns: 1fr auto;
     gap: 5px 14px;
@@ -3051,10 +3078,6 @@ body.score-explorer-open {
     min-height: 0;
     grid-template-columns: 1fr;
     gap: 7px;
-  }
-
-  .tracks-note {
-    margin-top: 22px;
   }
 
   .results-hero {
