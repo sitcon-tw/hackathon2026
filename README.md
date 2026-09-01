@@ -17,21 +17,21 @@ python3 -m http.server 8000
 
 ## 更新活動資料
 
-主要資料都位於 `script.js` 頂部：
+活動資料主要位於 `script.js` 頂部：
 
 - `SITE_CONFIG.links.lightningTalk`：閃電講表單 URL
 - `SITE_CONFIG.links.submission`：作品繳交表單 URL
 - `announcements`：最新公告
 - `schedule`：三日時程與高亮時間區間
-- `teams`：正式隊伍名單
+- `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
 - `resources`：下載項目與檔案路徑
 - `finalists.js` 的 `finalistTeams`：總排名前 10 名
 - `finalists.js` 的 `waitlistTeams`：候補名單
 
 隊伍格式：
 
-```js
-{ id: "T001", name: "Team Name", track: "01", members: 4 }
+```json
+{"id":"T001","name":"Team Name","track":"AI for Everyday Life"}
 ```
 
 表單 URL 設定完成後，按鈕會在 `SITE_CONFIG.actionRelease` 指定時間開放。若 URL 仍為空字串，按鈕會安全維持停用並顯示「連結待主辦補上」。

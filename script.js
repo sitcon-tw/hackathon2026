@@ -82,10 +82,18 @@ const schedule = [
   },
 ];
 
-// Add the official roster here when it is available.
-const teams = [
-  // { id: "T001", name: "Team Name", track: "01", members: 4 },
-];
+const teamTrackIds = {
+  "AI Agents & Automation": "01",
+  "AI for Everyday Life": "02",
+  "Future of Work": "03",
+  "AI × Creative Technology": "04",
+  "AI for Taiwan／Social Impact": "05",
+  "BUILDMODE Open": "06",
+  "AI x Creativity": "07",
+};
+
+let teams = [];
+let teamsState = "loading";
 
 const resources = [
   {
@@ -276,23 +284,58 @@ function renderTimeline(now) {
     .join("");
 }
 
+async function loadTeams() {
+  try {
+    const response = await fetch("teams.json");
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    const data = await response.json();
+    if (!Array.isArray(data)) throw new Error("Team data must be an array");
+
+    teams = data;
+    teamsState = "ready";
+  } catch (error) {
+    teamsState = "error";
+    console.error("Unable to load team roster", error);
+  }
+
+  const search = document.querySelector("#team-search");
+  const track = document.querySelector("#team-track");
+  renderTeams(search.value, track.value);
+  window.dispatchEvent(new Event("scrollstack:refresh"));
+}
+
 function renderTeams(query = "", track = "all") {
   const list = document.querySelector("#team-list");
+  const count = document.querySelector("#team-count");
+
+  if (teamsState === "loading") {
+    count.textContent = "名單載入中";
+    list.innerHTML = `<div class="team-empty"><div><b>名單載入中</b><p>正在取得最新隊伍資料。</p></div></div>`;
+    return;
+  }
+
+  if (teamsState === "error") {
+    count.textContent = "名單載入失敗";
+    list.innerHTML = `<div class="team-empty"><div><b>暫時無法載入名單</b><p>請重新整理頁面後再試一次。</p></div></div>`;
+    return;
+  }
+
   const normalizedQuery = query.trim().toLocaleLowerCase("zh-Hant");
   const filtered = teams.filter((team) => {
     const matchesQuery = `${team.id} ${team.name}`.toLocaleLowerCase("zh-Hant").includes(normalizedQuery);
-    const matchesTrack = track === "all" || team.track === track;
+    const matchesTrack = track === "all" || teamTrackIds[team.track] === track;
     return matchesQuery && matchesTrack;
   });
 
-  document.querySelector("#team-count").textContent = teams.length ? `${filtered.length} / ${teams.length} 隊` : "名單將另行公布";
+  count.textContent = teams.length ? `${filtered.length} / ${teams.length} 隊` : "目前沒有隊伍";
 
   if (!teams.length) {
     list.innerHTML = `
       <div class="team-empty">
         <div>
-          <b>名單<br />尚未公布</b>
-          <p>正式名單確認後，將開放隊名搜尋與賽道篩選。請以主辦單位寄送的通知為準。</p>
+          <b>目前沒有隊伍</b>
+          <p>請稍後再回來查看最新名單。</p>
         </div>
       </div>`;
     return;
@@ -304,16 +347,17 @@ function renderTeams(query = "", track = "all") {
   }
 
   list.innerHTML = filtered
-    .map(
-      (team) => `
+    .map((team) => {
+      const trackId = teamTrackIds[team.track] || "—";
+      return `
         <article class="team-card">
-          <span><b>${escapeHTML(team.id)}</b><b>賽道 ${escapeHTML(team.track)}</b></span>
+          <span><b>${escapeHTML(team.id)}</b><b>賽道 ${escapeHTML(trackId)}</b></span>
           <div>
             <h3>${escapeHTML(team.name)}</h3>
-            <p>${escapeHTML(team.members)} 位成員</p>
+            <p>${escapeHTML(team.track)}</p>
           </div>
-        </article>`,
-    )
+        </article>`;
+    })
     .join("");
 }
 
@@ -583,7 +627,10 @@ function setupMenu() {
 function setupTeamFilters() {
   const search = document.querySelector("#team-search");
   const track = document.querySelector("#team-track");
-  const filter = () => renderTeams(search.value, track.value);
+  const filter = () => {
+    renderTeams(search.value, track.value);
+    window.dispatchEvent(new Event("scrollstack:refresh"));
+  };
   search.addEventListener("input", filter);
   track.addEventListener("change", filter);
 }
@@ -1233,6 +1280,7 @@ function init() {
   renderResources();
   setupMenu();
   setupTeamFilters();
+  loadTeams();
   setupFaq();
   setupDisabledLinks();
   setupAnchorNavigation();
