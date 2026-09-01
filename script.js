@@ -128,6 +128,7 @@ const judgingRounds = [
   },
 ];
 
+const specialActivityIndex = schedule.length;
 let selectedDayIndex = getInitialDayIndex(Date.now());
 let lastRenderedMinute = -1;
 let lastKnownEventDay = getEventDayIndex(Date.now());
@@ -165,7 +166,7 @@ function renderDayTabs() {
   const todayIndex = getEventDayIndex(Date.now());
   const isEventDate = todayIndex >= 0;
 
-  tabs.innerHTML = schedule
+  const dayTabs = schedule
     .map(
       (day, index) => `
         <button
@@ -185,6 +186,22 @@ function renderDayTabs() {
     )
     .join("");
 
+  tabs.innerHTML = `${dayTabs}
+    <button
+      class="day-tab day-tab--special"
+      id="special-activity-tab"
+      type="button"
+      role="tab"
+      aria-selected="${selectedDayIndex === specialActivityIndex}"
+      aria-controls="timeline"
+      tabindex="${selectedDayIndex === specialActivityIndex ? "0" : "-1"}"
+      data-day-index="${specialActivityIndex}"
+    >
+      <b>SP</b>
+      <span>特別活動<small>Lightning Talk</small></span>
+      <i aria-hidden="true"></i>
+    </button>`;
+
   tabs.querySelectorAll(".day-tab").forEach((tab) => {
     tab.addEventListener("click", () => selectDay(Number(tab.dataset.dayIndex), true));
     tab.addEventListener("keydown", handleTabKeys);
@@ -194,11 +211,12 @@ function renderDayTabs() {
 function handleTabKeys(event) {
   if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
   event.preventDefault();
+  const tabCount = schedule.length + 1;
   let nextIndex = selectedDayIndex;
-  if (event.key === "ArrowLeft") nextIndex = (selectedDayIndex + schedule.length - 1) % schedule.length;
-  if (event.key === "ArrowRight") nextIndex = (selectedDayIndex + 1) % schedule.length;
+  if (event.key === "ArrowLeft") nextIndex = (selectedDayIndex + tabCount - 1) % tabCount;
+  if (event.key === "ArrowRight") nextIndex = (selectedDayIndex + 1) % tabCount;
   if (event.key === "Home") nextIndex = 0;
-  if (event.key === "End") nextIndex = schedule.length - 1;
+  if (event.key === "End") nextIndex = tabCount - 1;
   selectDay(nextIndex, true);
 }
 
@@ -211,6 +229,43 @@ function selectDay(index, focus = false) {
 }
 
 function renderTimeline(now) {
+  const timeline = document.querySelector("#timeline");
+  const statusbar = document.querySelector(".schedule-statusbar");
+  const isSpecialActivity = selectedDayIndex === specialActivityIndex;
+  statusbar.classList.toggle("is-special", isSpecialActivity);
+
+  if (isSpecialActivity) {
+    document.querySelector("#schedule-date").textContent = "SPECIAL ACTIVITY · LIGHTNING TALK";
+    timeline.setAttribute("aria-labelledby", "special-activity-tab");
+    timeline.innerHTML = `
+      <article class="lightning-talk">
+        <header>
+          <span>SPECIAL ACTIVITY / DATA BLITZ</span>
+          <h3>Lightning Talk <small>閃電秀</small></h3>
+        </header>
+        <p class="lightning-talk-lead">Lightning Talk，又稱 data blitz（資料閃電戰），是一場如閃電般短促、快速且精準的分享。講者必須用最快速度，把最重要的內容帶給全場。</p>
+        <div class="lightning-talk-rules">
+          <section>
+            <b>02:00</b>
+            <strong>兩分鐘硬性上限</strong>
+            <p>包含準備與連接投影機的時間，每位講者總共只有 2 分鐘。</p>
+          </section>
+          <section>
+            <b>HARD CUT</b>
+            <strong>超時直接斷訊號</strong>
+            <p>未能在 2 分鐘內結束，現場將直接切斷訊號，不提供延長。</p>
+          </section>
+          <section>
+            <b>OPEN TOPIC</b>
+            <strong>題目自由</strong>
+            <p>技術、工具、經驗或任何想分享的內容都可以，想講什麼就講什麼。</p>
+          </section>
+        </div>
+        <strong class="lightning-talk-callout">這是你的舞台。</strong>
+      </article>`;
+    return;
+  }
+
   const day = schedule[selectedDayIndex];
   const items = day.items.map((item) => ({
     ...item,
@@ -218,8 +273,6 @@ function renderTimeline(now) {
     endAt: parseEventTime(day.date, item.end),
   }));
   const nextIndex = items.findIndex((item) => item.startAt > now);
-  const timeline = document.querySelector("#timeline");
-
   document.querySelector("#schedule-date").textContent = day.dateLabel;
   timeline.setAttribute("aria-labelledby", `day-tab-${day.day}`);
   timeline.innerHTML = items
