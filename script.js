@@ -11,28 +11,6 @@ const SITE_CONFIG = {
 
 let pageScroller = null;
 
-const announcements = [
-  {
-    date: "09.01",
-    title: "請確認報名信箱",
-    body: "隊伍、座位、帳號額度與限量資源可能透過電子郵件個別通知，請一併檢查垃圾郵件匣。",
-    tag: "置頂",
-    pinned: true,
-  },
-  {
-    date: "09.05",
-    title: "閃電講與作品繳交表單",
-    body: "閃電講報名預計於 9/5 12:00 截止；作品繳交於 9/6 10:00 截止。",
-    tag: "重要時間",
-  },
-  {
-    date: "09.06",
-    title: "繳交前請確認連結權限",
-    body: "請以無痕視窗確認程式碼儲存庫與 YouTube 影片可直接開啟；若有提供作品展示網址，也請一併確認。",
-    tag: "繳交提醒",
-  },
-];
-
 const schedule = [
   {
     day: 1,
@@ -180,23 +158,6 @@ function escapeHTML(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
-}
-
-function renderAnnouncements() {
-  const container = document.querySelector("#announcement-list");
-  container.innerHTML = announcements
-    .map(
-      (item) => `
-        <article class="announcement-item${item.pinned ? " is-pinned" : ""}">
-          <time datetime="2026-${item.date.replace(".", "-")}">${escapeHTML(item.date)}</time>
-          <div>
-            <h3>${escapeHTML(item.title)}</h3>
-            <span class="announcement-tag">${escapeHTML(item.tag)}</span>
-          </div>
-          <p>${escapeHTML(item.body)}</p>
-        </article>`,
-    )
-    .join("");
 }
 
 function renderDayTabs() {
@@ -1238,7 +1199,7 @@ function setupAnimations() {
 
   const groups = [
     ...document.querySelectorAll(
-      ".action-grid, .announcement-list, .rule-list, .track-list, .rounds, .resource-list, .faq-list",
+      ".action-grid, .rule-list, .track-list, .rounds, .resource-list, .faq-list",
     ),
   ];
   const groupedElements = new WeakSet(groups);
@@ -1271,7 +1232,6 @@ function setupAnimations() {
 }
 
 function init() {
-  renderAnnouncements();
   renderDayTabs();
   renderTimeline(Date.now());
   renderTeams();

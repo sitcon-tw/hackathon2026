@@ -21,7 +21,6 @@ python3 -m http.server 8000
 
 - `SITE_CONFIG.links.lightningTalk`：閃電講表單 URL
 - `SITE_CONFIG.links.submission`：作品繳交表單 URL
-- `announcements`：最新公告
 - `schedule`：三日時程與高亮時間區間
 - `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
 - `resources`：下載項目與檔案路徑
