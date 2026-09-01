@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 參賽隊伍名單與賽道搜尋。" />
+    <meta name="theme-color" content="#11120f" />
+    <title>隊伍名單｜BUILDMODE GEN-AI HACKATHON 2026</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="teams-page.js" defer></script>
+  </head>
+  <body class="results-body teams-body">
+    <a class="skip-link" href="#teams-main">跳至主要內容</a>
+    <header class="site-header results-header">
+      <a class="brand" href="index.html" aria-label="返回活動資訊首頁">
+        <span class="brand-mark" aria-hidden="true">B/</span>
+        <span><strong>BUILDMODE</strong><small>FUTUREMODE × SITCON</small></span>
+      </a>
+      <a class="results-back" href="index.html">活動資訊</a>
+    </header>
+
+    <main id="teams-main" class="results-page teams-page">
+      <section class="results-hero teams-hero" aria-labelledby="teams-page-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div>
+          <p class="results-kicker">OFFICIAL ROSTER · 7 TRACKS</p>
+          <h1 id="teams-page-title">隊伍名單</h1>
+          <p>輸入隊名或隊伍編號快速搜尋，也可以依賽道篩選正式參賽隊伍。</p>
+        </div>
+        <div class="results-status"><i></i><span id="teams-page-status">名單載入中</span></div>
+      </section>
+
+      <section class="team-directory teams" aria-labelledby="team-directory-title">
+        <div class="section-heading section-heading--light">
+          <div>
+            <div class="section-kicker"><span>01</span> 參賽隊伍</div>
+            <h2 id="team-directory-title">搜尋隊伍</h2>
+          </div>
+          <p id="team-count" role="status" aria-live="polite">名單載入中</p>
+        </div>
+        <div class="team-toolbar">
+          <label>
+            <span>搜尋</span>
+            <input id="team-search" type="search" placeholder="搜尋隊名或隊伍編號" autocomplete="off" />
+          </label>
+          <label>
+            <span>賽道</span>
+            <select id="team-track">
+              <option value="all">全部賽道</option>
+              <option value="01">01 · AI Agents</option>
+              <option value="02">02 · Everyday Life</option>
+              <option value="03">03 · Future of Work</option>
+              <option value="04">04 · Creative Tech</option>
+              <option value="05">05 · Taiwan / Impact</option>
+              <option value="06">06 · BUILDMODE Open</option>
+              <option value="07">07 · AI × Creativity</option>
+            </select>
+          </label>
+        </div>
+        <div id="team-list" class="team-list" aria-busy="true"></div>
+      </section>
+    </main>
+
+    <footer class="results-footer">
+      <strong>BUILDMODE GEN-AI HACKATHON 2026</strong>
+      <span>隊伍與賽道以主辦單位最終資料為準</span>
+      <a href="mailto:ask@sitcon.org">ask@sitcon.org</a>
+    </footer>
+  </body>
+</html>

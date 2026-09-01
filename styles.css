@@ -1566,6 +1566,11 @@ select {
   color: #fff;
 }
 
+.team-directory {
+  padding: clamp(75px, 9vw, 120px) max(24px, calc((100vw - 1240px) / 2));
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
 .teams .section-heading > p {
   opacity: 1;
 }
@@ -1617,16 +1622,8 @@ select {
 }
 
 .team-list {
-  height: clamp(460px, 68vh, 760px);
   border-top: 1px solid rgba(255, 255, 255, 0.38);
   border-left: 1px solid rgba(255, 255, 255, 0.38);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-.team-list:focus-visible {
-  outline: 2px solid var(--acid);
-  outline-offset: 4px;
 }
 
 .team-card {
@@ -1675,7 +1672,7 @@ select {
 
 .team-empty {
   display: grid;
-  min-height: 100%;
+  min-height: 340px;
   grid-column: 1 / -1;
   place-items: center;
   border-right: 1px solid rgba(255, 255, 255, 0.38);
@@ -3094,10 +3091,6 @@ body.score-explorer-open {
   .team-toolbar label:first-child {
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.45);
-  }
-
-  .team-list {
-    height: clamp(420px, 62vh, 620px);
   }
 
   .team-card {

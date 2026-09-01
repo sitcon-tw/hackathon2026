@@ -23,6 +23,7 @@ python3 -m http.server 8000
 - `SITE_CONFIG.links.submission`：作品繳交表單 URL
 - `schedule`：三日時程與高亮時間區間
 - `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
+- `teams.html`：獨立隊伍名單頁
 - `resources`：下載項目與檔案路徑
 - `finalists.js` 的 `finalistTeams`：總排名前 10 名
 - `finalists.js` 的 `waitlistTeams`：候補名單

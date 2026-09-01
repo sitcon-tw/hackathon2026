@@ -60,19 +60,6 @@ const schedule = [
   },
 ];
 
-const teamTrackIds = {
-  "AI Agents & Automation": "01",
-  "AI for Everyday Life": "02",
-  "Future of Work": "03",
-  "AI × Creative Technology": "04",
-  "AI for Taiwan／Social Impact": "05",
-  "BUILDMODE Open": "06",
-  "AI x Creativity": "07",
-};
-
-let teams = [];
-let teamsState = "loading";
-
 const resources = [
   {
     type: "MD · 2 KB",
@@ -292,81 +279,6 @@ function renderTimeline(now) {
             <p>${escapeHTML(item.detail)}</p>
           </div>
           ${isNext ? '<span class="timeline-tag">下一場</span>' : ""}
-        </article>`;
-    })
-    .join("");
-}
-
-async function loadTeams() {
-  try {
-    const response = await fetch("teams.json");
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-    const data = await response.json();
-    if (!Array.isArray(data)) throw new Error("Team data must be an array");
-
-    teams = data;
-    teamsState = "ready";
-  } catch (error) {
-    teamsState = "error";
-    console.error("Unable to load team roster", error);
-  }
-
-  const search = document.querySelector("#team-search");
-  const track = document.querySelector("#team-track");
-  renderTeams(search.value, track.value);
-  window.dispatchEvent(new Event("scrollstack:refresh"));
-}
-
-function renderTeams(query = "", track = "all") {
-  const list = document.querySelector("#team-list");
-  const count = document.querySelector("#team-count");
-
-  if (teamsState === "loading") {
-    count.textContent = "名單載入中";
-    list.innerHTML = `<div class="team-empty"><div><b>名單載入中</b><p>正在取得最新隊伍資料。</p></div></div>`;
-    return;
-  }
-
-  if (teamsState === "error") {
-    count.textContent = "名單載入失敗";
-    list.innerHTML = `<div class="team-empty"><div><b>暫時無法載入名單</b><p>請重新整理頁面後再試一次。</p></div></div>`;
-    return;
-  }
-
-  const normalizedQuery = query.trim().toLocaleLowerCase("zh-Hant");
-  const filtered = teams.filter((team) => {
-    const matchesQuery = `${team.id} ${team.name}`.toLocaleLowerCase("zh-Hant").includes(normalizedQuery);
-    const matchesTrack = track === "all" || teamTrackIds[team.track] === track;
-    return matchesQuery && matchesTrack;
-  });
-
-  count.textContent = teams.length ? `${filtered.length} / ${teams.length} 隊` : "目前沒有隊伍";
-
-  if (!teams.length) {
-    list.innerHTML = `
-      <div class="team-empty">
-        <div>
-          <b>目前沒有隊伍</b>
-          <p>請稍後再回來查看最新名單。</p>
-        </div>
-      </div>`;
-    return;
-  }
-
-  if (!filtered.length) {
-    list.innerHTML = `<div class="team-empty"><div><b>查無隊伍</b><p>請調整搜尋內容或賽道條件。</p></div></div>`;
-    return;
-  }
-
-  list.innerHTML = filtered
-    .map((team) => {
-      const trackId = teamTrackIds[team.track] || "—";
-      return `
-        <article class="team-card">
-          <b class="team-id">${escapeHTML(team.id)}</b>
-          <h3>${escapeHTML(team.name)}</h3>
-          <span class="team-track"><b>${escapeHTML(trackId)}</b>${escapeHTML(team.track)}</span>
         </article>`;
     })
     .join("");
@@ -633,17 +545,6 @@ function setupMenu() {
   window.addEventListener("scroll", () => {
     document.querySelector("[data-header]").classList.toggle("is-scrolled", window.scrollY > 30);
   }, { passive: true });
-}
-
-function setupTeamFilters() {
-  const search = document.querySelector("#team-search");
-  const track = document.querySelector("#team-track");
-  const filter = () => {
-    renderTeams(search.value, track.value);
-    window.dispatchEvent(new Event("scrollstack:refresh"));
-  };
-  search.addEventListener("input", filter);
-  track.addEventListener("change", filter);
 }
 
 function setupFaq() {
@@ -1002,7 +903,6 @@ function setupScrollStack() {
       cardTops: cards.map(getDocumentTop),
       cardHeights: cards.map((card) => card.offsetHeight),
       endTop: getDocumentTop(end),
-      headerHeight: document.querySelector("[data-header]")?.offsetHeight || 0,
     };
     updateCardTransforms();
   };
@@ -1020,11 +920,7 @@ function setupScrollStack() {
       const cardHeight = metrics.cardHeights[index];
       const preferredStackTop = stackPosition + 12 * index;
       const tallStackTop = containerHeight - cardHeight - 58 + 8 * index;
-      const pinnedTop = card.hasAttribute("data-stack-interactive")
-        ? Math.max(preferredStackTop, metrics.headerHeight + 18)
-        : cardHeight > containerHeight * 0.84
-          ? Math.min(preferredStackTop, tallStackTop)
-          : preferredStackTop;
+      const pinnedTop = cardHeight > containerHeight * 0.84 ? Math.min(preferredStackTop, tallStackTop) : preferredStackTop;
       const pinStart = cardTop - pinnedTop;
       const triggerEnd = pinStart + Math.min(containerHeight * 0.48, 360);
       const scaleProgress = calculateProgress(scrollTop, pinStart, triggerEnd);
@@ -1262,7 +1158,7 @@ function setupAnimations() {
   const groupedElements = new WeakSet(groups);
   const targets = [
     ...document.querySelectorAll(
-      ".action-heading, .section-heading, .schedule-shell, .submission-spec, .tracks-head, .team-toolbar, .team-list, .score-overview",
+      ".action-heading, .section-heading, .schedule-shell, .submission-spec, .tracks-head, .score-overview",
     ),
     ...groups,
   ];
@@ -1291,11 +1187,8 @@ function setupAnimations() {
 function init() {
   renderDayTabs();
   renderTimeline(Date.now());
-  renderTeams();
   renderResources();
   setupMenu();
-  setupTeamFilters();
-  loadTeams();
   setupFaq();
   setupDisabledLinks();
   setupAnchorNavigation();
