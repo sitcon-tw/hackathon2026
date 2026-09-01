@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="BUILDMODE GEN-AI HACKATHON 2026 參賽者資訊站：最新公告、三日時程、賽制、評分、評審、隊伍與資源下載。"
+    />
+    <meta name="theme-color" content="#11120f" />
+    <meta property="og:title" content="BUILDMODE GEN-AI HACKATHON 2026" />
+    <meta
+      property="og:description"
+      content="9/4–9/6 台北花博爭艷館。掌握賽事進度、提交規格與現場公告。"
+    />
+    <title>BUILDMODE GEN-AI HACKATHON 2026｜參賽者資訊站</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/animejs@4.2.2/dist/bundles/anime.umd.min.js"
+      integrity="sha384-WxuE+98aTTR32yUCKdZWcpkcOiw9u2Hq1AiAnXM2Dts06K0D23kYXesJSuq1OeLZ"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"
+      integrity="sha384-kdY9hFBPoAPpxcrLihsO3APivFOxtQwSeYdzFD5CIIfLurwhdMrEHhkQxZJDkxgk"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/highcharts@12.4.0/highcharts.js"
+      integrity="sha384-SuKJbNf5exCoReOrvlG2qOS0m8rykJbV/EpkAZqFMxqGrDETIdBotuMnz746cTPS"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/highcharts@12.4.0/modules/accessibility.js"
+      integrity="sha384-GZ7mS9ktCQqUKCJMHHXf3hoVyCAnzRCROYiveL6Xcs78weLv5/0by+jmYCz4CphX"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div id="boot-screen" class="boot-screen" aria-hidden="true" hidden>
+      <div class="boot-meta"><span>FUTUREMODE × SITCON</span><span>2026</span></div>
+      <strong>BUILDMODE</strong>
+      <div class="boot-progress"><i></i></div>
+      <small>活動資訊載入中</small>
+    </div>
+    <a class="skip-link" href="#main-content">跳至主要內容</a>
+
+    <header class="site-header" data-header>
+      <a class="brand" href="#top" aria-label="BUILDMODE 回到頁首">
+        <span class="brand-mark" aria-hidden="true">B/</span>
+        <span>
+          <strong>BUILDMODE</strong>
+          <small>FUTUREMODE × SITCON</small>
+        </span>
+      </a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span>MENU</span>
+        <i aria-hidden="true"></i>
+      </button>
+      <nav id="site-nav" class="site-nav" aria-label="主要導覽">
+        <a href="#announcements">公告</a>
+        <a href="#schedule">時程</a>
+        <a href="#rules">賽制</a>
+        <a href="#teams">隊伍</a>
+        <a href="#judging">評分</a>
+        <a href="#judges">評審</a>
+        <a href="#resources">資源</a>
+        <a class="nav-finalists" href="finalists.html"><span>決賽名單</span><small>TOP 10</small></a>
+        <a class="nav-hot" href="#actions">重要連結</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section id="top" class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div class="hero-scan" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <div class="eyebrow"><span>參賽者資訊站</span><span>09.04–09.06</span></div>
+          <h1 id="hero-title">
+            <span>BUILD</span><span>MODE</span>
+            <em>GEN-AI HACKATHON</em>
+          </h1>
+          <div class="hero-meta" aria-label="活動資訊">
+            <div><small>日期</small><strong>2026.09.04–06</strong></div>
+            <div><small>開放時間</small><strong>09:00–17:00</strong></div>
+            <div><small>地點</small><strong>台北花博爭艷館</strong></div>
+          </div>
+        </div>
+
+        <aside class="mission-control" aria-label="賽事即時狀態">
+          <div class="control-head">
+            <span class="live-dot" aria-hidden="true"></span>
+            <span id="event-phase">活動尚未開始</span>
+            <time id="taipei-clock" datetime="">台北時間載入中</time>
+          </div>
+          <div class="countdown" id="countdown">
+            <span class="countdown-label">距離第一天開場</span>
+            <div class="countdown-units">
+              <span><b data-count="days">00</b><small>天</small></span>
+              <span><b data-count="hours">00</b><small>時</small></span>
+              <span><b data-count="minutes">00</b><small>分</small></span>
+              <span><b data-count="seconds">00</b><small>秒</small></span>
+            </div>
+          </div>
+          <div class="event-progress">
+            <div><span>活動進度</span><b id="progress-value">0%</b></div>
+            <div class="progress-track"><i id="progress-bar"></i></div>
+          </div>
+          <a class="next-up" href="#schedule">
+            <small>下一個活動</small>
+            <strong id="next-event">讀取賽程中</strong>
+            <span id="next-event-time">--:--</span>
+          </a>
+        </aside>
+      </section>
+
+      <div class="portal-stack scroll-stack" data-scroll-stack>
+        <div class="scroll-stack-inner">
+      <section id="actions" class="action-zone section-pad scroll-stack-card" aria-labelledby="actions-title">
+        <div class="section-kicker"><span>00</span> 重要連結</div>
+        <div class="action-heading">
+          <div>
+            <p class="hot-label">9/5 開放</p>
+            <h2 id="actions-title">重要表單</h2>
+          </div>
+          <p>
+            閃電講報名與作品繳交表單預計於 9/5 公布，連結上架後即可使用。
+          </p>
+        </div>
+        <div class="action-grid">
+          <a id="lightning-action" class="action-card action-card--acid" href="#" aria-disabled="true">
+            <span class="action-no">A/01</span>
+            <span class="action-main">
+              <small>表單 01</small>
+              <strong>閃電講報名</strong>
+              <em data-action-state>9/5 開放投稿</em>
+            </span>
+            <span class="action-meta">每人一題 · 2 分鐘 · 預計抽選 10 位</span>
+          </a>
+          <a id="submission-action" class="action-card action-card--orange" href="#" aria-disabled="true">
+            <span class="action-no">A/02</span>
+            <span class="action-main">
+              <small>表單 02</small>
+              <strong>作品繳交</strong>
+              <em data-action-state>9/5 公布連結</em>
+            </span>
+            <span class="action-meta">截止 9/6 10:00 · 請預留權限檢查時間</span>
+          </a>
+        </div>
+      </section>
+
+      <section id="announcements" class="announcements section-pad scroll-stack-card" aria-labelledby="announcements-title">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>01</span> 活動公告</div>
+            <h2 id="announcements-title">最新公告</h2>
+          </div>
+          <div class="feed-status"><i></i> 持續更新</div>
+        </div>
+        <div id="announcement-list" class="announcement-list" aria-live="polite"></div>
+      </section>
+
+      <section id="schedule" class="schedule section-pad scroll-stack-card" aria-labelledby="schedule-title">
+        <div class="section-heading section-heading--light">
+          <div>
+            <div class="section-kicker"><span>02</span> 活動時程</div>
+            <h2 id="schedule-title">三日賽程</h2>
+          </div>
+          <p>依台北時間自動標示目前進行與下一個活動。</p>
+        </div>
+        <div class="schedule-shell">
+          <div class="schedule-notice">
+            <strong>每日報到</strong><b>09:00–16:00</b><span>請於當日報到時段內完成報到</span>
+          </div>
+          <div class="schedule-controls">
+            <button id="schedule-now" type="button">查看目前時程</button>
+          </div>
+          <div id="day-tabs" class="day-tabs" role="tablist" aria-label="選擇活動日期"></div>
+          <div class="schedule-statusbar">
+            <span><i class="legend-live"></i> 進行中</span>
+            <span><i class="legend-next"></i> 下一項</span>
+            <span id="schedule-date">2026.09.04 FRI</span>
+          </div>
+          <div id="timeline" class="timeline" role="tabpanel"></div>
+        </div>
+      </section>
+
+      <section id="rules" class="rules section-pad scroll-stack-card" aria-labelledby="rules-title">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>03</span> 參賽規則</div>
+            <h2 id="rules-title">參賽規則</h2>
+          </div>
+          <p>以下為所有隊伍需遵守的基本規則。贊助商挑戰的額外條件以官方公告為準。</p>
+        </div>
+        <ul class="rule-list">
+          <li><span>01</span><strong>隊伍人數</strong><p>每隊 1–5 人，可個人參賽；每人同一時間僅能隸屬一個主隊伍。</p></li>
+          <li><span>02</span><strong>入場資格</strong><p>所有參賽者須持 Builder Pass 或 FUTUREMODE 有效票券入場。</p></li>
+          <li><span>03</span><strong>每日報到</strong><p>三日皆須於 09:00–16:00 完成隊伍報到，完成後可自由進出及參加其他議程。</p></li>
+          <li><span>04</span><strong>公開原始碼</strong><p>公開程式碼儲存庫、README、授權條款與執行方式是總排名評選的必要條件。</p></li>
+          <li><span>05</span><strong>作品數量</strong><p>一隊提交一件主作品；同一作品可依資格角逐總排名與贊助商獎項。</p></li>
+        </ul>
+
+        <div class="submission-spec">
+          <div class="spec-title">
+            <span>作品<br />繳交內容</span>
+            <b>09/06<br />10:00</b>
+          </div>
+          <ol>
+            <li><span>01</span>隊伍資料、主賽道與贊助商挑戰</li>
+            <li><span>02</span>100–200 字問題與解法摘要</li>
+            <li><span>03</span>公開 GitHub／GitLab 儲存庫與授權檔案</li>
+            <li><span>04</span>README、系統架構、執行方式與來源說明</li>
+            <li><span>05</span>作品展示網址（選填）</li>
+            <li><span>06</span>最長 2 分鐘的 YouTube 評選影片</li>
+          </ol>
+        </div>
+
+        <div class="tracks" aria-labelledby="tracks-title">
+          <div class="tracks-head">
+            <h3 id="tracks-title">7 個賽道</h3>
+            <div class="tracks-note">
+              <p>每隊選擇一條主賽道，並可額外加選 AI × Creative Technology 特殊賽道。</p>
+              <p>特殊賽道包含音樂、短片及 AI 創作雲端聚合平台，另有參賽與繳交規定。</p>
+              <a href="https://www.futuremode.xyz/hackathon-track04" target="_blank" rel="noreferrer">查看特殊賽道規則</a>
+            </div>
+          </div>
+          <ol class="track-list">
+            <li><b>01</b><div><h4>AI Agents &amp; Automation</h4><p>AI Agent 與自動化</p></div></li>
+            <li><b>02</b><div><h4>AI for Everyday Life</h4><p>日常生活 AI</p></div></li>
+            <li><b>03</b><div><h4>Future of Work</h4><p>未來工作</p></div></li>
+            <li class="is-special"><b>04</b><div><h4>AI × Creative Technology</h4><p>音樂、短片與 AI 創作雲端聚合平台</p></div><em>可額外加選</em></li>
+            <li><b>05</b><div><h4>AI for Taiwan / Social Impact</h4><p>台灣與社會影響</p></div></li>
+            <li><b>06</b><div><h4>BUILDMODE Open</h4><p>硬體、Web3、空間運算</p></div></li>
+            <li><b>07</b><div><h4>AI × Creativity</h4><p>影像與 IP 遊戲創作</p></div></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="teams" class="teams section-pad scroll-stack-card" aria-labelledby="teams-title">
+        <div class="section-heading section-heading--light">
+          <div>
+            <div class="section-kicker"><span>04</span> 參賽隊伍</div>
+            <h2 id="teams-title">隊伍名單</h2>
+          </div>
+          <p id="team-count" role="status" aria-live="polite">名單尚未公布</p>
+        </div>
+        <div class="team-toolbar">
+          <label>
+            <span>搜尋</span>
+            <input id="team-search" type="search" placeholder="搜尋隊名或隊伍編號" autocomplete="off" />
+          </label>
+          <label>
+            <span>賽道</span>
+            <select id="team-track">
+              <option value="all">全部賽道</option>
+              <option value="01">01 · AI Agents</option>
+              <option value="02">02 · Everyday Life</option>
+              <option value="03">03 · Future of Work</option>
+              <option value="04">04 · Creative Tech</option>
+              <option value="05">05 · Taiwan / Impact</option>
+              <option value="06">06 · BUILDMODE Open</option>
+              <option value="07">07 · AI × Creativity</option>
+            </select>
+          </label>
+        </div>
+        <div id="team-list" class="team-list"></div>
+      </section>
+
+      <section id="judging" class="judging section-pad scroll-stack-card" aria-labelledby="judging-title">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>05</span> 評選方式</div>
+            <h2 id="judging-title">評選方式</h2>
+          </div>
+          <p>第一輪依影片、程式碼與文件評選前 10 名；第二輪以現場展示決定總排名。</p>
+        </div>
+        <div class="rounds">
+          <article class="round-card">
+            <header><span>第一輪</span><strong>所有合格作品 → 前 10 名</strong></header>
+            <h3>Round 1 書審</h3>
+            <div class="score-overview">
+              <div id="score-chart-round1" class="score-chart" aria-label="第一輪評分比例互動圖表"></div>
+              <p class="score-hint"><i aria-hidden="true"></i>點擊任一區塊進入全螢幕評分說明</p>
+            </div>
+            <div class="round-info"><strong>Round 1 評選流程</strong><p>將選出前十名</p></div>
+          </article>
+          <article class="round-card round-card--dark">
+            <header><span>第二輪</span><strong>總排名前 10 名 → 前 3 名</strong></header>
+            <h3>Round 2 Demo</h3>
+            <div class="score-overview">
+              <div id="score-chart-round2" class="score-chart" aria-label="第二輪評分比例互動圖表"></div>
+              <p class="score-hint"><i aria-hidden="true"></i>點擊任一區塊進入全螢幕評分說明</p>
+            </div>
+            <div class="round-info"><strong>每隊 5 分鐘</strong><p>3 分鐘成果展示、1 分鐘評審提問、1 分鐘隊伍回答。請自備電腦。</p></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="judges" class="judges section-pad scroll-stack-card" aria-labelledby="judges-title">
+        <div class="section-heading section-heading--light">
+          <div>
+            <div class="section-kicker"><span>06</span> Judges</div>
+            <h2 id="judges-title">評審名單</h2>
+          </div>
+          <p lang="en">The people building the frontier.</p>
+        </div>
+        <div class="judges-grid">
+          <article class="judge-card">
+            <div class="judge-photo-frame">
+              <span aria-hidden="true">J/01</span>
+              <img class="judge-photo" src="assets/judges/york-chang.jpg" alt="York Chang" width="400" height="400" loading="lazy" decoding="async" />
+            </div>
+            <div class="judge-copy">
+              <h3>York Chang</h3>
+              <p>Blockchain Engineer</p>
+              <strong>Cathay Financial Holdings</strong>
+            </div>
+          </article>
+          <article class="judge-card">
+            <div class="judge-photo-frame">
+              <span aria-hidden="true">J/02</span>
+              <img class="judge-photo" src="assets/judges/oldrabbit.jpg" alt="OldRabbit" width="400" height="400" loading="lazy" decoding="async" />
+            </div>
+            <div class="judge-copy">
+              <h3>OldRabbit</h3>
+              <p>Growth Lead</p>
+              <strong>NOXCAT</strong>
+            </div>
+          </article>
+          <article class="judge-card">
+            <div class="judge-photo-frame">
+              <span aria-hidden="true">J/03</span>
+              <img class="judge-photo" src="assets/judges/jacky-lu.jpg" alt="Jacky Lu" width="400" height="400" loading="lazy" decoding="async" />
+            </div>
+            <div class="judge-copy">
+              <h3>Jacky Lu</h3>
+              <p>Forward Deployment Engineer</p>
+              <strong>GMI Cloud</strong>
+            </div>
+          </article>
+          <article class="judge-card">
+            <div class="judge-photo-frame">
+              <span aria-hidden="true">J/04</span>
+              <img class="judge-photo" src="assets/judges/kason-kang.jpg" alt="Kason Kang" width="400" height="400" loading="lazy" decoding="async" />
+            </div>
+            <div class="judge-copy">
+              <h3>Kason Kang</h3>
+              <p>Deputy General Coordinator</p>
+              <strong>SITCON</strong>
+            </div>
+          </article>
+          <article class="judge-card">
+            <div class="judge-photo-frame">
+              <span aria-hidden="true">J/05</span>
+              <img class="judge-photo" src="assets/judges/poren-chiang.jpg" alt="Poren Chiang" width="400" height="400" loading="lazy" decoding="async" />
+            </div>
+            <div class="judge-copy">
+              <h3>Poren Chiang <span lang="zh-Hant">姜柏任</span></h3>
+              <p>Research Assistant</p>
+              <strong>Institute of Information Science, Academia Sinica</strong>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="resources" class="resources section-pad scroll-stack-card" aria-labelledby="resources-title">
+        <div class="section-heading section-heading--light">
+          <div>
+            <div class="section-kicker"><span>07</span> 活動資源</div>
+            <h2 id="resources-title">資源下載</h2>
+          </div>
+          <p>廠商技術文件、素材包與繳交範本將集中上架於此。</p>
+        </div>
+        <div id="resource-list" class="resource-list"></div>
+        <p class="resource-footnote">帳號額度與個人兌換碼可能透過報名信箱發送，不會出現在公開下載區。</p>
+      </section>
+
+      <section id="faq" class="faq section-pad scroll-stack-card" aria-labelledby="faq-title">
+        <div class="section-heading">
+          <div>
+            <div class="section-kicker"><span>08</span> 常見問題</div>
+            <h2 id="faq-title">常見問題</h2>
+          </div>
+          <p>其他問題請寄信至 <a href="mailto:ask@sitcon.org">ask@sitcon.org</a></p>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary><span>01</span>每天都要整天待在黑客松區嗎？<i></i></summary>
+            <p>不需要。每隊每日完成報到後可自由進出、外出用餐或參加 FUTUREMODE 議程；請留意舞台集合與作品繳交時間。</p>
+          </details>
+          <details>
+            <summary><span>02</span>可以提前開發嗎？<i></i></summary>
+            <p>一般賽道可提前準備與開發，但提交時須完整揭露使用的既有程式、模型、資料與第三方素材。指定創意賽道若使用現場公布素材，依該賽道獨立規則辦理。</p>
+          </details>
+          <details>
+            <summary><span>03</span>一定要開源嗎？<i></i></summary>
+            <p>是。總排名評選期間須提供可公開存取的程式碼儲存庫、README、授權檔案與執行方式；未提供者不具總排名評選資格。</p>
+          </details>
+          <details>
+            <summary><span>04</span>一隊可以參加幾個獎項？<i></i></summary>
+            <p>一隊提交一件主作品並選擇一條主賽道；同一作品可依使用技術與資格，同時角逐多個贊助商獎項。特殊創意賽道依獨立規則辦理。</p>
+          </details>
+          <details>
+            <summary><span>05</span>現場有網路、插座或住宿嗎？<i></i></summary>
+            <p>現場提供網路與插座，但建議自備延長線與行動網路備援。場地每日 17:00 關閉、不開放過夜，住宿與交通需自行安排。</p>
+          </details>
+          <details>
+            <summary><span>06</span>作品展示與資料可以用什麼語言？<i></i></summary>
+            <p>中文或英文皆可。若使用其他語言，主辦方不保證能提供翻譯或安排對應評審。</p>
+          </details>
+          <details>
+            <summary><span>07</span>作品與著作權歸誰？<i></i></summary>
+            <p>原則上歸參賽隊伍所有；使用主辦單位或贊助商提供的 IP、角色、音樂與素材時，仍須遵守個別授權條款。</p>
+          </details>
+          <details>
+            <summary><span>08</span>未進入前 10 名，第三天下午需要留下嗎？<i></i></summary>
+            <p>可自行安排。現場仍會進行決賽展示、總排名頒獎與閉幕。</p>
+          </details>
+        </div>
+      </section>
+          <div class="scroll-stack-end" aria-hidden="true"></div>
+        </div>
+      </div>
+    </main>
+
+    <dialog id="score-explorer" class="score-explorer" aria-labelledby="score-explorer-title">
+      <div class="score-explorer-shell">
+        <header class="score-explorer-head">
+          <div><span>B/ SCORE SYSTEM</span><strong id="score-explorer-round">評分項目</strong></div>
+          <button id="score-explorer-close" type="button">關閉評分說明</button>
+        </header>
+        <div class="score-explorer-layout">
+          <section class="score-explorer-visual" aria-label="評分比例圖表">
+            <div class="score-explorer-label"><span>INTERACTIVE SCORE MAP</span><b>選擇圓餅區塊以切換細項</b></div>
+            <div id="score-explorer-chart" class="score-explorer-chart"></div>
+          </section>
+          <section class="score-explorer-copy" aria-live="polite">
+            <div id="score-explorer-tabs" class="score-explorer-tabs" role="tablist" aria-label="選擇評分項目"></div>
+            <div class="score-explorer-meta">
+              <span id="score-explorer-index">01</span>
+              <div><small>評分項目</small><h2 id="score-explorer-title">評分細項</h2></div>
+              <b id="score-explorer-value">--%</b>
+            </div>
+            <ul id="score-explorer-details" class="score-explorer-details"></ul>
+            <p>可直接點擊左側其他扇形，或使用上方項目按鈕連續切換。</p>
+          </section>
+        </div>
+      </div>
+    </dialog>
+
+    <footer class="site-footer">
+      <div class="footer-title"><span>BUILD</span><span>MODE</span><span>2026.</span></div>
+      <div class="footer-meta">
+        <div><strong>BUILDMODE GEN-AI HACKATHON 2026</strong><span>FUTUREMODE × SITCON</span></div>
+        <div><span>2026.09.04–06</span><span>台北花博爭艷館</span></div>
+        <div><a href="mailto:ask@sitcon.org">ask@sitcon.org</a><a href="https://www.futuremode.xyz/hackathon" target="_blank" rel="noreferrer">官方網站</a></div>
+      </div>
+      <p>所有時間以台北時間（UTC+8）及現場最新公告為準。</p>
+    </footer>
+
+    <nav class="mobile-dock" aria-label="手機版重要連結">
+      <a href="#schedule">目前賽程</a>
+      <a href="#actions">重要表單</a>
+    </nav>
+  </body>
+</html>

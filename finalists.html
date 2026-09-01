@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 總排名前 10 名與候補名單。" />
+    <meta name="theme-color" content="#11120f" />
+    <title>決賽名單｜BUILDMODE GEN-AI HACKATHON 2026</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/animejs@4.2.2/dist/bundles/anime.umd.min.js"
+      integrity="sha384-WxuE+98aTTR32yUCKdZWcpkcOiw9u2Hq1AiAnXM2Dts06K0D23kYXesJSuq1OeLZ"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <script src="finalists.js" defer></script>
+  </head>
+  <body class="results-body">
+    <a class="skip-link" href="#results-main">跳至主要內容</a>
+    <header class="site-header results-header">
+      <a class="brand" href="index.html" aria-label="返回活動資訊首頁">
+        <span class="brand-mark" aria-hidden="true">B/</span>
+        <span><strong>BUILDMODE</strong><small>FUTUREMODE × SITCON</small></span>
+      </a>
+      <a class="results-back" href="index.html">活動資訊</a>
+    </header>
+
+    <main id="results-main" class="results-page">
+      <section class="results-hero" aria-labelledby="results-title">
+        <div class="hero-grid" aria-hidden="true"></div>
+        <div>
+          <p class="results-kicker">2026.09.06 · 14:10 公布</p>
+          <h1 id="results-title">決賽名單</h1>
+          <p>第一輪評選完成後，本頁將公布總排名前 10 名與候補隊伍。</p>
+        </div>
+        <div class="results-status"><i></i><span id="results-status">名單尚未公布</span></div>
+      </section>
+
+      <section class="results-section results-section--finalists" aria-labelledby="finalists-title">
+        <div class="results-section-head">
+          <div><span>01</span><h2 id="finalists-title">總排名前 10 名</h2></div>
+          <p id="finalist-count">0 / 10 隊</p>
+        </div>
+        <div id="finalist-list" class="ranking-list"></div>
+      </section>
+
+      <section class="results-section results-section--waitlist" aria-labelledby="waitlist-title">
+        <div class="results-section-head">
+          <div><span>02</span><h2 id="waitlist-title">候補名單</h2></div>
+          <p id="waitlist-count">0 隊</p>
+        </div>
+        <div id="waitlist-list" class="ranking-list ranking-list--waitlist"></div>
+      </section>
+    </main>
+
+    <footer class="results-footer">
+      <strong>BUILDMODE GEN-AI HACKATHON 2026</strong>
+      <span>名單以主辦單位最終公告為準</span>
+      <a href="mailto:ask@sitcon.org">ask@sitcon.org</a>
+    </footer>
+  </body>
+</html>
