@@ -215,7 +215,7 @@
   {"id":"T217","name":"OMG (2)","track":"AI for Taiwan／Social Impact"},
   {"id":"T218","name":"OneOneTalk AI","track":"AI Agents & Automation"},
   {"id":"T219","name":"Open · 未來鄉愁吉普賽","track":"AI for Everyday Life"},
-  {"id":"T220","name":"P and Pi","track":"AI for Everyday Life"},
+  {"id":"T220","name":"P and Pi (1)","track":"AI for Everyday Life"},
   {"id":"T221","name":"Paper2Proof","track":"AI Agents & Automation"},
   {"id":"T222","name":"PDTEST","track":"Future of Work"},
   {"id":"T223","name":"PhiloPhilo","track":"AI for Everyday Life"},
@@ -257,5 +257,6 @@
   {"id":"T259","name":"ZERooNEZEROZERO","track":"AI for Taiwan／Social Impact"},
   {"id":"T260","name":"Zzyzx Labs","track":"AI Agents & Automation"},
   {"id":"T261","name":"AIIA","track":"AI × Creative Technology"},
-  {"id":"T262","name":"lulupay","track":"AI Agents & Automation"}
+  {"id":"T262","name":"lulupay","track":"AI Agents & Automation"},
+  {"id":"T263","name":"P and Pi (2)","track":"AI for Taiwan／Social Impact"}
 ]
