@@ -351,11 +351,9 @@ function renderTeams(query = "", track = "all") {
       const trackId = teamTrackIds[team.track] || "—";
       return `
         <article class="team-card">
-          <span><b>${escapeHTML(team.id)}</b><b>賽道 ${escapeHTML(trackId)}</b></span>
-          <div>
-            <h3>${escapeHTML(team.name)}</h3>
-            <p>${escapeHTML(team.track)}</p>
-          </div>
+          <b class="team-id">${escapeHTML(team.id)}</b>
+          <h3>${escapeHTML(team.name)}</h3>
+          <span class="team-track"><b>${escapeHTML(trackId)}</b>${escapeHTML(team.track)}</span>
         </article>`;
     })
     .join("");
@@ -965,7 +963,7 @@ function setupScrollStack() {
   const stack = document.querySelector("[data-scroll-stack]");
   if (!stack) return;
 
-  const cards = [...stack.querySelectorAll(".scroll-stack-card")];
+  const cards = [...stack.querySelectorAll(".scroll-stack-card:not(.scroll-stack-card--static)")];
   const end = stack.querySelector(".scroll-stack-end");
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointer = window.matchMedia("(pointer: coarse)");

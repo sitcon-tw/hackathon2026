@@ -1494,8 +1494,14 @@ select {
 }
 
 .teams {
+  z-index: 5;
   background: var(--ink-soft);
   color: #fff;
+}
+
+.teams.scroll-stack-card--static {
+  overflow: visible;
+  transform: none !important;
 }
 
 .teams .section-heading > p {
@@ -1503,10 +1509,14 @@ select {
 }
 
 .team-toolbar {
+  position: sticky;
+  z-index: 2;
+  top: 78px;
   display: grid;
   grid-template-columns: 1fr minmax(220px, 0.36fr);
   margin-bottom: 25px;
   border: 1px solid rgba(255, 255, 255, 0.45);
+  background: var(--ink-soft);
 }
 
 .team-toolbar label {
@@ -1548,25 +1558,22 @@ select {
 }
 
 .team-list {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
   border-top: 1px solid rgba(255, 255, 255, 0.38);
   border-left: 1px solid rgba(255, 255, 255, 0.38);
 }
 
 .team-card {
-  display: flex;
-  min-height: 180px;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 24px;
+  display: grid;
+  min-height: 76px;
+  grid-template-columns: 100px minmax(0, 1fr) minmax(240px, 0.42fr);
+  align-items: stretch;
   border-right: 1px solid rgba(255, 255, 255, 0.38);
   border-bottom: 1px solid rgba(255, 255, 255, 0.38);
 }
 
-.team-card > span {
-  display: flex;
-  justify-content: space-between;
+.team-id {
+  display: grid;
+  place-items: center;
   color: #fff;
   font-size: 12px;
   font-weight: 900;
@@ -1574,15 +1581,29 @@ select {
 }
 
 .team-card h3 {
-  margin: 25px 0 0;
-  font-size: 25px;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 16px 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.38);
+  border-left: 1px solid rgba(255, 255, 255, 0.38);
+  font-size: 20px;
   line-height: 1.2;
 }
 
-.team-card p {
-  margin: 6px 0 0;
+.team-track {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 20px;
   color: #fff;
   font-size: 12px;
+}
+
+.team-track b {
+  color: var(--acid);
+  font-size: 14px;
 }
 
 .team-empty {
@@ -3009,6 +3030,22 @@ body.score-explorer-open {
   .team-toolbar label:first-child {
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  }
+
+  .team-card {
+    grid-template-columns: 72px minmax(0, 1fr);
+  }
+
+  .team-card h3 {
+    padding: 14px;
+    border-right: 0;
+    font-size: 17px;
+  }
+
+  .team-track {
+    grid-column: 1 / -1;
+    padding: 10px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.38);
   }
 
   .team-empty {
