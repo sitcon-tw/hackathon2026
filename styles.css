@@ -1562,14 +1562,8 @@ select {
 }
 
 .teams {
-  z-index: 5;
   background: var(--ink-soft);
   color: #fff;
-}
-
-.teams.scroll-stack-card--static {
-  overflow: visible;
-  transform: none !important;
 }
 
 .teams .section-heading > p {
@@ -1577,9 +1571,6 @@ select {
 }
 
 .team-toolbar {
-  position: sticky;
-  z-index: 2;
-  top: 78px;
   display: grid;
   grid-template-columns: 1fr minmax(220px, 0.36fr);
   margin-bottom: 25px;
@@ -1626,8 +1617,16 @@ select {
 }
 
 .team-list {
+  height: clamp(460px, 68vh, 760px);
   border-top: 1px solid rgba(255, 255, 255, 0.38);
   border-left: 1px solid rgba(255, 255, 255, 0.38);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.team-list:focus-visible {
+  outline: 2px solid var(--acid);
+  outline-offset: 4px;
 }
 
 .team-card {
@@ -1676,7 +1675,7 @@ select {
 
 .team-empty {
   display: grid;
-  min-height: 340px;
+  min-height: 100%;
   grid-column: 1 / -1;
   place-items: center;
   border-right: 1px solid rgba(255, 255, 255, 0.38);
@@ -2987,8 +2986,7 @@ body.score-explorer-open {
   }
 
   .rule-grid,
-  .track-grid,
-  .team-list {
+  .track-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3096,6 +3094,10 @@ body.score-explorer-open {
   .team-toolbar label:first-child {
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.45);
+  }
+
+  .team-list {
+    height: clamp(420px, 62vh, 620px);
   }
 
   .team-card {

@@ -243,7 +243,7 @@
         </div>
       </section>
 
-      <section id="teams" class="teams section-pad scroll-stack-card scroll-stack-card--static" aria-labelledby="teams-title">
+      <section id="teams" class="teams section-pad scroll-stack-card" aria-labelledby="teams-title" data-stack-interactive>
         <div class="section-heading section-heading--light">
           <div>
             <div class="section-kicker"><span>03</span> 參賽隊伍</div>
@@ -270,7 +270,7 @@
             </select>
           </label>
         </div>
-        <div id="team-list" class="team-list"></div>
+        <div id="team-list" class="team-list" tabindex="0" aria-label="隊伍名單，可捲動" data-lenis-prevent></div>
       </section>
 
       <section id="judging" class="judging section-pad scroll-stack-card" aria-labelledby="judging-title">

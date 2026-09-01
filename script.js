@@ -976,7 +976,7 @@ function setupScrollStack() {
   const stack = document.querySelector("[data-scroll-stack]");
   if (!stack) return;
 
-  const cards = [...stack.querySelectorAll(".scroll-stack-card:not(.scroll-stack-card--static)")];
+  const cards = [...stack.querySelectorAll(".scroll-stack-card")];
   const end = stack.querySelector(".scroll-stack-end");
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const coarsePointer = window.matchMedia("(pointer: coarse)");
@@ -1002,6 +1002,7 @@ function setupScrollStack() {
       cardTops: cards.map(getDocumentTop),
       cardHeights: cards.map((card) => card.offsetHeight),
       endTop: getDocumentTop(end),
+      headerHeight: document.querySelector("[data-header]")?.offsetHeight || 0,
     };
     updateCardTransforms();
   };
@@ -1019,7 +1020,11 @@ function setupScrollStack() {
       const cardHeight = metrics.cardHeights[index];
       const preferredStackTop = stackPosition + 12 * index;
       const tallStackTop = containerHeight - cardHeight - 58 + 8 * index;
-      const pinnedTop = cardHeight > containerHeight * 0.84 ? Math.min(preferredStackTop, tallStackTop) : preferredStackTop;
+      const pinnedTop = card.hasAttribute("data-stack-interactive")
+        ? Math.max(preferredStackTop, metrics.headerHeight + 18)
+        : cardHeight > containerHeight * 0.84
+          ? Math.min(preferredStackTop, tallStackTop)
+          : preferredStackTop;
       const pinStart = cardTop - pinnedTop;
       const triggerEnd = pinStart + Math.min(containerHeight * 0.48, 360);
       const scaleProgress = calculateProgress(scrollTop, pinStart, triggerEnd);
