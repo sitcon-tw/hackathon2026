@@ -2428,14 +2428,18 @@ body.score-explorer-open {
   line-height: 0.65;
 }
 
-.footer-title span:nth-child(2) {
+.footer-title > :nth-child(2) {
   margin-left: 9vw;
   color: transparent;
   -webkit-text-stroke: 2px var(--ink);
 }
 
-.footer-title span:nth-child(3) {
+.footer-title > :nth-child(3) {
   align-self: flex-end;
+}
+
+.footer-title a {
+  text-decoration: none;
 }
 
 .footer-meta {
@@ -3269,7 +3273,7 @@ body.score-explorer-open {
     font-size: clamp(36px, 12vw, 48px);
   }
 
-  .footer-title span:nth-child(2) {
+  .footer-title > :nth-child(2) {
     margin-left: 0;
   }
 

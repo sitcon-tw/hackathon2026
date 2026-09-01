@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 主題曲〈把未來做出來〉互動播放頁。" />
+    <meta name="theme-color" content="#090a08" />
+    <meta property="og:title" content="把未來做出來｜BUILDMODE 主題曲" />
+    <meta property="og:description" content="FUTUREMODE × SITCON，三天，把腦中的未來做出來。" />
+    <title>把未來做出來｜BUILDMODE 主題曲</title>
+    <link rel="stylesheet" href="anthem.css" />
+    <script src="anthem.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#anthem-main">跳至播放器</a>
+    <canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
+    <div class="page-grid" aria-hidden="true"></div>
+    <div class="page-noise" aria-hidden="true"></div>
+
+    <header class="anthem-header">
+      <a class="anthem-brand" href="index.html" aria-label="返回 BUILDMODE 活動資訊首頁">
+        <span aria-hidden="true">B/</span>
+        <strong>BUILDMODE</strong>
+      </a>
+      <p><span>TRACK 01</span> / EASTER EGG</p>
+      <a class="back-link" href="index.html">返回活動資訊 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main id="anthem-main" class="anthem-layout">
+      <section class="anthem-stage" aria-labelledby="anthem-title">
+        <div class="stage-status">
+          <span><i id="status-dot" aria-hidden="true"></i><b id="audio-status">AUDIO READY</b></span>
+          <span>FUTUREMODE × SITCON · 2026</span>
+        </div>
+
+        <div class="title-block">
+          <p class="title-kicker">OFFICIAL HACKATHON ANTHEM</p>
+          <h1 id="anthem-title">
+            <span>把未來</span>
+            <span class="title-outline">做出來</span>
+          </h1>
+          <p class="title-note">三天。一個想法。一群人。把它做出來。</p>
+        </div>
+
+        <div class="visualizer" data-playing="false">
+          <canvas id="wave-canvas" aria-hidden="true"></canvas>
+          <div class="visualizer-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+          <button id="play-button" class="play-button" type="button" aria-label="播放〈把未來做出來〉">
+            <span class="play-icon" aria-hidden="true"></span>
+          </button>
+          <div class="visualizer-label" aria-hidden="true"><span>LIVE AUDIO SIGNAL</span><span>48 BANDS</span></div>
+        </div>
+
+        <div class="current-lyric" aria-live="polite">
+          <span>NOW / 現在唱到</span>
+          <strong id="current-lyric">按下播放，把未來做出來。</strong>
+        </div>
+
+        <div class="player-controls">
+          <time id="current-time" datetime="PT0S">00:00</time>
+          <label class="seek-label">
+            <span class="sr-only">歌曲進度</span>
+            <input id="seek-control" type="range" min="0" max="1000" value="0" aria-valuetext="00:00 / --:--" />
+          </label>
+          <time id="duration" datetime="">--:--</time>
+        </div>
+        <audio id="anthem-audio" preload="metadata" playsinline>
+          <source src="把未來做出來.mp3" type="audio/mpeg" />
+          你的瀏覽器不支援音訊播放。
+        </audio>
+
+        <div class="stage-footer" aria-hidden="true">
+          <span>BUILD / BREAK / REBUILD</span>
+          <span>09.04—09.06</span>
+          <span>TAIPEI</span>
+        </div>
+      </section>
+
+      <aside class="lyrics-panel" aria-labelledby="lyrics-title">
+        <header class="lyrics-header">
+          <div>
+            <span>FULL LYRICS</span>
+            <h2 id="lyrics-title">歌詞</h2>
+          </div>
+          <p><b id="lyric-position">000</b> / <span id="lyric-total">---</span></p>
+        </header>
+        <div id="lyrics-scroll" class="lyrics-scroll" tabindex="0" aria-label="〈把未來做出來〉完整歌詞">
+          <ol id="lyrics-list" class="lyrics-list" aria-live="polite">
+            <li class="lyrics-loading">LOADING LYRICS<span>...</span></li>
+          </ol>
+        </div>
+        <footer class="lyrics-footer">
+          <span>點一句歌詞可跳到對應段落</span>
+          <span>AUTO FLOW / ON</span>
+        </footer>
+      </aside>
+    </main>
+  </body>
+</html>
