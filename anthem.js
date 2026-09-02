@@ -13,7 +13,38 @@ const lyricPosition = document.querySelector("#lyric-position");
 const lyricTotal = document.querySelector("#lyric-total");
 const waveCanvas = document.querySelector("#wave-canvas");
 const ambientCanvas = document.querySelector("#ambient-canvas");
+const audioSource = audio.querySelector("source");
+const trackSwitcher = document.querySelector("#track-switcher");
+const trackIndex = document.querySelector("#track-index");
+const titleBlock = document.querySelector(".title-block");
+const titleKicker = document.querySelector("#title-kicker");
+const trackTitleFirst = document.querySelector("#track-title-first");
+const trackTitleSecond = document.querySelector("#track-title-second");
+const titleNote = document.querySelector("#title-note");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+const tracks = [
+  {
+    title: "把未來做出來",
+    titleLines: ["把未來", "做出來"],
+    note: "三天。一個想法。一群人。把它做出來。",
+    prompt: "按下播放，把未來做出來。",
+    prelude: "前奏 / SIGNAL INCOMING",
+    audio: "assets/audio/把未來做出來.mp3",
+    lyrics: "assets/audio/把未來做出來.lrc",
+    language: "zh-Hant",
+  },
+  {
+    title: "Tonight Is Ours to Keep",
+    titleLines: ["Tonight Is", "Ours to Keep"],
+    note: "We found a spark in the noise. Tonight is ours to keep.",
+    prompt: "Press play. Tonight is ours to keep.",
+    prelude: "INTRO / SIGNAL INCOMING",
+    audio: "assets/audio/Tonight Is Ours to Keep.mp3",
+    lyrics: "assets/audio/Tonight Is Ours to Keep.lrc",
+    language: "en",
+  },
+];
 
 let audioContext = null;
 let analyser = null;
@@ -23,6 +54,7 @@ let waveformData = null;
 let lyricLines = [];
 let activeLyricIndex = -1;
 let animationFrame = 0;
+let activeTrackIndex = 0;
 
 function formatTime(value) {
   if (!Number.isFinite(value)) return "--:--";
@@ -38,8 +70,9 @@ function setStatus(text, state = "ready") {
 
 function updatePlayerState() {
   const playing = !audio.paused && !audio.ended;
+  const track = tracks[activeTrackIndex];
   playButton.classList.toggle("is-playing", playing);
-  playButton.setAttribute("aria-label", playing ? "暫停〈把未來做出來〉" : "播放〈把未來做出來〉");
+  playButton.setAttribute("aria-label", `${playing ? "暫停" : "播放"}〈${track.title}〉`);
   visualizer.dataset.playing = String(playing);
   setStatus(playing ? "SIGNAL LIVE" : audio.ended ? "TRACK ENDED" : "AUDIO READY", playing ? "live" : "ready");
 }
@@ -141,7 +174,7 @@ function updateActiveLyric(currentTime) {
   if (nextIndex === activeLyricIndex) {
     if (nextIndex < 0) {
       lyricPosition.textContent = "000";
-      currentLyric.textContent = "前奏 / SIGNAL INCOMING";
+      currentLyric.textContent = tracks[activeTrackIndex].prelude;
     }
     return;
   }
@@ -153,7 +186,7 @@ function updateActiveLyric(currentTime) {
   if (nextIndex < 0) {
     activeLyricIndex = -1;
     lyricPosition.textContent = "000";
-    currentLyric.textContent = "前奏 / SIGNAL INCOMING";
+    currentLyric.textContent = tracks[activeTrackIndex].prelude;
     return;
   }
 
@@ -219,14 +252,51 @@ function renderLyrics(source) {
   updateActiveLyric(audio.currentTime);
 }
 
-async function loadLyrics() {
+async function loadLyrics(requestedTrackIndex = activeTrackIndex) {
   try {
-    const response = await fetch("lyric.lrc");
+    const response = await fetch(tracks[requestedTrackIndex].lyrics);
     if (!response.ok) throw new Error("Lyrics unavailable");
-    renderLyrics(await response.text());
+    const source = await response.text();
+    if (requestedTrackIndex !== activeTrackIndex) return;
+    renderLyrics(source);
   } catch {
+    if (requestedTrackIndex !== activeTrackIndex) return;
     lyricsList.innerHTML = '<li class="lyrics-error">歌詞載入失敗，請重新整理頁面。</li>';
   }
+}
+
+function selectTrack(nextTrackIndex) {
+  if (nextTrackIndex === activeTrackIndex || !tracks[nextTrackIndex]) return;
+
+  audio.pause();
+  activeTrackIndex = nextTrackIndex;
+  const track = tracks[activeTrackIndex];
+  activeLyricIndex = -1;
+  lyricLines = [];
+  audioSource.src = track.audio;
+  audio.load();
+  titleBlock.lang = track.language;
+  titleBlock.classList.toggle("is-english", track.language === "en");
+  titleKicker.textContent = `OFFICIAL HACKATHON TRACK / ${String(activeTrackIndex + 1).padStart(2, "0")}`;
+  trackIndex.textContent = `TRACK ${String(activeTrackIndex + 1).padStart(2, "0")}`;
+  trackTitleFirst.textContent = track.titleLines[0];
+  trackTitleSecond.textContent = track.titleLines[1];
+  titleNote.textContent = track.note;
+  currentLyric.textContent = track.prompt;
+  currentLyric.lang = track.language;
+  lyricsList.lang = track.language;
+  lyricsScroll.setAttribute("aria-label", `〈${track.title}〉完整歌詞`);
+  lyricPosition.textContent = "000";
+  lyricTotal.textContent = "---";
+  lyricsList.innerHTML = '<li class="lyrics-loading">LOADING LYRICS<span>...</span></li>';
+  trackSwitcher.querySelectorAll("[data-track-index]").forEach((button, index) => {
+    const selected = index === activeTrackIndex;
+    button.setAttribute("aria-selected", String(selected));
+    button.tabIndex = selected ? 0 : -1;
+  });
+  updateProgress();
+  updatePlayerState();
+  loadLyrics(activeTrackIndex);
 }
 
 function sizeCanvas(canvas) {
@@ -331,6 +401,21 @@ function resizeCanvases() {
 }
 
 playButton.addEventListener("click", togglePlayback);
+trackSwitcher.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-track-index]");
+  if (button) selectTrack(Number(button.dataset.trackIndex));
+});
+trackSwitcher.addEventListener("keydown", (event) => {
+  if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+  event.preventDefault();
+  let nextTrackIndex = activeTrackIndex;
+  if (event.key === "ArrowLeft") nextTrackIndex = (activeTrackIndex + tracks.length - 1) % tracks.length;
+  if (event.key === "ArrowRight") nextTrackIndex = (activeTrackIndex + 1) % tracks.length;
+  if (event.key === "Home") nextTrackIndex = 0;
+  if (event.key === "End") nextTrackIndex = tracks.length - 1;
+  selectTrack(nextTrackIndex);
+  trackSwitcher.querySelector(`[data-track-index="${nextTrackIndex}"]`).focus();
+});
 audio.addEventListener("play", updatePlayerState);
 audio.addEventListener("pause", updatePlayerState);
 audio.addEventListener("ended", updatePlayerState);

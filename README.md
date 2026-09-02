@@ -36,4 +36,8 @@ python3 -m http.server 8000
 
 表單 URL 設定完成後，按鈕會在 `SITE_CONFIG.actionRelease` 指定時間開放。若 URL 仍為空字串，按鈕會安全維持停用並顯示「連結待主辦補上」。
 
+## 主題曲檔案
+
+音訊與同步歌詞統一放在 `assets/audio/`，每首歌的 MP3 與 LRC 使用相同檔名。播放器曲目設定位於 `anthem.js` 的 `tracks` 陣列。
+
 要上架廠商資源時，將檔案放入 `resources/`，再於 `resources` 陣列填入相對路徑。個人兌換碼、API Key 或含個資的檔案不應放入公開下載區。

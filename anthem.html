@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 主題曲〈把未來做出來〉互動播放頁。" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 雙曲互動播放頁：〈把未來做出來〉與〈Tonight Is Ours to Keep〉。" />
     <meta name="theme-color" content="#090a08" />
-    <meta property="og:title" content="把未來做出來｜BUILDMODE 主題曲" />
-    <meta property="og:description" content="FUTUREMODE × SITCON，三天，把腦中的未來做出來。" />
-    <title>把未來做出來｜BUILDMODE 主題曲</title>
+    <meta property="og:title" content="BUILDMODE SONGBOOK｜Hackathon Tracks" />
+    <meta property="og:description" content="FUTUREMODE × SITCON，兩首歌記下三天一起完成作品的時刻。" />
+    <title>BUILDMODE SONGBOOK｜Hackathon Tracks</title>
     <link rel="stylesheet" href="anthem.css" />
     <script src="anthem.js" defer></script>
   </head>
@@ -22,7 +22,7 @@
         <span aria-hidden="true">B/</span>
         <strong>BUILDMODE</strong>
       </a>
-      <p><span>TRACK 01</span> / EASTER EGG</p>
+      <p><span id="track-index">TRACK 01</span> / SONGBOOK</p>
       <a class="back-link" href="index.html">返回活動資訊 <span aria-hidden="true">↗</span></a>
     </header>
 
@@ -34,12 +34,12 @@
         </div>
 
         <div class="title-block">
-          <p class="title-kicker">OFFICIAL HACKATHON ANTHEM</p>
+          <p id="title-kicker" class="title-kicker">OFFICIAL HACKATHON TRACK / 01</p>
           <h1 id="anthem-title">
-            <span>把未來</span>
-            <span class="title-outline">做出來</span>
+            <span id="track-title-first">把未來</span>
+            <span id="track-title-second" class="title-outline">做出來</span>
           </h1>
-          <p class="title-note">三天。一個想法。一群人。把它做出來。</p>
+          <p id="title-note" class="title-note">三天。一個想法。一群人。把它做出來。</p>
         </div>
 
         <div class="visualizer" data-playing="false">
@@ -65,7 +65,7 @@
           <time id="duration" datetime="">--:--</time>
         </div>
         <audio id="anthem-audio" preload="metadata" playsinline>
-          <source src="把未來做出來.mp3" type="audio/mpeg" />
+          <source src="assets/audio/把未來做出來.mp3" type="audio/mpeg" />
           你的瀏覽器不支援音訊播放。
         </audio>
 
@@ -84,6 +84,14 @@
           </div>
           <p><b id="lyric-position">000</b> / <span id="lyric-total">---</span></p>
         </header>
+        <div id="track-switcher" class="track-switcher" role="tablist" aria-label="選擇歌曲">
+          <button type="button" role="tab" data-track-index="0" aria-selected="true" aria-controls="lyrics-list">
+            <small>TRACK 01 · 04:43</small><strong>把未來做出來</strong>
+          </button>
+          <button type="button" role="tab" data-track-index="1" aria-selected="false" aria-controls="lyrics-list" tabindex="-1">
+            <small>TRACK 02 · 03:39</small><strong lang="en">Tonight Is Ours to Keep</strong>
+          </button>
+        </div>
         <div id="lyrics-scroll" class="lyrics-scroll" tabindex="0" aria-label="〈把未來做出來〉完整歌詞">
           <ol id="lyrics-list" class="lyrics-list" aria-live="polite">
             <li class="lyrics-loading">LOADING LYRICS<span>...</span></li>
