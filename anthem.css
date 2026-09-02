@@ -566,8 +566,12 @@ body.is-ready .title-block h1 > span:nth-child(2) {
   transition: background 160ms ease, color 160ms ease;
 }
 
-.track-switcher button:last-child {
+.track-switcher button:nth-child(even) {
   border-right: 0;
+}
+
+.track-switcher button:nth-child(-n + 2) {
+  border-bottom: 1px solid var(--line);
 }
 
 .track-switcher button:hover {

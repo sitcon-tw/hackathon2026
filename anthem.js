@@ -44,6 +44,26 @@ const tracks = [
     lyrics: "assets/audio/Tonight Is Ours to Keep.lrc",
     language: "en",
   },
+  {
+    title: "Break the Horizon",
+    titleLines: ["Break the", "Horizon"],
+    note: "Hands on the future. Break the horizon.",
+    prompt: "Press play. Break the horizon.",
+    prelude: "INTRO / ENGINES STARTING",
+    audio: "assets/audio/Break the Horizon.mp3",
+    lyrics: "assets/audio/Break the Horizon.lrc",
+    language: "en",
+  },
+  {
+    title: "今天沒有 Bug",
+    titleLines: ["今天沒有", "Bug"],
+    note: "綠燈亮得多漂亮。今天沒有 Bug。",
+    prompt: "按下播放，今天沒有 Bug。",
+    prelude: "前奏 / GOOD BUILD INCOMING",
+    audio: "assets/audio/今天沒有Bug.mp3",
+    lyrics: "assets/audio/今天沒有Bug.lrc",
+    language: "zh-Hant",
+  },
 ];
 
 let audioContext = null;
