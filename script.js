@@ -76,10 +76,10 @@ const resources = [
     download: true,
   },
   {
-    type: "廠商資料",
-    title: "廠商技術與素材包",
-    description: "API 文件、素材、挑戰條件與授權說明將集中上架。",
-    url: "",
+    type: "ATLAS · API",
+    title: "Atlas API 使用指南",
+    description: "完成帳號註冊、取得 API Key，開始串接 Pull API 與 WebSocket。",
+    url: "atlas.html",
   },
   {
     type: "場地 PDF",
@@ -295,11 +295,11 @@ function renderResources() {
           ${available && resource.download ? "download" : ""}
         >
           <div>
-            <small>${escapeHTML(resource.type)} · ${available ? "可下載" : "待上架"}</small>
+            <small>${escapeHTML(resource.type)} · ${available ? (resource.download ? "可下載" : "前往查看") : "待上架"}</small>
             <strong>${escapeHTML(resource.title)}</strong>
             <p>${escapeHTML(resource.description)}</p>
           </div>
-          <span aria-hidden="true">${available ? "↓" : "··"}</span>
+          <span aria-hidden="true">${available ? (resource.download ? "↓" : "→") : "··"}</span>
         </a>`;
     })
     .join("");

@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE 參賽者 Atlas API 帳號註冊、API Key 與 Pull API、WebSocket 串接指南。" />
+    <meta name="theme-color" content="#11120f" />
+    <meta property="og:title" content="Atlas API 使用指南｜BUILDMODE 2026" />
+    <meta property="og:description" content="使用申請時的相同 Email 建立免費帳號，取得 API Key 並開始串接 Atlas。" />
+    <title>Atlas API 使用指南｜BUILDMODE 2026</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="atlas-body">
+    <a class="skip-link" href="#atlas-main">跳至 Atlas API 使用指南</a>
+
+    <header class="site-header results-header">
+      <a class="brand" href="index.html" aria-label="BUILDMODE 回到首頁">
+        <span class="brand-mark" aria-hidden="true">B/</span>
+        <span>
+          <strong>BUILDMODE</strong>
+          <small>FUTUREMODE × SITCON</small>
+        </span>
+      </a>
+      <a class="results-back" href="index.html#resources">返回資源下載</a>
+    </header>
+
+    <main id="atlas-main" class="atlas-page">
+      <section class="atlas-hero" aria-labelledby="atlas-title">
+        <div class="atlas-hero-copy">
+          <p class="atlas-kicker">PARTNER RESOURCE / ATLAS ORACLE</p>
+          <h1 id="atlas-title"><span>ATLAS API</span><em>ONBOARDING</em></h1>
+          <p>
+            已申請 Atlas API 的參賽者，請使用<strong>申請時填寫的相同 Email</strong>建立免費帳號，再依下方步驟取得 API Key。
+          </p>
+          <div class="atlas-actions">
+            <a class="atlas-button atlas-button--primary" href="https://atlasoracle.io/pricing" target="_blank" rel="noreferrer">建立免費帳號 <span aria-hidden="true">↗</span></a>
+            <a class="atlas-button" href="#atlas-guides">查看串接文件 <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+
+        <aside class="atlas-quick-start" aria-label="Atlas 快速開始">
+          <header><span>QUICK START</span><b>04 STEPS</b></header>
+          <ol>
+            <li><span>01</span><div><small>ACCOUNT</small><strong>使用相同 Email 註冊 Free 帳號</strong></div></li>
+            <li><span>02</span><div><small>USER CENTER</small><strong>登入後開啟 API Credentials</strong></div></li>
+            <li><span>03</span><div><small>API KEY</small><strong>立即複製並安全保存金鑰</strong></div></li>
+            <li><span>04</span><div><small>INTEGRATE</small><strong>依需求選擇 SDK 或直接串接</strong></div></li>
+          </ol>
+          <p><i aria-hidden="true"></i> ATLAS PULL ACCESS / READY</p>
+        </aside>
+      </section>
+
+      <section class="atlas-guide-section" aria-labelledby="atlas-steps-title">
+        <header class="atlas-section-head">
+          <div><span>01 / ONBOARDING</span><h2 id="atlas-steps-title">從帳號到 API Key</h2></div>
+          <p>按照順序完成設定。整個流程不需要在本頁輸入帳號或金鑰。</p>
+        </header>
+
+        <ol class="atlas-step-grid">
+          <li>
+            <span class="atlas-step-no">01</span>
+            <small>CREATE ACCOUNT</small>
+            <h3>用相同 Email 建立帳號</h3>
+            <p>前往 Atlas Pricing 頁面選擇 Free 方案，並使用申請 Atlas API 時填寫的相同 Email 完成註冊與登入。</p>
+            <a href="https://atlasoracle.io/pricing" target="_blank" rel="noreferrer">前往 Atlas Pricing <span aria-hidden="true">↗</span></a>
+          </li>
+          <li>
+            <span class="atlas-step-no">02</span>
+            <small>USER CENTER</small>
+            <h3>開啟 API Credentials</h3>
+            <p>登入後，由網站上方導覽進入 User Center。在 API Credentials 區塊即可查看帳號的 API Key。</p>
+          </li>
+          <li>
+            <span class="atlas-step-no">03</span>
+            <small>STORE THE KEY</small>
+            <h3>立即複製並安全保存</h3>
+            <p>金鑰顯示時立即存入 secret manager 或安全的環境變數；不要提交至公開程式庫，也不要貼在公開頻道。</p>
+          </li>
+          <li>
+            <span class="atlas-step-no">04</span>
+            <small>REGENERATE</small>
+            <h3>遺失時重新產生</h3>
+            <p>遺失的 API Key 無法復原。使用 Regenerate Key 會立即使舊金鑰失效，請同步更新使用中的服務。</p>
+          </li>
+        </ol>
+      </section>
+
+      <section class="atlas-guardrails" aria-label="Atlas API 使用提醒">
+        <article>
+          <span>SECURITY / 01</span>
+          <h2>API Key 是機密資料</h2>
+          <p>只在伺服器端或受控環境使用。若懷疑金鑰外洩，請立即重新產生並替換舊金鑰。</p>
+        </article>
+        <article>
+          <span>ACCESS / 02</span>
+          <h2>這把 Key 用於 Pull，不是 Push</h2>
+          <p>API 與 WebSocket 的讀取由 API Key 授權；on-chain Push feed 則使用 contract whitelist，請勿混用兩種授權方式。</p>
+        </article>
+      </section>
+
+      <section id="atlas-guides" class="atlas-doc-section" aria-labelledby="atlas-guides-title">
+        <header class="atlas-section-head atlas-section-head--dark">
+          <div><span>02 / DOCUMENTATION</span><h2 id="atlas-guides-title">選擇串接方式</h2></div>
+          <p>兩份文件皆由 Atlas 提供，會在新的分頁開啟。</p>
+        </header>
+        <div class="atlas-doc-grid">
+          <a href="https://docs.google.com/document/d/12O8CZ428h0gYwD86nWvXNzpMHk_S_lEzJtoPO-a0RwM/edit?usp=sharing" target="_blank" rel="noreferrer">
+            <small>GUIDE / 01</small>
+            <strong>Pull API &amp;<br />WebSocket</strong>
+            <p>帳號設定、驗證、Pull API 與即時 WebSocket 資料讀取指南。</p>
+            <span>OPEN USER GUIDE <b aria-hidden="true">↗</b></span>
+          </a>
+          <a href="https://docs.google.com/document/d/10ry1L-Vk14qViVjfcJ7J2A1pI6JcJCEbfoYxyZRoX5s/edit?usp=sharing" target="_blank" rel="noreferrer">
+            <small>GUIDE / 02</small>
+            <strong>WITH SDK /<br />WITHOUT SDK</strong>
+            <p>依專案需求選擇使用 Atlas SDK，或不透過 SDK 直接完成 Pull Mode 整合。</p>
+            <span>OPEN INTEGRATION GUIDE <b aria-hidden="true">↗</b></span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="results-footer atlas-footer">
+      <strong>ATLAS API ONBOARDING</strong>
+      <span>BUILDMODE 2026 PARTNER RESOURCE</span>
+      <a href="index.html#resources">返回資源下載</a>
+    </footer>
+  </body>
+</html>
