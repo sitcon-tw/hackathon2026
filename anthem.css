@@ -643,6 +643,7 @@ body.is-ready .title-block h1 > span:nth-child(2) {
   overscroll-behavior: contain;
   scrollbar-color: var(--acid) rgba(255, 255, 255, 0.08);
   scrollbar-width: thin;
+  position: relative;
 }
 
 .lyrics-scroll::-webkit-scrollbar {

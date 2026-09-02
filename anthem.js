@@ -218,8 +218,22 @@ function updateActiveLyric(currentTime) {
   currentLyric.textContent = activeLine.text;
 
   if (!audio.paused) {
-    const targetTop = activeLine.element.offsetTop - lyricsScroll.clientHeight / 2 + activeLine.element.offsetHeight / 2;
-    lyricsScroll.scrollTo({ top: targetTop, behavior: reducedMotion.matches ? "auto" : "smooth" });
+    const scrollRect = lyricsScroll.getBoundingClientRect();
+    const lineRect = activeLine.element.getBoundingClientRect();
+
+    const lineCenter =
+      lineRect.top -
+      scrollRect.top +
+      lyricsScroll.scrollTop +
+      lineRect.height / 2;
+
+    const targetTop =
+      lineCenter - lyricsScroll.clientHeight / 2;
+
+    lyricsScroll.scrollTo({
+      top: Math.max(0, targetTop),
+      behavior: reducedMotion.matches ? "auto" : "smooth"
+    });
   }
 }
 
