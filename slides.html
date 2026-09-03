@@ -397,26 +397,6 @@
         color: var(--acid);
       }
 
-      .pill-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 26px;
-      }
-
-      .pill {
-        padding: 8px 16px;
-        border: 1px solid var(--line-light);
-        color: rgba(241, 239, 230, 0.75);
-        font-size: 14px;
-        font-weight: 700;
-      }
-
-      .pill--acid {
-        border-color: var(--acid);
-        color: var(--acid);
-      }
-
       .sponsor {
         display: grid;
         grid-template-columns: minmax(150px, 220px) 1fr auto;
@@ -484,14 +464,6 @@
         font-weight: 900;
       }
 
-      .big-deadline {
-        margin: 8px 0 26px;
-        font-family: var(--font-display);
-        font-size: clamp(64px, 13vw, 170px);
-        line-height: 0.9;
-        color: var(--acid);
-      }
-
       .link-list {
         display: grid;
         gap: 12px;
@@ -537,6 +509,69 @@
       .link-item a:hover {
         text-decoration: underline;
       }
+
+      .team-cloud {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+
+      .cloud-center {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        pointer-events: none;
+        text-shadow: 0 2px 22px rgba(17, 18, 15, 0.95);
+      }
+
+      .cloud-center b {
+        font-family: var(--font-display);
+        font-size: clamp(96px, 16vw, 230px);
+        font-weight: 500;
+        line-height: 0.9;
+        color: var(--acid);
+      }
+
+      .cloud-center small {
+        color: var(--paper-bright);
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 0.42em;
+      }
+
+      .cloud-word {
+        position: absolute;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        line-height: 1.15;
+        white-space: nowrap;
+        opacity: 0;
+      }
+
+      .slide.is-active .cloud-word {
+        animation: cloudPop 0.45s ease both;
+      }
+
+      @keyframes cloudPop {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .cloud-b { color: var(--paper-bright); }
+      .cloud-c { color: var(--cyan); }
+      .cloud-d { color: rgba(241, 239, 230, 0.58); }
+      .cloud-f { color: rgba(217, 255, 67, 0.55); }
 
       .nav-hint {
         display: flex;
@@ -644,6 +679,14 @@
             <div><small>每日報到</small><strong>09:00 – 16:00</strong></div>
             <div><small>主辦</small><strong>FUTUREMODE × SITCON</strong></div>
           </div>
+        </div>
+      </section>
+
+      <section class="slide slide--cloud" data-topic="參賽隊伍" aria-label="全體參賽隊伍隊名牆">
+        <div id="team-cloud" class="team-cloud" aria-hidden="true"></div>
+        <div class="cloud-center rise">
+          <b data-team-count>261</b>
+          <small>TEAMS</small>
         </div>
       </section>
 
@@ -758,16 +801,16 @@
       <section class="slide" data-topic="作品繳交">
         <div class="slide-inner">
           <div class="kicker rise"><span>03</span> 作品繳交</div>
-          <div class="big-deadline rise">9/6 10:00</div>
-          <p class="lede rise">截止前請完成以下六項，並預留連結權限檢查時間：</p>
-          <div class="pill-row rise">
-            <span class="pill pill--acid">隊伍資料與賽道</span>
-            <span class="pill">100–200 字摘要</span>
-            <span class="pill">公開儲存庫＋授權檔案</span>
-            <span class="pill">README 與架構說明</span>
-            <span class="pill">展示網址（選填）</span>
-            <span class="pill pill--acid">2 分鐘評選影片</span>
+          <h2 class="display display-md rise">書審要交<span class="acid">什麼</span></h2>
+          <div class="stack stack--tight rise">
+            <div class="item"><span class="no">01</span><div><strong>隊伍資料與賽道</strong><small>主賽道＋欲角逐的贊助商挑戰</small></div></div>
+            <div class="item"><span class="no">02</span><div><strong>問題與解法摘要</strong><small>100–200 字</small></div></div>
+            <div class="item item--hot"><span class="no">03</span><div><strong>公開程式碼儲存庫＋授權檔案</strong><small>GitHub／GitLab，開源是總排名必要條件</small></div></div>
+            <div class="item"><span class="no">04</span><div><strong>README 與系統架構</strong><small>執行方式與素材來源說明</small></div></div>
+            <div class="item"><span class="no">05</span><div><strong>作品展示網址</strong><small>選填</small></div></div>
+            <div class="item item--hot"><span class="no">06</span><div><strong>2 分鐘評選影片</strong><small>上傳 YouTube，書審主要依據</small></div></div>
           </div>
+          <p class="lede rise" style="margin-top: 18px">截止 <strong>9/6（日）10:00</strong>・繳交表單 9/5 公布於資訊站</p>
         </div>
       </section>
 
@@ -844,9 +887,8 @@
           <div class="kicker rise"><span>07</span> 資訊網</div>
           <h2 class="display display-lg rise">所有資訊<br /><span class="acid">都在這裡</span></h2>
           <div class="link-list rise">
-            <div class="link-item"><i>WEB</i><div><strong><a href="https://hackathon2026.sitcon.org" target="_blank" rel="noreferrer">hackathon2026.sitcon.org</a></strong><small>參賽者資訊站：時程、賽制、評分、隊伍、資源</small></div></div>
-            <div class="link-item"><i>WEB</i><div><strong><a href="https://www.futuremode.xyz/hackathon" target="_blank" rel="noreferrer">futuremode.xyz/hackathon</a></strong><small>官方網站與最新公告</small></div></div>
-            <div class="link-item"><i>MAIL</i><div><strong><a href="mailto:ask@sitcon.org">ask@sitcon.org</a></strong><small>任何問題，寄信就對了</small></div></div>
+            <div class="link-item"><i>WEB</i><div><strong><a href="https://hackathon2026.sitcon.org" target="_blank" rel="noreferrer">hackathon2026.sitcon.org</a></strong><small>參賽者資訊站：三日最新公告都在這，含時程、賽制、評分與資源</small></div></div>
+            <div class="link-item"><i>HELP</i><div><strong>Telegram 官方群組</strong><small>現場有任何問題，直接在群組提問，馬上有人回</small></div></div>
             <div class="link-item"><i>FORM</i><div><strong>重要表單 9/5 公布</strong><small>閃電講報名與作品繳交，連結上架於資訊站首頁</small></div></div>
           </div>
         </div>
@@ -863,6 +905,98 @@
     </main>
 
     <script>
+      const TEAM_NAMES = ["VibeSafari", "Think more", "Taigentic", "RWACE", "Quasar Labs", "Ferry Service", "Chiikawa", "AI 小白", "零食組成", "新創小隊", "黑輪隊", "超級颱風", "海底總動員", "全～隊", "皮卡不揪", "比奇堡的海底世界", "心花開", "51CODE", "LearnFlow", "Open Product Workshop", "AI Prototype Lab", "Creative Interaction Lab", "Agent Build Lab", "Physical AI Forge", "Trust & Civic AI", "StoryTrace Studio", "火木 YLC", "Everyday Decision Lab", "Health AI Bridge", "Context & Agent Lab", "QWOP Research", "—–這條線以上的都是給—–", "A E \"I\" O U", "(´・ω・`)", "💪生在台灣💪🏾倒在羅馬尼亞🦵🏾死在保加利亞🦵", "404 Team Not Found", "404: Care Not Found", "一人成隊", "一群皮老闆", "丹丹快跑", "丹丹來測試", "今天我洗碗", "分身有術", "日記漂流瓶", "水返腳(2).png", "牛肉酒麵", "牛來了", "世界上最難測量的東西,你,因為是難量", "未命名隊伍", "加油加油加油", "可夜", "光合作用", "全", "全村的希望就是真真", "全隊", "全對", "共好", "同簷", "有Token就好", "艾老師AI Laoshi", "艾薯網", "血色天際線", "你說的都對", "你說的對，我不應該直接把資料庫刪掉", "尬電商一下", "我女友好正", "我有兩隻貓要養", "我阿公會帶我飛", "我是迪爵", "我愛綠豆冰", "芒果戰隊", "來偷偷啃", "咕咕嘎嘎牛逼轟轟", "咚嗞咚嗞嗶嗶嗶", "姆姆未來", "明晚的我就這樣切完芒果進浴室放起迷幻電子樂當一隻雨林猴子", "林操德海軍陸戰隊哈哈哈", "氛圍鱈魚中", "邱博與他的小粉絲", "阿鳥為", "星芋自由學院", "星澄遠征軍", "洪金寶", "乘風破prompt-趕海人號", "俺So re", "恐怖仙人掌", "拿冠軍就休學", "時律之繭Tempo Casing", "特務J", "神秘薪水小偷", "草莓舒芙蕾教宗", "除草證照五級", "馬內歸我", "高位元走狗", "偷啃大盜", "啊對對對", "掉到世界外面的米粒", "掙五千", "梅", "淡大虎", "清燉魯蛇", "創市巨作", "創新科技實驗室", "單人智造", "喵～", "帽子工廠", "替代方案", "期待的仙境", "痛失泡麵的綠蔡", "發芽芽", "等等我問一下 AI", "逸一時吾一世", "開堂首節課", "黃桃罐頭", "會好", "萬一我的天賦是訂閱 codex 呢", "腦袋很忙", "詭像依依Gxyy", "路易", "電電資資滋⚡", "嘿嘿", "德卡瓦", "歐歐歐ai，蝦米是 ai", "碼上成功", "躺著廢", "據說可以免費吃東西?", "橪", "獨自開發", "融慧貫通", "薛丁格的梅", "螺絲", "還沒想好", "鍋重輪", "織疊", "爆肝高中生", "嚴貧隊", "嚴肅奶龍", "寶成咖啡", "寶寶寶", "歡樂隊", "體感溫度快熱死", "龘鱻驫", "AC", "Age Is Just a Number", "AI agent team", "AI Sloper", "AI經理人", "AIs On Me", "AIT Hub", "AnyIdea?", "Art of Next", "Artificial Illusion", "Atrophied Intelligence", "Baeka", "Ben10", "BensonNumberOne", "BXF任王幫", "Cantus", "ChatKTV", "Chill Agents", "Coco", "Code Bakery", "codenoodles", "Codex 我的再生父母", "Colin", "CyberPuppy", "CYP", "DevDevDev", "Drone pilot", "Edgecase", "EdgeRunner", "Ellen", "Everything No Reason", "Fulfill", "Future of work", "Gary", "GOGOGO", "GoGoOpenResume", "gotyou ai", "GPUPoor", "Hamber Harper", "Hana", "HelloWorld", "Henry Black", "HypeLink", "idk", "Inspiriflow", "judygood", "JunHack", "justforfun666", "K29", "k66", "king game", "L", "LeadGeneration", "life house", "Lingo", "LumiLumi", "MCPocket", "MODEV", "mozufu", "mt", "MW Consultancy", "my GF is 10", "na", "Naruto", "NextMode", "Njzbunniez", "Nobody", "Nomad Life", "NOVA", "Ohmysugar", "OMG (1)", "OMG (2)", "OneOneTalk AI", "Open · 未來鄉愁吉普賽", "P and Pi (1)", "Paper2Proof", "PDTEST", "PhiloPhilo", "Mello", "potato lab", "RCEs 沒有 R 也沒有 E 也沒有 s", "RhythME AI", "Richdawang", "Right One", "rm -rf", "ROBOT", "Safari", "Seal is Cute", "shaugyue", "Shawn Capital NYC branch", "Sherdil", "ShiftMatchAI", "SitDownPlzero", "SixHuang", "ST", "T-FLOW 演化座標", "TEAM FILIPINAS", "Thalassia", "TitApeX", "Token對不隊", "TWMD", "TYPA-C", "U秀", "uj隊", "Vibe-IC", "virxagent", "Visual Pop", "Willis", "Woooooo It’s AI", "Y0ur4n5w3r", "YAIS", "Yuan01", "Zeke", "ZERooNEZEROZERO", "Zzyzx Labs", "AIIA", "lulupay", "P and Pi (2)", "The Aresians"];
+
+      function mulberry32(seed) {
+        return function () {
+          seed |= 0;
+          seed = (seed + 0x6d2b79f5) | 0;
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        };
+      }
+
+      function buildTeamCloud() {
+        const host = document.getElementById("team-cloud");
+        if (!host) return;
+        host.innerHTML = "";
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const cell = 13;
+        const cols = Math.ceil(width / cell);
+        const rows = Math.ceil(height / cell);
+        const grid = new Uint8Array(cols * rows);
+
+        const markRegion = (x, y, w, h) => {
+          const c0 = Math.max(0, Math.floor(x / cell));
+          const c1 = Math.min(cols - 1, Math.floor((x + w) / cell));
+          const r0 = Math.max(0, Math.floor(y / cell));
+          const r1 = Math.min(rows - 1, Math.floor((y + h) / cell));
+          for (let r = r0; r <= r1; r += 1) {
+            for (let c = c0; c <= c1; c += 1) grid[r * cols + c] = 1;
+          }
+        };
+
+        const regionFree = (x, y, w, h) => {
+          const c0 = Math.max(0, Math.floor(x / cell));
+          const c1 = Math.min(cols - 1, Math.floor((x + w) / cell));
+          const r0 = Math.max(0, Math.floor(y / cell));
+          const r1 = Math.min(rows - 1, Math.floor((y + h) / cell));
+          for (let r = r0; r <= r1; r += 1) {
+            for (let c = c0; c <= c1; c += 1) {
+              if (grid[r * cols + c]) return false;
+            }
+          }
+          return true;
+        };
+
+        const reserveWidth = Math.min(width * 0.34, 620);
+        const reserveHeight = Math.min(height * 0.34, 320);
+        markRegion((width - reserveWidth) / 2, (height - reserveHeight) / 2, reserveWidth, reserveHeight);
+
+        const rand = mulberry32(20260904);
+        const order = TEAM_NAMES.map((name) => ({ name, key: rand() })).sort((a, b) => a.key - b.key);
+        const size = Math.max(13, Math.round(Math.min(width, height) / 66));
+
+        order.forEach((entry) => {
+          const roll = rand();
+          const styleClass = roll < 0.08 ? "cloud-f" : roll < 0.32 ? "cloud-c" : roll < 0.62 ? "cloud-b" : "cloud-d";
+
+          let units = 0;
+          for (const char of entry.name) units += char.charCodeAt(0) > 0x2e7f ? 1.04 : 0.58;
+          const w = units * size;
+          const h = size * 1.5;
+
+          const centerX = width / 2;
+          const centerY = height / 2;
+          let angle = rand() * Math.PI * 2;
+          let radius = 90;
+          let placed = false;
+
+          while (!placed && radius < Math.max(width, height)) {
+            for (let step = 0; step < 6 && !placed; step += 1) {
+              angle += 1.7;
+              const x = centerX + Math.cos(angle) * radius - w / 2;
+              const y = centerY + Math.sin(angle) * radius * 0.6 - h / 2;
+              if (x < 10 || y < 58 || x + w > width - 10 || y + h > height - 54) continue;
+              if (!regionFree(x, y, w, h)) continue;
+              markRegion(x, y, w, h);
+              const word = document.createElement("span");
+              word.className = `cloud-word ${styleClass}`;
+              word.textContent = entry.name;
+              word.style.left = `${x}px`;
+              word.style.top = `${y}px`;
+              word.style.fontSize = `${size}px`;
+              word.style.animationDelay = `${(rand() * 0.6).toFixed(2)}s`;
+              host.append(word);
+              placed = true;
+            }
+            radius += 24;
+          }
+        });
+      }
+
       const slides = Array.from(document.querySelectorAll(".slide"));
       const counter = document.getElementById("slide-counter");
       const topic = document.getElementById("slide-topic");
@@ -918,6 +1052,11 @@
       if (Number.isInteger(hashIndex) && hashIndex >= 0 && hashIndex < slides.length) {
         index = hashIndex;
       }
+      document.querySelectorAll("[data-team-count]").forEach((label) => {
+        label.textContent = String(TEAM_NAMES.length);
+      });
+      buildTeamCloud();
+      window.addEventListener("resize", buildTeamCloud);
       render();
     </script>
   </body>
