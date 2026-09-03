@@ -1495,6 +1495,73 @@ select {
   line-height: 1.65;
 }
 
+.bounties {
+  background: #f8f6eb;
+}
+
+.bounty-note {
+  margin: 0 0 16px;
+  color: rgba(17, 18, 15, 0.68);
+  font-size: 13px;
+}
+
+.bounty-table-wrap {
+  overflow-x: auto;
+  border: 2px solid var(--ink);
+  border-top: 0;
+}
+
+.bounties-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.bounties-table th,
+.bounties-table td {
+  padding: 14px 16px;
+  vertical-align: top;
+  border-top: 2px solid var(--line);
+  border-bottom: 2px solid var(--line);
+  border-left: 2px solid var(--line);
+}
+
+.bounties-table th:first-child,
+.bounties-table td:first-child {
+  min-width: 160px;
+}
+
+.bounties-table th:last-child,
+.bounties-table td:last-child {
+  min-width: 220px;
+}
+
+.bounties-table thead th {
+  background: rgba(17, 18, 15, 0.07);
+  text-align: left;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.bounties-table tbody td {
+  background: rgba(255, 255, 255, 0.84);
+}
+
+.bounty-qual {
+  color: rgba(17, 18, 15, 0.76);
+}
+
+.amt-cell {
+  font-size: 13px;
+}
+
+.hl {
+  background: var(--acid);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
 .track-special-content > a {
   display: inline-block;
   margin-top: 16px;
@@ -2302,14 +2369,21 @@ body.score-explorer-open {
   grid-template-columns: 1fr auto;
   align-items: start;
   padding: clamp(22px, 3vw, 36px);
+  width: 100%;
   border-right: 1px solid var(--line-light);
   border-bottom: 1px solid var(--line-light);
   color: #fff;
+  background: transparent;
   text-decoration: none;
   transition: background 160ms ease, color 160ms ease;
+  text-align: left;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
-.resource-card[href]:hover {
+.resource-card:hover,
+.resource-card:focus-visible {
   background: var(--acid);
   color: var(--ink);
 }
@@ -2326,7 +2400,8 @@ body.score-explorer-open {
   letter-spacing: 0.13em;
 }
 
-.resource-card[href]:hover small {
+.resource-card:hover small,
+.resource-card:focus-visible small {
   color: var(--ink);
 }
 
@@ -2355,6 +2430,84 @@ body.score-explorer-open {
   color: rgba(255, 255, 255, 0.48);
   font-size: 12px;
   text-align: right;
+}
+
+.resource-download-link {
+  display: inline-block;
+  margin: 10px 0 0;
+  color: var(--acid);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.venue-map-open {
+  overflow: hidden;
+}
+
+.venue-map-dialog {
+  width: min(96vw, 1080px);
+  max-width: min(96vw, 1080px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+}
+
+.venue-map-dialog::backdrop {
+  background: rgba(9, 10, 8, 0.81);
+  backdrop-filter: blur(5px);
+}
+
+.venue-map-dialog-shell {
+  width: min(96vw, 1080px);
+  max-height: min(90vh, 900px);
+  overflow: hidden;
+  background: var(--ink-soft);
+  border: 1px solid var(--line-light);
+}
+
+.venue-map-dialog-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line-light);
+  background: #11120f;
+}
+
+.venue-map-dialog-head strong {
+  display: block;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+
+.venue-map-dialog-head button {
+  border: 0;
+  margin: 0;
+  padding: 5px 12px;
+  background: var(--acid);
+  color: var(--ink);
+  font-weight: 900;
+}
+
+.venue-map-dialog-body {
+  max-height: calc(90vh - 70px);
+  overflow: auto;
+  padding: 16px;
+}
+
+.venue-map-dialog-image {
+  width: 100%;
+  display: block;
+  height: auto;
+  max-height: calc(90vh - 140px);
+  object-fit: contain;
+}
+
+.venue-map-dialog-download {
+  color: var(--acid);
 }
 
 .atlas-body {

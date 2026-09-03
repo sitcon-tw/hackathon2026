@@ -85,7 +85,10 @@ const resources = [
     type: "場地 PDF",
     title: "場地圖與座位分區",
     description: "最終隊伍編號與座位區確認後上架。",
-    url: "",
+    url: "https://images.squarespace-cdn.com/content/v1/698ac8797f3cb35b8bf437d6/ab3a3054-709b-4a01-87ea-bc950dd35c24/FM_MAP_DIGITALArtboard+2.jpg",
+    download: true,
+    mapPopup: true,
+    mapFileName: "BUILDMODE_2026_venue_map.jpg",
   },
 ];
 
@@ -288,6 +291,24 @@ function renderResources() {
   document.querySelector("#resource-list").innerHTML = resources
     .map((resource) => {
       const available = Boolean(resource.url);
+      if (resource.mapPopup) {
+        return `
+        <button
+          type="button"
+          class="resource-card venue-map-card-trigger"
+          data-venue-map="${escapeHTML(resource.url)}"
+          data-venue-map-title="${escapeHTML(resource.title)}"
+          data-venue-map-download="${escapeHTML(resource.mapFileName)}"
+          aria-label="${escapeHTML(resource.title)}（點擊展開）"
+        >
+          <div>
+            <small>${escapeHTML(resource.type)} · ${available ? "可下載" : "待上架"}</small>
+            <strong>${escapeHTML(resource.title)}</strong>
+            <p>${escapeHTML(resource.description)}</p>
+          </div>
+          <span aria-hidden="true">${available ? "↗" : "··"}</span>
+        </button>`;
+      }
       return `
         <a
           class="resource-card"
@@ -303,6 +324,46 @@ function renderResources() {
         </a>`;
     })
     .join("");
+}
+
+function setupMapPopup() {
+  const dialog = document.querySelector("#venue-map-dialog");
+  if (!dialog) return;
+
+  const title = dialog.querySelector(".venue-map-dialog-title");
+  const image = dialog.querySelector(".venue-map-dialog-image");
+  const download = dialog.querySelector(".venue-map-dialog-download");
+  const closeButton = dialog.querySelector("#venue-map-dialog-close");
+
+  const openMapDialog = (url, titleText, fileName) => {
+    if (!url) return;
+    title.textContent = titleText || "場地圖與座位分區";
+    image.src = url;
+    image.alt = titleText || "場地圖與座位分區";
+    download.href = url;
+    download.download = fileName || "BUILDMODE_2026_venue_map.jpg";
+    if (!dialog.open) dialog.showModal();
+    document.body.classList.add("venue-map-open");
+  };
+
+  document.querySelectorAll("[data-venue-map]").forEach((trigger) => {
+    trigger.addEventListener("click", () => {
+      const mapUrl = trigger.dataset.venueMap;
+      const mapTitle = trigger.dataset.venueMapTitle;
+      const mapDownload = trigger.dataset.venueMapDownload;
+      openMapDialog(mapUrl, mapTitle, mapDownload);
+    });
+  });
+
+  closeButton?.addEventListener("click", () => dialog.close());
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+  dialog.addEventListener("close", () => {
+    document.body.classList.remove("venue-map-open");
+    image.removeAttribute("src");
+    image.alt = "";
+  });
 }
 
 function updateActions(now) {
@@ -1122,7 +1183,7 @@ function setupAnimations() {
     ease: "linear",
   });
 
-  document.querySelectorAll(".resource-card[href]").forEach((card) => {
+  document.querySelectorAll(".resource-card").forEach((card) => {
     card.addEventListener("pointerenter", () => {
       animate(card, { y: -6, duration: 260, ease: "out(3)" });
     });
@@ -1194,6 +1255,7 @@ function init() {
   setupAnchorNavigation();
   setupScheduleNow();
   setupScoreCharts();
+  setupMapPopup();
   setupScrollStack();
   updateNextEvent(Date.now());
   updateClock();
