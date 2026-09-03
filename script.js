@@ -330,7 +330,7 @@ function setupMapPopup() {
   const dialog = document.querySelector("#venue-map-dialog");
   if (!dialog) return;
 
-  const title = dialog.querySelector(".venue-map-dialog-title");
+  const title = dialog.querySelector("#venue-map-dialog-title");
   const image = dialog.querySelector(".venue-map-dialog-image");
   const download = dialog.querySelector(".venue-map-dialog-download");
   const closeButton = dialog.querySelector("#venue-map-dialog-close");
