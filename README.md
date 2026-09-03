@@ -5,10 +5,10 @@
 ## 本機預覽
 
 ```bash
-python3 -m http.server 8000
+python3 serve.py
 ```
 
-開啟 `http://localhost:8000`。
+開啟 `http://localhost:8000`。`serve.py` 支援 HTTP Range 請求，音訊可分段串流、邊載邊播；若使用 `python3 -m http.server`，MP3 必須整檔下載完成才能播放。
 
 ## 正式網站
 
