@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 現場資訊：資訊站網址、QR Code 與會場 WiFi。" />
+    <meta name="theme-color" content="#11120f" />
+    <title>現場資訊｜BUILDMODE GEN-AI HACKATHON 2026</title>
+    <style>
+      @font-face {
+        font-family: "Build Sans";
+        src: local("Arial");
+        font-display: swap;
+      }
+
+      :root {
+        --ink: #11120f;
+        --paper: #f1efe6;
+        --paper-bright: #fffdf5;
+        --acid: #d9ff43;
+        --violet: #6978ff;
+        --cyan: #a9b2ff;
+        --line-light: rgba(255, 255, 255, 0.24);
+        --font-sans: "Build Sans", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+        --font-display: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Black", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        overflow: hidden;
+        background:
+          linear-gradient(rgba(217, 255, 67, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(217, 255, 67, 0.05) 1px, transparent 1px),
+          var(--ink);
+        background-size: 48px 48px;
+        color: var(--paper);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .scanline {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(180deg, transparent 0%, rgba(217, 255, 67, 0.035) 50%, transparent 100%);
+        animation: scan 9s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes scan {
+        from {
+          transform: translateY(-100%);
+        }
+        to {
+          transform: translateY(100%);
+        }
+      }
+
+      .frame {
+        position: fixed;
+        inset: clamp(16px, 3vh, 44px);
+        border: 1px solid var(--line-light);
+        display: flex;
+        flex-direction: column;
+        padding: clamp(16px, 3.2vh, 44px);
+      }
+
+      .chrome {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: clamp(10px, 2vh, 22px);
+        border-bottom: 1px solid var(--line-light);
+        font-size: clamp(12px, 1.6vh, 20px);
+        font-weight: 900;
+        letter-spacing: 0.16em;
+      }
+
+      .brand {
+        color: var(--acid);
+      }
+
+      .brand em {
+        font-style: normal;
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      .stage {
+        flex: 1;
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: clamp(20px, 4vw, 72px);
+        align-items: center;
+        min-height: 0;
+      }
+
+      .kicker {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--acid);
+        font-size: clamp(13px, 2vh, 24px);
+        font-weight: 900;
+        letter-spacing: 0.2em;
+      }
+
+      .kicker span {
+        padding: 2px 10px;
+        border: 1px solid var(--acid);
+      }
+
+      .url-display {
+        margin: clamp(10px, 2.4vh, 26px) 0 0;
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(30px, 5.4vw, 104px);
+        line-height: 1;
+        letter-spacing: 0;
+        text-transform: lowercase;
+        white-space: nowrap;
+        color: var(--paper-bright);
+      }
+
+      .url-display .acid {
+        color: var(--acid);
+      }
+
+      .url-note {
+        margin: clamp(10px, 2.2vh, 24px) 0 0;
+        color: rgba(241, 239, 230, 0.72);
+        font-size: clamp(14px, 2.4vh, 28px);
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
+      .wifi {
+        margin-top: clamp(18px, 4.4vh, 52px);
+        padding: clamp(14px, 2.8vh, 34px) clamp(18px, 3.2vh, 40px);
+        border: 1px solid var(--acid);
+        background: rgba(217, 255, 67, 0.06);
+        display: inline-block;
+      }
+
+      .wifi small {
+        display: block;
+        color: rgba(241, 239, 230, 0.6);
+        font-size: clamp(12px, 1.8vh, 20px);
+        font-weight: 900;
+        letter-spacing: 0.2em;
+      }
+
+      .wifi strong {
+        display: block;
+        margin-top: clamp(4px, 1vh, 12px);
+        font-family: var(--font-display);
+        font-weight: 500;
+        font-size: clamp(26px, 5vh, 62px);
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: var(--acid);
+      }
+
+      .qr-panel {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: clamp(10px, 2.2vh, 26px);
+        min-width: 0;
+      }
+
+      .qr-card {
+        margin: 0;
+        padding: clamp(12px, 2vh, 28px);
+        border: 2px solid var(--acid);
+        background: var(--paper-bright);
+      }
+
+      .qr-card svg {
+        display: block;
+        width: min(clamp(240px, 44vh, 560px), 100%);
+        height: auto;
+      }
+
+      .qr-caption {
+        color: var(--paper-bright);
+        font-size: clamp(13px, 2vh, 22px);
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-align: center;
+      }
+
+      .qr-caption small {
+        display: block;
+        margin-top: 6px;
+        color: rgba(241, 239, 230, 0.55);
+        font-size: 0.78em;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+      }
+
+      .schedule-banner {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(10px, 1.6vw, 24px);
+        margin-top: clamp(10px, 2vh, 22px);
+      }
+
+      .banner-cell {
+        display: flex;
+        align-items: center;
+        gap: clamp(10px, 1.6vw, 22px);
+        padding: clamp(10px, 1.8vh, 22px) clamp(14px, 2.4vh, 30px);
+        border: 1px solid var(--line-light);
+        background: rgba(255, 255, 255, 0.03);
+        min-width: 0;
+      }
+
+      .banner-cell .cell-tag {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 10px;
+        font-size: clamp(11px, 1.6vh, 18px);
+        font-weight: 900;
+        letter-spacing: 0.18em;
+        color: rgba(241, 239, 230, 0.7);
+        border: 1px solid var(--line-light);
+        white-space: nowrap;
+      }
+
+      .banner-cell strong {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: clamp(16px, 2.6vh, 32px);
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        color: var(--paper-bright);
+      }
+
+      .banner-cell small {
+        color: rgba(241, 239, 230, 0.62);
+        font-size: clamp(12px, 1.9vh, 22px);
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+
+      .banner-cell.is-live {
+        border-color: var(--acid);
+        background: rgba(217, 255, 67, 0.07);
+      }
+
+      .banner-cell.is-live .cell-tag {
+        border-color: var(--acid);
+        color: var(--acid);
+      }
+
+      .live-dot {
+        width: 0.6em;
+        height: 0.6em;
+        border-radius: 50%;
+        background: var(--acid);
+        animation: pulse 1.4s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.4;
+          transform: scale(0.72);
+        }
+      }
+
+      .footer {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 16px;
+        padding-top: clamp(10px, 2vh, 22px);
+        border-top: 1px solid var(--line-light);
+        color: rgba(241, 239, 230, 0.55);
+        font-size: clamp(11px, 1.6vh, 18px);
+        font-weight: 900;
+        letter-spacing: 0.16em;
+      }
+
+      .footer b {
+        color: var(--acid);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .fade {
+        animation: fade 0.8s ease both;
+      }
+
+      .fade:nth-child(2) {
+        animation-delay: 0.12s;
+      }
+
+      @keyframes fade {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (orientation: portrait) {
+        .stage {
+          grid-template-columns: 1fr;
+          grid-template-rows: auto auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanline" aria-hidden="true"></div>
+
+    <div class="frame">
+      <header class="chrome">
+        <div class="brand">B/ <em>BUILDMODE GEN-AI HACKATHON 2026</em></div>
+        <div>FUTUREMODE × SITCON</div>
+      </header>
+
+      <main class="stage">
+        <div class="fade">
+          <div class="kicker"><span>SCAN</span> 參賽者資訊站</div>
+          <h1 class="url-display">hackathon2026<span class="acid">.sitcon.org</span></h1>
+          <p class="url-note">三日最新公告・時程・賽制・評分與資源下載<br />隨時掃描，隨時掌握</p>
+          <div class="wifi">
+            <small>會場 WIFI</small>
+            <strong>BUILDMODE_BY_SITCON</strong>
+          </div>
+        </div>
+
+        <figure class="qr-panel fade">
+          <div class="qr-card">
+            <svg xmlns="http://www.w3.org/2000/svg" width="330" height="330" class="segno" role="img" aria-label="QR Code：https://hackathon2026.sitcon.org/"><g transform="scale(10)"><path fill="#fffdf5" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#11120f" d="M2 2.5h7m2 0h1m2 0h1m2 0h3m4 0h7m-29 1h1m5 0h1m1 0h4m1 0h2m1 0h3m3 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m2 0h2m1 0h1m3 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m1 0h2m1 0h1m4 0h2m1 0h2m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h2m1 0h1m2 0h5m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m2 0h2m1 0h1m2 0h1m2 0h1m3 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-21 1h2m1 0h2m1 0h3m2 0h2m-21 1h1m5 0h1m1 0h1m8 0h1m2 0h3m2 0h3m-28 1h1m1 0h1m1 0h2m6 0h2m2 0h1m2 0h2m2 0h2m1 0h2m-27 1h1m1 0h5m4 0h4m5 0h1m1 0h1m-24 1h2m1 0h1m4 0h2m1 0h3m4 0h2m1 0h1m3 0h1m-26 1h3m3 0h1m1 0h1m2 0h1m1 0h1m1 0h2m2 0h1m2 0h2m4 0h1m-28 1h2m6 0h4m5 0h2m1 0h4m2 0h2m-29 1h1m2 0h4m2 0h1m1 0h1m3 0h4m4 0h1m1 0h2m-25 1h2m1 0h1m2 0h3m4 0h1m4 0h1m1 0h1m1 0h1m1 0h1m1 0h1m-29 1h1m4 0h3m1 0h1m1 0h2m4 0h1m2 0h1m4 0h2m-27 1h1m2 0h1m7 0h1m1 0h3m1 0h3m2 0h3m1 0h3m-29 1h3m2 0h4m6 0h1m3 0h3m2 0h2m2 0h1m-29 1h1m1 0h1m1 0h1m4 0h3m1 0h1m1 0h2m2 0h1m4 0h1m-25 1h1m1 0h1m3 0h1m3 0h2m2 0h2m1 0h1m2 0h5m1 0h3m-21 1h2m4 0h2m1 0h4m3 0h2m-26 1h7m3 0h2m3 0h1m1 0h1m1 0h2m1 0h1m1 0h3m-27 1h1m5 0h1m7 0h2m2 0h1m1 0h1m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h1m2 0h4m2 0h8m1 0h2m-29 1h1m1 0h3m1 0h1m2 0h1m2 0h1m1 0h5m1 0h2m3 0h2m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h2m1 0h1m2 0h3m1 0h9m-28 1h1m5 0h1m3 0h1m3 0h2m2 0h1m2 0h1m2 0h3m1 0h1m-29 1h7m1 0h2m1 0h1m1 0h2m2 0h1m1 0h1m2 0h1m3 0h1"/></g></svg>
+          </div>
+          <figcaption class="qr-caption">
+            掃我前往資訊站
+            <small>https://hackathon2026.sitcon.org/</small>
+          </figcaption>
+        </figure>
+      </main>
+
+      <section class="schedule-banner" aria-live="polite">
+        <div class="banner-cell" id="now-cell">
+          <span class="cell-tag"><i class="live-dot" id="now-dot" hidden></i>NOW</span>
+          <strong id="now-title">賽程載入中</strong>
+          <small id="now-meta">--:-- – --:--</small>
+        </div>
+        <div class="banner-cell" id="next-cell">
+          <span class="cell-tag">NEXT</span>
+          <strong id="next-title">賽程載入中</strong>
+          <small id="next-meta">--:-- – --:--</small>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>2026.09.04–06　台北花博爭艷館</span>
+        <span>台北時間 <b id="taipei-clock">--:--:--</b></span>
+      </footer>
+    </div>
+
+    <script>
+      const schedule = [
+        {
+          date: "2026-09-04",
+          items: [
+            { start: "09:00", end: "09:30", title: "場地開放、參賽者進場" },
+            { start: "09:30", end: "10:20", title: "入座與開發準備" },
+            { start: "10:20", end: "10:30", title: "開幕前提醒" },
+            { start: "10:30", end: "11:10", title: "開幕與賽制說明" },
+            { start: "11:10", end: "16:30", title: "開發時間" },
+            { start: "16:30", end: "16:45", title: "隊伍與主題異動截止" },
+            { start: "16:45", end: "17:00", title: "第一天公告與離場" },
+          ],
+        },
+        {
+          date: "2026-09-05",
+          items: [
+            { start: "09:00", end: "10:30", title: "開發時間（閃電講報名 12:00 截止）" },
+            { start: "10:30", end: "12:00", title: "開發時間" },
+            { start: "12:00", end: "12:30", title: "閃電講報名截止與抽選" },
+            { start: "12:30", end: "15:50", title: "開發時間" },
+            { start: "15:50", end: "16:05", title: "閃電講講者報到" },
+            { start: "16:05", end: "16:40", title: "閃電講" },
+            { start: "16:40", end: "17:00", title: "第二天公告與離場" },
+          ],
+        },
+        {
+          date: "2026-09-06",
+          items: [
+            { start: "09:00", end: "09:50", title: "最後開發與作品繳交" },
+            { start: "09:50", end: "10:00", title: "作品繳交截止" },
+            { start: "10:00", end: "14:10", title: "第一輪評選" },
+            { start: "14:10", end: "14:30", title: "成績確認與決賽名單公布" },
+            { start: "14:30", end: "15:00", title: "AI × 創意作品展演｜科幻文創協會" },
+            { start: "15:00", end: "17:00", title: "BUILDMODE Demo Day 成果發表｜SITCON" },
+          ],
+        },
+      ];
+
+      const eventTimeline = schedule.flatMap((day) =>
+        day.items.map((item) => ({
+          title: item.title,
+          start: new Date(`${day.date}T${item.start}:00+08:00`).getTime(),
+          end: new Date(`${day.date}T${item.end}:00+08:00`).getTime(),
+          timeLabel: `${item.start} – ${item.end}`,
+        })),
+      );
+
+      function formatDayLabel(timestamp) {
+        return new Intl.DateTimeFormat("zh-TW", {
+          timeZone: "Asia/Taipei",
+          month: "numeric",
+          day: "numeric",
+        }).format(new Date(timestamp));
+      }
+
+      function updateScheduleBanner(now) {
+        const nowTs = now.getTime();
+        const current = eventTimeline.find((event) => nowTs >= event.start && nowTs < event.end);
+        const next = eventTimeline.find((event) => event.start > nowTs);
+
+        const nowCell = document.getElementById("now-cell");
+        const nowTitle = document.getElementById("now-title");
+        const nowMeta = document.getElementById("now-meta");
+        const nowDot = document.getElementById("now-dot");
+        const nextTitle = document.getElementById("next-title");
+        const nextMeta = document.getElementById("next-meta");
+
+        nowCell.classList.toggle("is-live", Boolean(current));
+        nowDot.hidden = !current;
+        if (current) {
+          nowTitle.textContent = current.title;
+          nowMeta.textContent = current.timeLabel;
+        } else if (nowTs < eventTimeline[0].start) {
+          nowTitle.textContent = "活動尚未開始";
+          nowMeta.textContent = `${formatDayLabel(eventTimeline[0].start)} 09:00 開跑`;
+        } else if (nowTs >= eventTimeline[eventTimeline.length - 1].end) {
+          nowTitle.textContent = "活動已結束";
+          nowMeta.textContent = "感謝參與";
+        } else {
+          nowTitle.textContent = "非活動時段";
+          nowMeta.textContent = "明日 09:00 見";
+        }
+
+        if (next) {
+          nextTitle.textContent = next.title;
+          const sameDay = current && new Date(next.start).toDateString() === new Date(current.start).toDateString();
+          nextMeta.textContent = sameDay ? `${next.timeLabel}` : `${formatDayLabel(next.start)} ${next.timeLabel}`;
+        } else {
+          nextTitle.textContent = "三日賽程已結束";
+          nextMeta.textContent = "—";
+        }
+      }
+
+      function updateClock() {
+        document.getElementById("taipei-clock").textContent = new Intl.DateTimeFormat("zh-TW", {
+          timeZone: "Asia/Taipei",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }).format(new Date());
+        updateScheduleBanner(new Date());
+      }
+      updateClock();
+      window.setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>

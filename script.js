@@ -82,6 +82,18 @@ const resources = [
     url: "atlas.html",
   },
   {
+    type: "素材包 · Drive",
+    title: "NOXCAT IP 素材",
+    description: "AI × IP 遊戲創作素材包，角逐 NOXCAT 獎項時請依 IP 使用規範取用。",
+    url: "https://drive.google.com/drive/folders/14TmeQ-zccUxyWfXm_-6SwVsmiVsIa0Xs?usp=sharing",
+  },
+  {
+    type: "素材包 · Drive",
+    title: "科幻協會素材",
+    description: "AI 創作賽道素材包，含指定命題角色造型與創作資源。",
+    url: "https://drive.google.com/drive/folders/1Dd7Ue-ecscLTgkeo0LYRIUGsVbCVd6BS?usp=sharing",
+  },
+  {
     type: "場地 PDF",
     title: "場地圖與座位分區",
     description: "最終隊伍編號與座位區確認後上架。",
@@ -314,6 +326,7 @@ function renderResources() {
           class="resource-card"
           ${available ? `href="${escapeHTML(resource.url)}"` : 'aria-disabled="true"'}
           ${available && resource.download ? "download" : ""}
+          ${available && /^https?:/i.test(resource.url) ? 'target="_blank" rel="noreferrer"' : ""}
         >
           <div>
             <small>${escapeHTML(resource.type)} · ${available ? (resource.download ? "可下載" : "前往查看") : "待上架"}</small>
