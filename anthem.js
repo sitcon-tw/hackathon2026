@@ -64,6 +64,16 @@ const tracks = [
     lyrics: "assets/audio/今天沒有Bug.lrc",
     language: "zh-Hant",
   },
+  {
+    title: "閃電短講",
+    titleLines: ["閃電", "短講"],
+    note: "一百二十秒，讓全場聽見你。",
+    prompt: "按下播放，準備登台。",
+    prelude: "前奏 / LIGHTNING INCOMING",
+    audio: "assets/audio/閃電短講.mp3",
+    lyrics: "assets/audio/閃電短講.lrc",
+    language: "zh-Hant",
+  },
 ];
 
 let audioContext = null;
