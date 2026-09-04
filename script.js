@@ -3,12 +3,9 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   actionRelease: "2026-09-05T09:00:00+08:00",
-  changeDeadline: "2026-09-04T16:30:00+08:00",
   links: {
     lightningTalk: "",
     submission: "",
-    teamChange: "https://forms.gle/bTFc6scen2mHGUFx7",
-    topicChange: "https://forms.gle/SpHnfC9MWNoPHJ2u6",
   },
 };
 
@@ -40,7 +37,7 @@ const schedule = [
       { start: "10:30", end: "12:00", title: "開發時間", detail: "持續開發作品。", tag: "開發" },
       { start: "12:00", end: "12:30", title: "閃電講報名截止與抽選", detail: "預計抽選 10 位講者與 2 位候補。", tag: "截止" },
       { start: "12:30", end: "15:50", title: "開發時間", detail: "持續開發作品。", tag: "開發" },
-      { start: "15:50", end: "16:05", title: "閃電講講者報到", detail: "請入選講者至舞台報到。", tag: "報到" },
+      { start: "15:55", end: "16:05", title: "閃電講講者報到", detail: "請入選講者至 ONBOARD 後台集合。", tag: "報到" },
       { start: "16:05", end: "16:40", title: "閃電講", detail: "每位講者 2 分鐘，不開放延長。", tag: "現場" },
       { start: "16:40", end: "17:00", title: "第二天公告與離場", detail: "確認作品繳交規格、連結權限與第三天集合時間。", tag: "離場" },
     ],
@@ -266,7 +263,7 @@ function renderTimeline(now) {
             <p>技術、工具、經驗或任何想分享的內容都可以，想講什麼就講什麼。</p>
           </section>
         </div>
-        <strong class="lightning-talk-callout">這是你的舞台。</strong>
+        <strong class="lightning-talk-callout">15:55 至 ONBOARD 後台集合。</strong>
       </article>`;
     return;
   }
@@ -389,29 +386,13 @@ function updateActions(now) {
     SITE_CONFIG.links.lightningTalk,
     isReleased,
     "前往投稿表單",
+    "9:00 開放報名",
   );
   setActionState(
     document.querySelector("#submission-action"),
     SITE_CONFIG.links.submission,
     isReleased,
     "前往作品繳交",
-  );
-  const changeDeadline = new Date(SITE_CONFIG.changeDeadline).getTime();
-  const changeOpen = now < changeDeadline;
-  const changeClosedText = now >= changeDeadline ? "16:30 已截止" : "9/4 開放";
-  setActionState(
-    document.querySelector("#team-change-action"),
-    SITE_CONFIG.links.teamChange,
-    changeOpen,
-    "前往隊伍異動",
-    changeClosedText,
-  );
-  setActionState(
-    document.querySelector("#topic-change-action"),
-    SITE_CONFIG.links.topicChange,
-    changeOpen,
-    "前往主題異動",
-    changeClosedText,
   );
 }
 
