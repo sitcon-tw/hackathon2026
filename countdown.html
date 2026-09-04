@@ -14,6 +14,13 @@
     --bg: #070303;
   }
 
+  /* ---- 緊迫階段速度（JS 切換 body class） ---- */
+  body        { --pulse: 4s;   --blink: 2s;   --hazard: 1.1s; --heart: 1.2s; }
+  body.u-hours { --pulse: 2.6s; --blink: 1s;   --hazard: .8s; }
+  body.u-min10 { --pulse: 1.6s; --blink: .5s;  --hazard: .5s;  --heart: .9s; }
+  body.u-min   { --pulse: 1s;   --blink: .25s; --hazard: .32s; --heart: .6s; }
+  body.u-final { --pulse: .55s; --blink: .14s; --hazard: .2s;  --heart: .42s; }
+
   html, body { height: 100%; }
 
   body {
@@ -57,6 +64,106 @@
   @keyframes gridmove { to { background-position: 0 60px, 60px 0; } }
   @keyframes scan { from { top: -140px; } to { top: 100%; } }
 
+  /* ---- 緊迫氛圍層 ---- */
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 3;
+    opacity: 0; transition: opacity .6s;
+    background: radial-gradient(ellipse at center, transparent 52%, rgba(255, 0, 0, .32) 100%);
+  }
+  body.u-min10 .vignette, body.u-min .vignette, body.u-final .vignette {
+    opacity: 1;
+    animation: heartbeat var(--heart) ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%, 45%, 100% { transform: scale(1); }
+    14% { transform: scale(1.06); }
+    28% { transform: scale(1.01); }
+  }
+
+  .beacon {
+    position: fixed; top: 50%; width: 24vmin; height: 24vmin; margin-top: -12vmin;
+    pointer-events: none; z-index: 1; opacity: 0;
+    background: radial-gradient(circle, rgba(255, 30, 30, .55), transparent 62%);
+    filter: blur(10px);
+  }
+  .beacon-l { left: -12vmin; }
+  .beacon-r { right: -12vmin; }
+  body.u-min .beacon, body.u-final .beacon { animation: beaconFlash .9s linear infinite; }
+  body.u-final .beacon { animation-duration: .45s; }
+  .beacon-r { animation-delay: .45s; }
+  body.u-final .beacon-r { animation-delay: .225s; }
+  @keyframes beaconFlash { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+
+  .alert-strip {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5; height: 36px;
+    display: flex; align-items: center; overflow: hidden; pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 42, 42, .18), rgba(255, 42, 42, .4) 50%, rgba(255, 42, 42, .18));
+    border-bottom: 1px solid rgba(255, 42, 42, .55);
+    box-shadow: 0 4px 24px rgba(255, 0, 0, .3);
+    opacity: 0; transform: translateY(-100%);
+    transition: opacity .4s, transform .4s;
+  }
+  body.u-hours .alert-strip, body.u-min10 .alert-strip,
+  body.u-min .alert-strip, body.u-final .alert-strip { opacity: 1; transform: none; }
+  .alert-track { display: flex; width: max-content; white-space: nowrap; animation: marquee 18s linear infinite; }
+  body.u-min .alert-track { animation-duration: 9s; }
+  body.u-final .alert-track { animation-duration: 5s; }
+  .alert-track span {
+    font-size: 12px; font-weight: 700; letter-spacing: .35em;
+    color: #ffb0b0; padding-right: .35em;
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  #embers { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+  .ember {
+    position: absolute; bottom: -12px; display: block; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 130, 70, .95), rgba(255, 42, 42, 0) 70%);
+    opacity: 0;
+    animation: emberRise linear infinite;
+  }
+  @keyframes emberRise {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    10% { opacity: .85; }
+    100% { transform: translate(var(--drift, 40px), -106vh) scale(.2); opacity: 0; }
+  }
+
+  .alarm-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 4;
+    background: rgba(255, 0, 0, .18); opacity: 0;
+  }
+  body.done .alarm-flash { animation: alarmFlash .6s linear infinite; }
+  @keyframes alarmFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  .final-overlay {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none;
+    display: grid; place-items: center;
+  }
+  .final-num {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-weight: 900; line-height: 1;
+    font-size: clamp(140px, 40vmin, 460px);
+    color: var(--red);
+    text-shadow: 0 0 40px var(--red), 0 0 120px rgba(255, 0, 0, .9);
+    opacity: 0;
+  }
+  .final-ring {
+    position: absolute; top: 50%; left: 50%;
+    width: 34vmin; height: 34vmin; margin: -17vmin 0 0 -17vmin;
+    border-radius: 50%; border: 4px solid var(--red); opacity: 0;
+  }
+  .final-overlay.go .final-num { animation: finalPunch 1s cubic-bezier(.16, 1, .3, 1) both; }
+  .final-overlay.go .final-ring { animation: ringOut 1s ease-out both; }
+  @keyframes finalPunch {
+    0% { transform: scale(2.6); opacity: 0; filter: blur(24px); }
+    16% { transform: scale(1); opacity: 1; filter: blur(0); }
+    72% { transform: scale(.96); opacity: 1; }
+    100% { transform: scale(.8); opacity: 0; }
+  }
+  @keyframes ringOut {
+    0% { transform: scale(.2); opacity: .9; }
+    100% { transform: scale(2.8); opacity: 0; }
+  }
+
   /* ---- 標題 ---- */
   .stage { position: relative; z-index: 2; text-align: center; }
 
@@ -75,6 +182,13 @@
     letter-spacing: .12em;
     color: #fff;
     text-shadow: 0 0 18px var(--red-glow), 0 0 60px rgba(255, 0, 0, .3);
+    animation: titleGlitch 7s infinite;
+  }
+  body.u-final h1 { animation: titleGlitch 1.2s infinite; }
+  @keyframes titleGlitch {
+    0%, 91%, 96%, 100% { transform: none; }
+    92% { transform: translate(-3px, 2px) skewX(-6deg); text-shadow: -4px 0 rgba(0, 220, 255, .7), 4px 0 rgba(255, 0, 80, .8), 0 0 60px rgba(255, 0, 0, .3); }
+    94% { transform: translate(3px, -2px) skewX(4deg); text-shadow: 4px 0 rgba(0, 220, 255, .7), -4px 0 rgba(255, 0, 80, .8); }
   }
   h1 .accent { color: var(--red); }
 
@@ -101,19 +215,29 @@
     font-family: "SF Mono", "Menlo", "Consolas", monospace;
     font-weight: 800;
     font-size: clamp(44px, 11vw, 120px);
-    line-height: 1;
+    line-height: 1.1;
     color: #fff;
     text-shadow:
       0 0 8px rgba(255, 255, 255, .4),
       0 0 24px var(--red-glow),
       0 0 70px rgba(255, 0, 0, .45);
     font-variant-numeric: tabular-nums;
-    display: block;
+    display: flex;
+    justify-content: center;
   }
-  .unit:not(.days) .num.tick { animation: tick 1s ease-out; }
-  @keyframes tick {
-    0%   { color: var(--red); text-shadow: 0 0 30px var(--red), 0 0 90px rgba(255,0,0,.8); }
-    100% { color: #fff; }
+
+  .digit { display: inline-block; min-width: .62em; }
+  .digit.roll { animation: rollIn .5s cubic-bezier(.2, .9, .3, 1.25) both; }
+  @keyframes rollIn {
+    0% { transform: translateY(.55em) scale(.7); opacity: 0; filter: blur(10px); }
+    0%, 55% { color: var(--red); }
+    55% { transform: translateY(-.05em) scale(1.12); opacity: 1; filter: blur(0); }
+  }
+
+  .unit:not(.days) .num.punch { animation: punch .5s cubic-bezier(.2, .9, .3, 1.3); }
+  @keyframes punch {
+    0% { transform: scale(1.16); filter: brightness(1.9) drop-shadow(0 0 26px var(--red)); }
+    100% { transform: scale(1); filter: none; }
   }
 
   .label {
@@ -129,25 +253,74 @@
     font-weight: 800;
     color: var(--red);
     text-shadow: 0 0 20px var(--red-glow);
-    animation: blink 2s step-end infinite;
+    animation: blink var(--blink) step-end infinite;
     transform: translateY(-10px);
   }
   @keyframes blink { 50% { opacity: .25; } }
 
+  /* 緊迫階段：數字染紅 */
+  body.u-min10 .unit.seconds .num {
+    color: var(--red);
+    text-shadow: 0 0 12px var(--red), 0 0 46px var(--red-glow), 0 0 100px rgba(255, 0, 0, .65);
+  }
+  body.u-min .unit.minutes .num,
+  body.u-min .unit.seconds .num {
+    color: var(--red);
+    text-shadow: 0 0 12px var(--red), 0 0 46px var(--red-glow), 0 0 100px rgba(255, 0, 0, .65);
+  }
+  body.u-final .unit:not(.days) .num {
+    color: var(--red);
+    text-shadow: 0 0 14px var(--red), 0 0 52px var(--red-glow), 0 0 120px rgba(255, 0, 0, .8);
+  }
+
+  body.u-min .stage { animation: jitter 1.1s ease-in-out infinite; }
+  body.u-final .stage { animation: jitter .45s linear infinite; }
+  @keyframes jitter {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-1.5px, 1px); }
+    40% { transform: translate(1.5px, -1px); }
+    60% { transform: translate(-1px, -1.5px); }
+    80% { transform: translate(1px, 1.5px); }
+  }
+
+  /* 引線警示條 */
+  .hazard {
+    width: min(92vw, 640px);
+    height: 7px;
+    margin: 22px auto 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255, 42, 42, .1);
+    border: 1px solid rgba(255, 42, 42, .35);
+    position: relative;
+  }
+  .hazard i {
+    position: absolute; inset: 0; display: block;
+    background: repeating-linear-gradient(90deg, var(--red) 0 18px, transparent 18px 36px);
+    animation: hazardMove var(--hazard) linear infinite;
+    opacity: .9;
+  }
+  @keyframes hazardMove { to { transform: translateX(36px); } }
+
   /* ---- 倒數結束 ---- */
   .done-msg {
     display: none;
-    margin-top: 14px;
-    font-size: clamp(20px, 4vw, 40px);
+    margin-top: 16px;
+    font-size: clamp(24px, 5vw, 52px);
     font-weight: 900;
     letter-spacing: .3em;
     color: var(--red);
     text-shadow: 0 0 20px var(--red), 0 0 70px rgba(255, 0, 0, .7);
-    animation: alarm .8s ease-in-out infinite;
   }
-  @keyframes alarm { 50% { opacity: .35; transform: scale(.97); } }
-  body.done .done-msg { display: block; }
+  body.done .done-msg { display: block; animation: alarmShake .9s ease-in-out infinite; }
+  @keyframes alarmShake {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    25% { opacity: .5; transform: scale(.97) translateX(-4px); }
+    50% { opacity: .3; transform: scale(.95); }
+    75% { opacity: .5; transform: scale(.97) translateX(4px); }
+  }
   body.done .countdown { opacity: .25; filter: grayscale(.6); }
+  body.done .hazard { display: none; }
 
   /* ---- QR 卡片 ---- */
   .qr-card {
@@ -215,14 +388,35 @@
     .qr-card { flex-direction: column; text-align: center; gap: 12px; padding: 20px; }
     .qr-text span { max-width: 260px; margin-inline: auto; }
     .colon { display: none; }
+    .beacon { width: 30vmin; height: 30vmin; margin-top: -15vmin; }
+    .alert-track span { font-size: 10px; letter-spacing: .25em; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01s !important;
+      animation-iteration-count: 1 !important;
+    }
   }
 </style>
 </head>
 <body>
 
+<div class="alert-strip" aria-hidden="true">
+  <div class="alert-track">
+    <span>⚠ 倒數加速中 ⚠ 請儘速完成更動 ⚠ FINAL CALL ⚠ 立即掃描 QR 前往表單 ⚠&nbsp;</span>
+    <span>⚠ 倒數加速中 ⚠ 請儘速完成更動 ⚠ FINAL CALL ⚠ 立即掃描 QR 前往表單 ⚠&nbsp;</span>
+  </div>
+</div>
+
 <div class="bg-grid"></div>
 <div class="bg-glow"></div>
 <div class="scanline"></div>
+<div class="vignette"></div>
+<div class="beacon beacon-l"></div>
+<div class="beacon beacon-r"></div>
+<div id="embers"></div>
+<div class="alarm-flash"></div>
 
 <div class="stage">
   <div class="eyebrow">⚠ CHANGE OVER ⚠</div>
@@ -230,16 +424,23 @@
   <div class="target-time">更動時間｜<b id="targetText">—</b></div>
 
   <div class="countdown" role="timer" aria-label="倒數計時">
-    <div class="unit days"><span class="num" id="d">00</span><span class="label">天</span></div>
+    <div class="unit days"><span class="num" id="d"></span><span class="label">天</span></div>
     <span class="colon">:</span>
-    <div class="unit"><span class="num" id="h">00</span><span class="label">時</span></div>
+    <div class="unit hours"><span class="num" id="h"></span><span class="label">時</span></div>
     <span class="colon">:</span>
-    <div class="unit"><span class="num" id="m">00</span><span class="label">分</span></div>
+    <div class="unit minutes"><span class="num" id="m"></span><span class="label">分</span></div>
     <span class="colon">:</span>
-    <div class="unit"><span class="num" id="s">00</span><span class="label">秒</span></div>
+    <div class="unit seconds"><span class="num" id="s"></span><span class="label">秒</span></div>
   </div>
 
+  <div class="hazard" aria-hidden="true"><i></i></div>
+
   <div class="done-msg">🔥 更動時間已到 🔥</div>
+</div>
+
+<div class="final-overlay" id="finalOverlay" aria-hidden="true">
+  <i class="final-ring"></i>
+  <span class="final-num" id="finalNum"></span>
 </div>
 
 <a class="qr-card" id="qrCard" href="#" target="_blank" rel="noopener">
@@ -2595,41 +2796,107 @@ const CONFIG = {
     document.getElementById('qrFrame').appendChild(img);
   }
 
+  /* ---- 餘燼粒子 ---- */
+  const embersBox = document.getElementById('embers');
+  for (let i = 0; i < 26; i++) {
+    const e = document.createElement('i');
+    e.className = 'ember';
+    const size = 3 + Math.random() * 7;
+    e.style.width = e.style.height = size + 'px';
+    e.style.left = Math.random() * 100 + '%';
+    e.style.animationDuration = 6 + Math.random() * 8 + 's';
+    e.style.animationDelay = -Math.random() * 14 + 's';
+    e.style.setProperty('--drift', (Math.random() * 140 - 70) + 'px');
+    embersBox.appendChild(e);
+  }
+
   /* ---- 倒數 ---- */
   const els = { d: document.getElementById('d'), h: document.getElementById('h'),
                 m: document.getElementById('m'), s: document.getElementById('s') };
+  const finalOverlay = document.getElementById('finalOverlay');
+  const finalNumEl = document.getElementById('finalNum');
+  const PHASES = ['u-hours', 'u-min10', 'u-min', 'u-final'];
   let finished = false;
+  let lastPhase = null;
+  let lastFinal = null;
+
+  function setNum(el, str) {
+    const chars = [...String(str)];
+    let changed = false;
+    while (el.children.length < chars.length) {
+      const d = document.createElement('span');
+      d.className = 'digit';
+      el.appendChild(d);
+    }
+    while (el.children.length > chars.length) el.lastElementChild.remove();
+    chars.forEach((ch, i) => {
+      const d = el.children[i];
+      if (d.textContent !== ch) {
+        changed = true;
+        d.textContent = ch;
+        d.classList.remove('roll'); void d.offsetWidth; d.classList.add('roll');
+      }
+    });
+    return changed;
+  }
+
+  function rePunch(el) {
+    el.classList.remove('punch'); void el.offsetWidth; el.classList.add('punch');
+  }
+
+  function phaseFor(ms) {
+    if (ms <= 0) return 'done';
+    if (ms <= 10e3) return 'u-final';
+    if (ms <= 60e3) return 'u-min';
+    if (ms <= 600e3) return 'u-min10';
+    if (ms <= 3600e3) return 'u-hours';
+    return '';
+  }
 
   function render() {
-    let diff = target - Date.now();
+    const diff = target - Date.now();
     if (diff <= 0) {
       if (!finished) {
         finished = true;
+        PHASES.forEach(c => document.body.classList.remove(c));
         document.body.classList.add('done');
-        Object.values(els).forEach(el => el.textContent = '00');
+        Object.values(els).forEach(el => setNum(el, '00'));
+        finalOverlay.classList.remove('go');
       }
       return;
     }
+
+    const phase = phaseFor(diff);
+    if (phase !== lastPhase) {
+      lastPhase = phase;
+      PHASES.forEach(c => document.body.classList.toggle(c, c === phase));
+    }
+
     const d = Math.floor(diff / 864e5);
     const h = Math.floor(diff % 864e5 / 36e5);
     const m = Math.floor(diff % 36e5 / 6e4);
     const s = Math.floor(diff % 6e4 / 1e3);
 
-    if (els.d.textContent !== String(d).padStart(2, '0')) {
-      els.d.textContent = String(d).padStart(2, '0');
-      els.d.classList.remove('tick'); void els.d.offsetWidth; els.d.classList.add('tick');
-    }
-    [ [els.h, h], [els.m, m], [els.s, s] ].forEach(([el, v]) => {
-      const t = String(v).padStart(2, '0');
-      if (el.textContent !== t) {
-        el.textContent = t;
-        el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick');
-      }
+    [['d', d], ['h', h], ['m', m], ['s', s]].forEach(([k, v]) => {
+      const text = String(v).padStart(2, '0');
+      if (setNum(els[k], text) && k !== 'd') rePunch(els[k]);
     });
+
+    if (phase === 'u-final') {
+      const secs = Math.ceil(diff / 1e3);
+      if (secs !== lastFinal) {
+        lastFinal = secs;
+        finalNumEl.textContent = secs;
+        finalOverlay.classList.remove('go'); void finalOverlay.offsetWidth; finalOverlay.classList.add('go');
+      }
+    } else if (lastFinal !== null) {
+      lastFinal = null;
+      finalOverlay.classList.remove('go');
+    }
   }
 
   render();
-  setInterval(render, 250);
+  setInterval(render, 100);
 })();
 </script>
 
