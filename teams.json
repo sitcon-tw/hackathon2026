@@ -179,7 +179,7 @@
     "id": "T030",
     "name": "Context & Agent Lab",
     "tracks": [
-      "AI Agents & Automation"
+      "AI for Everyday Life"
     ]
   },
   {
@@ -935,6 +935,13 @@
     "name": "rm -rf",
     "tracks": [
       "AI for Taiwan／Social Impact"
+    ]
+  },
+  {
+    "id": "T231",
+    "name": "ROBOT",
+    "tracks": [
+      "AI Agents & Automation"
     ]
   },
   {
