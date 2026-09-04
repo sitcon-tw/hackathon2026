@@ -37,6 +37,24 @@
     position: relative;
   }
 
+  body::before, body::after {
+    content: '';
+    position: fixed; inset: -25vmax; pointer-events: none; z-index: 0;
+  }
+  body::before {
+    background: repeating-radial-gradient(circle at center, transparent 0 7vmin, rgba(255, 42, 42, .055) 7.15vmin 7.3vmin);
+    animation: radarSweep 16s linear infinite;
+  }
+  body::after {
+    opacity: .28;
+    background-image: radial-gradient(circle, rgba(255, 180, 180, .7) 0 1px, transparent 1.5px);
+    background-size: 52px 52px;
+    mask-image: radial-gradient(circle at center, #000, transparent 72%);
+    animation: starDrift 18s linear infinite;
+  }
+  @keyframes radarSweep { to { transform: rotate(360deg); } }
+  @keyframes starDrift { to { background-position: 52px -104px; } }
+
   /* ---- 背景特效 ---- */
   .bg-glow {
     position: fixed; inset: 0; pointer-events: none;
@@ -164,6 +182,23 @@
     100% { transform: scale(2.8); opacity: 0; }
   }
 
+  .phase-impact {
+    position: fixed; inset: 0; z-index: 8; display: grid; place-items: center;
+    pointer-events: none; opacity: 0;
+  }
+  .phase-impact span {
+    max-width: min(90vw, 720px); padding: 14px 26px; border: 2px solid rgba(255, 110, 110, .9); border-radius: 12px;
+    background: rgba(48, 0, 0, .76); color: #fff; font-size: clamp(18px, 4vw, 42px); font-weight: 900;
+    letter-spacing: .14em; text-align: center; text-shadow: 0 0 18px var(--red), 0 0 58px rgba(255, 0, 0, .9);
+    box-shadow: 0 0 46px rgba(255, 0, 0, .5);
+  }
+  .phase-impact.go { animation: impactShow 2s cubic-bezier(.2, .9, .3, 1) both; }
+  @keyframes impactShow {
+    0% { opacity: 0; transform: scale(2.3); filter: blur(18px); }
+    12%, 80% { opacity: 1; transform: scale(1); filter: blur(0); }
+    100% { opacity: 0; transform: scale(.9); filter: blur(5px); }
+  }
+
   /* ---- 標題 ---- */
   .stage { position: relative; z-index: 2; text-align: center; }
 
@@ -199,6 +234,29 @@
     letter-spacing: .2em;
   }
   .target-time b { color: rgba(255, 120, 120, .9); font-weight: 600; }
+
+  /* ---- 倒數節奏 ---- */
+  .phase-board {
+    width: min(92vw, 640px); margin: 18px auto 4px; padding: 12px 15px 11px;
+    border: 1px solid rgba(255, 75, 75, .28); border-radius: 12px;
+    background: linear-gradient(105deg, rgba(255, 42, 42, .09), rgba(255, 42, 42, .02) 54%, rgba(255, 42, 42, .12));
+    box-shadow: inset 0 0 28px rgba(255, 20, 20, .05), 0 0 26px rgba(255, 20, 20, .08);
+    backdrop-filter: blur(5px);
+  }
+  .phase-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+  .phase-head b { color: #fff; font-size: clamp(13px, 2vw, 16px); letter-spacing: .12em; }
+  .phase-head span { color: rgba(255, 202, 202, .68); font-size: 11px; letter-spacing: .13em; }
+  .phase-track { height: 5px; margin: 11px 0 8px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .12); }
+  .phase-fill {
+    display: block; width: var(--phase-progress, 8%); height: 100%; border-radius: inherit;
+    background: linear-gradient(90deg, #ffb020, #ff2a2a 62%, #ff0055);
+    box-shadow: 0 0 16px rgba(255, 42, 42, .9); transition: width .8s cubic-bezier(.2, .9, .3, 1);
+  }
+  .phase-steps { display: flex; justify-content: space-between; gap: 3px; color: rgba(255, 255, 255, .38); font-size: clamp(8px, 1.5vw, 10px); font-weight: 800; letter-spacing: .04em; }
+  .phase-steps span { transition: color .35s, text-shadow .35s; }
+  .phase-steps span.active { color: #ffbab2; text-shadow: 0 0 10px var(--red); }
+  body.u-min .phase-board, body.u-final .phase-board { border-color: rgba(255, 60, 60, .65); animation: phasePulse var(--pulse) ease-in-out infinite; }
+  @keyframes phasePulse { 50% { box-shadow: inset 0 0 34px rgba(255, 20, 20, .14), 0 0 35px rgba(255, 20, 20, .28); } }
 
   /* ---- 倒數 ---- */
   .countdown {
@@ -392,6 +450,18 @@
     .alert-track span { font-size: 10px; letter-spacing: .25em; }
   }
 
+  /* 1920 x 1080 投影畫面：所有資訊維持在單一畫面內。 */
+  @media (min-width: 900px) and (min-height: 1000px) {
+    body { height: 100vh; gap: 18px; padding: 18px 32px 12px; overflow: hidden; }
+    .phase-board { margin: 12px auto 2px; padding: 10px 14px 9px; }
+    .phase-track { margin: 8px 0 6px; }
+    .hazard { margin-top: 14px; }
+    .qr-card { gap: 16px; padding: 12px 20px; }
+    .qr-frame { padding: 6px; }
+    .qr-frame canvas, .qr-frame img { width: 104px; }
+    footer { font-size: 10px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: .01s !important;
@@ -423,6 +493,14 @@
   <h1 id="pageTitle">主題 <span class="accent">/</span> 隊伍 更動倒數</h1>
   <div class="target-time">更動時間｜<b id="targetText">—</b></div>
 
+  <div class="phase-board" aria-live="polite">
+    <div class="phase-head"><b id="phaseText">倒數準備中</b><span id="phaseNote">請確認更動內容</span></div>
+    <div class="phase-track" aria-hidden="true"><i class="phase-fill" id="phaseFill"></i></div>
+    <div class="phase-steps" aria-hidden="true">
+      <span data-at="120">2H</span><span data-at="60">1H</span><span data-at="50">50</span><span data-at="40">40</span><span data-at="30">30</span><span data-at="20">20</span><span data-at="10">10</span><span data-at="5">5</span><span data-at="3">3</span><span data-at="2">2</span><span data-at="1">1M</span>
+    </div>
+  </div>
+
   <div class="countdown" role="timer" aria-label="倒數計時">
     <div class="unit days"><span class="num" id="d"></span><span class="label">天</span></div>
     <span class="colon">:</span>
@@ -442,6 +520,8 @@
   <i class="final-ring"></i>
   <span class="final-num" id="finalNum"></span>
 </div>
+
+<div class="phase-impact" id="phaseImpact" aria-hidden="true"><span id="impactText"></span></div>
 
 <a class="qr-card" id="qrCard" href="#" target="_blank" rel="noopener">
   <div class="qr-frame" id="qrFrame"></div>
@@ -2762,7 +2842,7 @@ var qrcode = function() {
    ====================================================== */
 const CONFIG = {
   title: '主題 <span class="accent">/</span> 隊伍 更動倒數',  // 可含 HTML
-  date:  '2026-09-04T16:30:00',                             // 更動時間 (ISO 格式)
+  date:  '2026-09-05T16:30:00',                             // 更動時間 (ISO 格式)
   url:   'https://hackathon2026.sitcon.org/#actions'         // 更動表單網址
 };
 /* ====================================================== */
@@ -2815,10 +2895,39 @@ const CONFIG = {
                 m: document.getElementById('m'), s: document.getElementById('s') };
   const finalOverlay = document.getElementById('finalOverlay');
   const finalNumEl = document.getElementById('finalNum');
+  const phaseTextEl = document.getElementById('phaseText');
+  const phaseNoteEl = document.getElementById('phaseNote');
+  const phaseFillEl = document.getElementById('phaseFill');
+  const phaseSteps = document.querySelectorAll('.phase-steps span');
+  const impactEl = document.getElementById('phaseImpact');
+  const impactTextEl = document.getElementById('impactText');
   const PHASES = ['u-hours', 'u-min10', 'u-min', 'u-final'];
+  const PHASE_COPY = {
+    '':        ['準備階段', '保留時間檢查內容與連結'],
+    'u-hours': ['2 小時警戒', '確認變更後立即送出'],
+    'u-min10': ['30 分鐘行動', '這是最後一次完整檢查'],
+    'u-min':   ['5 分鐘緊急', '現在送出，不要再等待'],
+    'u-final': ['最後 10 秒', '立即完成更動'],
+    'done':    ['更動時間已到', '表單已關閉']
+  };
+  const MILESTONES = [
+    { at: 120, text: '⚠ 剩 2 小時｜確認後即可送出' },
+    { at: 60, text: '⚠ 剩 1 小時｜完成最後檢查' },
+    { at: 50, text: '⚠ 剩 50 分鐘｜確認表單資料' },
+    { at: 40, text: '⚠ 剩 40 分鐘｜檢查隊伍與主題' },
+    { at: 30, text: '⚠ 剩 30 分鐘｜最後完整檢查' },
+    { at: 20, text: '⚠ 剩 20 分鐘｜請立即送出' },
+    { at: 10, text: '⚠ 剩 10 分鐘｜截止警戒' },
+    { at: 5, text: '⚠ 剩 5 分鐘｜立即送出' },
+    { at: 3, text: '⚠ 剩 3 分鐘｜最後確認' },
+    { at: 2, text: '⚠ 剩 2 分鐘｜不要再等待' },
+    { at: 1, text: '🔥 最後 1 分鐘｜不要錯過截止時間' }
+  ];
+  const shownMilestones = new Set();
   let finished = false;
   let lastPhase = null;
   let lastFinal = null;
+  let lastRemainingMinute = null;
 
   function setNum(el, str) {
     const chars = [...String(str)];
@@ -2847,10 +2956,40 @@ const CONFIG = {
   function phaseFor(ms) {
     if (ms <= 0) return 'done';
     if (ms <= 10e3) return 'u-final';
-    if (ms <= 60e3) return 'u-min';
-    if (ms <= 600e3) return 'u-min10';
-    if (ms <= 3600e3) return 'u-hours';
+    if (ms <= 300e3) return 'u-min';
+    if (ms <= 1800e3) return 'u-min10';
+    if (ms <= 7200e3) return 'u-hours';
     return '';
+  }
+
+  function setPhaseCopy(phase, minutesLeft) {
+    const [title, note] = PHASE_COPY[phase];
+    const reached = [...phaseSteps].filter(step => minutesLeft <= Number(step.dataset.at)).length;
+    phaseTextEl.textContent = title;
+    phaseNoteEl.textContent = note;
+    phaseFillEl.style.setProperty('--phase-progress', (8 + reached / phaseSteps.length * 92) + '%');
+    phaseSteps.forEach(step => step.classList.toggle('active', minutesLeft <= Number(step.dataset.at)));
+  }
+
+  function showImpact(text) {
+    impactTextEl.textContent = text;
+    impactEl.classList.remove('go'); void impactEl.offsetWidth; impactEl.classList.add('go');
+  }
+
+  function updateMilestones(minutesLeft) {
+    if (lastRemainingMinute === null) {
+      MILESTONES.forEach(({ at }) => { if (minutesLeft <= at) shownMilestones.add(at); });
+      lastRemainingMinute = minutesLeft;
+      return;
+    }
+    for (const milestone of MILESTONES) {
+      if (lastRemainingMinute > milestone.at && minutesLeft <= milestone.at && !shownMilestones.has(milestone.at)) {
+        shownMilestones.add(milestone.at);
+        showImpact(milestone.text);
+        break;
+      }
+    }
+    lastRemainingMinute = minutesLeft;
   }
 
   function render() {
@@ -2862,15 +3001,20 @@ const CONFIG = {
         document.body.classList.add('done');
         Object.values(els).forEach(el => setNum(el, '00'));
         finalOverlay.classList.remove('go');
+        setPhaseCopy('done', 0);
+        showImpact('⛔ 更動時間已到');
       }
       return;
     }
 
     const phase = phaseFor(diff);
+    const minutesLeft = Math.ceil(diff / 6e4);
+    updateMilestones(minutesLeft);
     if (phase !== lastPhase) {
       lastPhase = phase;
       PHASES.forEach(c => document.body.classList.toggle(c, c === phase));
     }
+    setPhaseCopy(phase, minutesLeft);
 
     const d = Math.floor(diff / 864e5);
     const h = Math.floor(diff % 864e5 / 36e5);

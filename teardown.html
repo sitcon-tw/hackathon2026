@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17:00 最後撤場倒數</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #ff2a2a;
+    --red-dim: #b31212;
+    --red-glow: rgba(255, 42, 42, .55);
+    --green: #39ff88;
+    --green-glow: rgba(57, 255, 136, .5);
+    --bg: #070303;
+  }
+
+  /* ---- 緊迫階段速度（JS 切換 body class） ---- */
+  body {
+    --pulse: 4s;   --blink: 2s;   --heart: 1.2s; --floor: 5s;
+    --door: 0deg;  --glow: 0;     --px: 6%;      --bob: 1.4s;
+    --surge: 0;
+  }
+  body.u-hours  { --pulse: 2.6s; --blink: 1s;   --heart: 1.2s; --floor: 3.5s; --door: -12deg; --glow: .12; --px: 26%; --bob: 1s; }
+  body.u-min10  { --pulse: 1.6s; --blink: .5s;  --heart: .9s;  --floor: 2s;   --door: -35deg; --glow: .35; --px: 52%; --bob: .6s; }
+  body.u-min    { --pulse: 1s;   --blink: .25s; --heart: .6s;  --floor: 1.1s; --door: -62deg; --glow: .65; --px: 76%; --bob: .45s; }
+  body.u-final  { --pulse: .55s; --blink: .14s; --heart: .42s; --floor: .5s;  --door: -80deg; --glow: .9;  --px: 88%; --bob: .32s; }
+  body.done     { --door: -85deg; --glow: 1; --surge: 1; }
+
+  html { height: 100%; }
+  body {
+    min-height: 100%;
+    background: var(--bg);
+    color: #fff;
+    font-family: -apple-system, "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 16px 20px 20px;
+    padding-top: 48px;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* ---- 背景特效 ---- */
+  .bg-glow {
+    position: fixed; inset: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% 30%, rgba(255, 30, 30, .18), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 50% 100%, rgba(120, 0, 0, .25), transparent 70%);
+    animation: breathe calc(var(--pulse) * (1 - .35 * var(--surge))) ease-in-out infinite;
+  }
+  .bg-grid {
+    position: fixed; inset: -50%; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255, 42, 42, .05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 42, 42, .05) 1px, transparent 1px);
+    background-size: 60px 60px;
+    transform: perspective(500px) rotateX(60deg) translateY(-20%);
+    animation: gridmove calc(12s - 9s * var(--surge)) linear infinite;
+    opacity: calc(.54 + .36 * var(--surge));
+  }
+  .scanline {
+    position: fixed; left: 0; right: 0; height: 140px; pointer-events: none;
+    background: linear-gradient(transparent, rgba(255, 42, 42, .07), transparent);
+    animation: scan calc(6s - 4s * var(--surge)) linear infinite;
+  }
+  @keyframes breathe { 50% { opacity: .65; } }
+  @keyframes gridmove { to { background-position: 0 60px, 60px 0; } }
+  @keyframes scan { from { top: -140px; } to { top: 100%; } }
+
+  /* ---- 緊迫氛圍層 ---- */
+  .vignette {
+    position: fixed; inset: 0; pointer-events: none; z-index: 3;
+    opacity: 0; transition: opacity .6s;
+    background: radial-gradient(ellipse at center, transparent 52%, rgba(255, 0, 0, .32) 100%);
+  }
+  body.u-min10 .vignette, body.u-min .vignette, body.u-final .vignette, body.done .vignette {
+    opacity: 1;
+    animation: heartbeat calc(var(--heart) * (1 - .4 * var(--surge))) ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%, 45%, 100% { transform: scale(1); }
+    14% { transform: scale(1.06); }
+    28% { transform: scale(1.01); }
+  }
+
+  .beacon {
+    position: fixed; top: 50%; width: 24vmin; height: 24vmin; margin-top: -12vmin;
+    pointer-events: none; z-index: 1; opacity: 0;
+    background: radial-gradient(circle, rgba(255, 30, 30, .55), transparent 62%);
+    filter: blur(10px);
+  }
+  .beacon-l { left: -12vmin; }
+  .beacon-r { right: -12vmin; }
+  body.u-min .beacon, body.u-final .beacon, body.done .beacon {
+    animation: beaconFlash calc(.9s - .35s * var(--surge)) linear infinite;
+  }
+  body.u-final .beacon, body.done .beacon { animation-duration: calc(.45s - .12s * var(--surge)); }
+  .beacon-r { animation-delay: .45s; }
+  body.u-final .beacon-r, body.done .beacon-r { animation-delay: .225s; }
+  @keyframes beaconFlash { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+
+  .alert-strip {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 5; height: 36px;
+    display: flex; align-items: center; overflow: hidden; pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 42, 42, .18), rgba(255, 42, 42, .4) 50%, rgba(255, 42, 42, .18));
+    border-bottom: 1px solid rgba(255, 42, 42, .55);
+    box-shadow: 0 4px 24px rgba(255, 0, 0, .3);
+    opacity: 0; transform: translateY(-100%);
+    transition: opacity .4s, transform .4s;
+  }
+  body.u-hours .alert-strip, body.u-min10 .alert-strip,
+  body.u-min .alert-strip, body.u-final .alert-strip, body.done .alert-strip { opacity: 1; transform: none; }
+  .alert-track {
+    display: flex; width: max-content; white-space: nowrap;
+    animation: marquee calc(18s - 13s * var(--surge)) linear infinite;
+  }
+  body.u-min .alert-track { animation-duration: calc(9s - 4s * var(--surge)); }
+  body.u-final .alert-track { animation-duration: calc(5s - 1.2s * var(--surge)); }
+  .alert-track span {
+    font-size: 12px; font-weight: 700; letter-spacing: .35em;
+    color: #ffb0b0; padding-right: .35em;
+  }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
+  #embers { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+  .ember {
+    position: absolute; bottom: -12px; display: block; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 130, 70, .95), rgba(255, 42, 42, 0) 70%);
+    opacity: 0;
+    animation: emberRise calc(var(--dur, 8s) * (1 - .45 * var(--surge))) linear infinite;
+  }
+  @keyframes emberRise {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    10% { opacity: .85; }
+    100% { transform: translate(var(--drift, 40px), -106vh) scale(.2); opacity: 0; }
+  }
+
+  .alarm-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 4;
+    background: rgba(255, 0, 0, calc(.12 + .15 * var(--surge))); opacity: 0;
+  }
+  body.done .alarm-flash { animation: alarmFlash calc(.6s - .2s * var(--surge)) linear infinite; }
+  @keyframes alarmFlash { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+  /* ---- 每分鐘閃光衝擊 ---- */
+  .minute-flash {
+    position: fixed; inset: 0; pointer-events: none; z-index: 4;
+    background: rgba(255, 60, 60, var(--flash-i, .2));
+    opacity: 0;
+  }
+  .minute-flash.go { animation: mflash .55s ease-out both; }
+  @keyframes mflash { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+  /* ---- URGENCY 能量條 ---- */
+  .surge-meter {
+    position: fixed; top: 36px; left: 0; right: 0; z-index: 5;
+    height: 5px; pointer-events: none;
+    background: rgba(255, 255, 255, .07);
+    opacity: 0; transition: opacity .5s;
+  }
+  body.u-hours .surge-meter, body.u-min10 .surge-meter,
+  body.u-min .surge-meter, body.u-final .surge-meter, body.done .surge-meter { opacity: 1; }
+  .surge-fill {
+    display: block; height: 100%;
+    transform-origin: left center;
+    transform: scaleX(var(--surge));
+    background: linear-gradient(90deg, #ffb020, #ff2a2a 70%, #ff004c);
+    box-shadow: 0 0 14px rgba(255, 42, 42, calc(.3 + .5 * var(--surge)));
+    transition: transform .9s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  /* ---- 紅色緊迫濾鏡 ---- */
+  .surge-tint {
+    position: fixed; inset: 0; pointer-events: none; z-index: 3;
+    background: radial-gradient(ellipse at center, transparent 42%, rgba(255, 0, 0, .5) 100%);
+    opacity: calc(var(--surge) * .38);
+  }
+
+  /* ---- 里程碑橫幅 ---- */
+  .milestone {
+    position: fixed; inset: 0; z-index: 7; pointer-events: none;
+    display: grid; place-items: center; opacity: 0;
+  }
+  .ms-text {
+    font-weight: 900;
+    font-size: clamp(18px, 4.2vw, 46px);
+    letter-spacing: .16em;
+    color: #fff;
+    padding: 14px 34px;
+    border-radius: 12px;
+    background: linear-gradient(90deg, rgba(255, 42, 42, .22), rgba(255, 42, 42, .5) 50%, rgba(255, 42, 42, .22));
+    border: 2px solid rgba(255, 80, 80, .85);
+    text-shadow: 0 0 18px var(--red), 0 0 60px rgba(255, 0, 0, .8);
+    box-shadow: 0 0 46px rgba(255, 0, 0, .5);
+    white-space: nowrap;
+  }
+  .milestone.go { animation: msShow 2.3s cubic-bezier(.2, .9, .3, 1) both; }
+  @keyframes msShow {
+    0% { opacity: 0; transform: scale(2.3); filter: blur(20px); }
+    12% { opacity: 1; transform: scale(1); filter: blur(0); }
+    82% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0; transform: scale(.9); filter: blur(4px); }
+  }
+
+  .final-overlay {
+    position: fixed; inset: 0; z-index: 6; pointer-events: none;
+    display: grid; place-items: center;
+  }
+  .final-num {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-weight: 900; line-height: 1;
+    font-size: clamp(140px, 40vmin, 460px);
+    color: var(--red);
+    text-shadow: 0 0 calc(40px + 22px * var(--surge)) var(--red), 0 0 calc(120px + 40px * var(--surge)) rgba(255, 0, 0, .9);
+    opacity: 0;
+  }
+  .final-ring {
+    position: absolute; top: 50%; left: 50%;
+    width: 34vmin; height: 34vmin; margin: -17vmin 0 0 -17vmin;
+    border-radius: 50%; border: 4px solid var(--red); opacity: 0;
+  }
+  .final-overlay.go .final-num { animation: finalPunch 1s cubic-bezier(.16, 1, .3, 1) both; }
+  .final-overlay.go .final-ring { animation: ringOut 1s ease-out both; }
+  @keyframes finalPunch {
+    0% { transform: scale(2.6); opacity: 0; filter: blur(24px); }
+    16% { transform: scale(1); opacity: 1; filter: blur(0); }
+    72% { transform: scale(.96); opacity: 1; }
+    100% { transform: scale(.8); opacity: 0; }
+  }
+  @keyframes ringOut {
+    0% { transform: scale(.2); opacity: .9; }
+    100% { transform: scale(2.8); opacity: 0; }
+  }
+
+  /* ---- 標題 ---- */
+  .stage { position: relative; z-index: 2; text-align: center; }
+
+  .eyebrow {
+    color: var(--red);
+    letter-spacing: .5em;
+    font-size: clamp(11px, 2vw, 14px);
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  h1 {
+    font-size: clamp(22px, 4.5vw, 44px);
+    font-weight: 900;
+    letter-spacing: .12em;
+    color: #fff;
+    text-shadow: 0 0 18px var(--red-glow), 0 0 60px rgba(255, 0, 0, .3);
+    animation: titleGlitch calc(7s - 2.5s * var(--surge)) infinite;
+  }
+  h1 .accent { color: var(--green); text-shadow: 0 0 18px var(--green-glow), 0 0 60px rgba(57, 255, 136, .3); }
+  body.u-final h1 { animation: titleGlitch calc(1.2s - .65s * var(--surge)) infinite; }
+  @keyframes titleGlitch {
+    0%, 91%, 96%, 100% { transform: none; }
+    92% { transform: translate(-3px, 2px) skewX(-6deg); text-shadow: -4px 0 rgba(0, 220, 255, .7), 4px 0 rgba(255, 0, 80, .8), 0 0 60px rgba(255, 0, 0, .3); }
+    94% { transform: translate(3px, -2px) skewX(4deg); text-shadow: 4px 0 rgba(0, 220, 255, .7), -4px 0 rgba(255, 0, 80, .8); }
+  }
+
+  .target-time {
+    margin-top: 10px;
+    color: rgba(255, 255, 255, .45);
+    font-size: clamp(12px, 2vw, 15px);
+    letter-spacing: .2em;
+  }
+  .target-time b { color: rgba(255, 120, 120, .9); font-weight: 600; }
+
+  /* ---- 撤場節奏 ---- */
+  .phase-board {
+    width: min(92vw, 560px); margin: 14px auto 2px; padding: 10px 14px;
+    border: 1px solid rgba(57, 255, 136, .3); border-radius: 12px;
+    background: linear-gradient(105deg, rgba(57, 255, 136, .08), rgba(255, 42, 42, .04) 60%, rgba(255, 42, 42, .12));
+    box-shadow: inset 0 0 26px rgba(57, 255, 136, .04), 0 0 24px rgba(255, 42, 42, .08);
+    backdrop-filter: blur(5px);
+  }
+  .phase-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .phase-head b { color: #fff; font-size: clamp(13px, 2vw, 16px); letter-spacing: .12em; }
+  .phase-head span { color: rgba(207, 255, 225, .65); font-size: 11px; letter-spacing: .12em; }
+  .phase-track { height: 5px; margin: 9px 0 7px; overflow: hidden; border-radius: 99px; background: rgba(255, 255, 255, .12); }
+  .phase-fill {
+    display: block; height: 100%; width: var(--phase-progress, 8%); border-radius: inherit;
+    background: linear-gradient(90deg, var(--green), #ffb020 48%, var(--red));
+    box-shadow: 0 0 16px rgba(255, 65, 65, .9); transition: width .8s cubic-bezier(.2, .9, .3, 1);
+  }
+  .phase-steps { display: flex; justify-content: space-between; gap: 3px; color: rgba(255, 255, 255, .38); font-size: clamp(8px, 1.5vw, 10px); font-weight: 800; letter-spacing: .04em; }
+  .phase-steps span { transition: color .35s, text-shadow .35s; }
+  .phase-steps span.active { color: #d1ffdf; text-shadow: 0 0 10px var(--green); }
+  body.u-min .phase-board, body.u-final .phase-board { border-color: rgba(255, 70, 70, .7); animation: phasePulse var(--pulse) ease-in-out infinite; }
+  @keyframes phasePulse { 50% { box-shadow: inset 0 0 32px rgba(255, 20, 20, .15), 0 0 35px rgba(255, 20, 20, .28); } }
+
+  /* ---- 大字時間 ---- */
+  .deadline {
+    display: inline-flex; align-items: baseline; gap: 12px;
+    margin-top: 10px; padding: 8px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(57, 255, 136, .5);
+    background: rgba(57, 255, 136, .06);
+    box-shadow: 0 0 30px rgba(57, 255, 136, .12), inset 0 0 18px rgba(57, 255, 136, .06);
+    animation: deadlinePulse calc(2.4s - 1.4s * var(--surge)) ease-in-out infinite;
+  }
+  @keyframes deadlinePulse {
+    50% {
+      box-shadow:
+        0 0 calc(46px + 20px * var(--surge)) rgba(57, 255, 136, .3),
+        inset 0 0 calc(18px + 8px * var(--surge)) rgba(57, 255, 136, .12);
+    }
+  }
+  .deadline small {
+    color: rgba(255, 255, 255, .55);
+    letter-spacing: .3em;
+    font-size: clamp(11px, 1.8vw, 14px);
+    font-weight: 700;
+  }
+  .deadline strong {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-size: clamp(26px, 5.5vmin, 44px);
+    font-weight: 900;
+    letter-spacing: .08em;
+    color: var(--green);
+    text-shadow: 0 0 18px rgba(57, 255, 136, .65), 0 0 60px rgba(57, 255, 136, .35);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- 倒數 ---- */
+  .countdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(6px, 2vw, 22px);
+    margin-top: 8px;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    filter: drop-shadow(0 0 calc(3px + 16px * var(--surge)) rgba(255, 30, 30, calc(.12 + .5 * var(--surge))));
+  }
+
+  .unit { text-align: center; min-width: clamp(56px, 12vw, 130px); }
+  .unit .label { line-height: 1.2; }
+
+  .num {
+    font-family: "SF Mono", "Menlo", "Consolas", monospace;
+    font-weight: 800;
+    font-size: clamp(38px, 8.5vw, 96px);
+    line-height: 1.1;
+    color: #fff;
+    text-shadow:
+      0 0 8px rgba(255, 255, 255, .4),
+      0 0 24px var(--red-glow),
+      0 0 70px rgba(255, 0, 0, .45);
+    font-variant-numeric: tabular-nums;
+    display: flex;
+    justify-content: center;
+  }
+
+  .digit { display: inline-block; min-width: .62em; }
+  .digit.roll { animation: rollIn .5s cubic-bezier(.2, .9, .3, 1.25) both; }
+  @keyframes rollIn {
+    0% { transform: translateY(.55em) scale(.7); opacity: 0; filter: blur(10px); }
+    0%, 55% { color: var(--red); }
+    55% { transform: translateY(-.05em) scale(1.12); opacity: 1; filter: blur(0); }
+  }
+
+  .unit:not(.days) .num.punch { animation: punch calc(.5s - .2s * var(--surge)) cubic-bezier(.2, .9, .3, 1.3); }
+  @keyframes punch {
+    0% { transform: scale(1.16); filter: brightness(1.9) drop-shadow(0 0 26px var(--red)); }
+    100% { transform: scale(1); filter: none; }
+  }
+
+  .label {
+    margin-top: 6px;
+    font-size: clamp(10px, 1.6vw, 14px);
+    letter-spacing: .4em;
+    color: var(--red);
+    font-weight: 700;
+  }
+
+  .colon {
+    font-size: clamp(30px, 7vw, 80px);
+    font-weight: 800;
+    color: var(--red);
+    text-shadow: 0 0 20px var(--red-glow);
+    animation: blink calc(var(--blink) * (1 - .5 * var(--surge))) step-end infinite;
+    transform: translateY(-10px);
+  }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  /* 緊迫階段：數字染紅 */
+  body.u-min10 .unit.seconds .num {
+    color: var(--red);
+    text-shadow: 0 0 12px var(--red), 0 0 46px var(--red-glow), 0 0 100px rgba(255, 0, 0, .65);
+  }
+  body.u-min .unit.minutes .num,
+  body.u-min .unit.seconds .num {
+    color: var(--red);
+    text-shadow: 0 0 12px var(--red), 0 0 46px var(--red-glow), 0 0 100px rgba(255, 0, 0, .65);
+  }
+  body.u-final .unit:not(.days) .num {
+    color: var(--red);
+    text-shadow: 0 0 14px var(--red), 0 0 52px var(--red-glow), 0 0 120px rgba(255, 0, 0, .8);
+  }
+
+  body.u-min .stage { animation: jitter calc(1.1s * (1 - .55 * var(--surge)) ) ease-in-out infinite; }
+  body.u-final .stage { animation: jitter calc(.45s * (1 - .35 * var(--surge)) ) linear infinite; }
+  @keyframes jitter {
+    0%, 100% { transform: translate(0, 0); }
+    20% { transform: translate(-1.5px, 1px); }
+    40% { transform: translate(1.5px, -1px); }
+    60% { transform: translate(-1px, -1.5px); }
+    80% { transform: translate(1px, 1.5px); }
+  }
+
+  /* ---- 撤場舞台（地板 + 門 + 逃跑的人） ---- */
+  .scene {
+    position: relative; z-index: 2;
+    width: min(92vw, 620px);
+    height: clamp(180px, 30vmin, 260px);
+    margin-top: 6px;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 42, 42, .22);
+    background:
+      radial-gradient(ellipse 90% 70% at 70% 90%, rgba(57, 255, 136, calc(var(--glow) * .1)), transparent 70%),
+      linear-gradient(180deg, rgba(20, 4, 4, .6), rgba(8, 2, 2, .8));
+    box-shadow: inset 0 0 40px rgba(0, 0, 0, .7), 0 0 30px rgba(255, 20, 20, .08);
+    transition: background .8s;
+  }
+  .scene::after {
+    content: ''; position: absolute; top: -35%; left: -62%; width: 26%; height: 170%; z-index: 1;
+    background: linear-gradient(90deg, transparent, rgba(255, 120, 120, .45), transparent);
+    transform: rotate(24deg); opacity: calc(.06 + var(--surge) * .55);
+    animation: sceneSweep calc(7s - 4.5s * var(--surge)) linear infinite;
+  }
+  @keyframes sceneSweep { to { left: 138%; } }
+
+  .floor {
+    position: absolute; left: -6%; right: -6%; bottom: 0; height: 26%;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 42, 42, .3);
+  }
+  .floor::before {
+    content: ''; position: absolute; inset: -100% 0 0 0;
+    background-image:
+      linear-gradient(rgba(255, 42, 42, .09) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 42, 42, .09) 1px, transparent 1px);
+    background-size: 48px 48px;
+    transform: perspective(300px) rotateX(60deg);
+    transform-origin: top;
+    animation: floorMove calc(var(--floor) * (1 - .4 * var(--surge))) linear infinite;
+    opacity: .7;
+  }
+  @keyframes floorMove { to { background-position: 0 48px; } }
+
+  .door-unit {
+    position: absolute; right: 8%; bottom: 9%;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+    z-index: 2;
+  }
+
+  .exit-sign {
+    padding: 5px 14px 5px 17px;
+    border-radius: 6px;
+    background: #04170c;
+    border: 2px solid var(--green);
+    color: var(--green);
+    font-weight: 900;
+    letter-spacing: .3em;
+    font-size: clamp(11px, 2vmin, 15px);
+    text-shadow: 0 0 12px var(--green);
+    box-shadow: 0 0 24px rgba(57, 255, 136, .45), inset 0 0 12px rgba(57, 255, 136, .25);
+    animation: signFlicker calc(4s - 2.5s * var(--surge)) infinite;
+  }
+  body.u-final .exit-sign { animation-duration: calc(.8s - .3s * var(--surge)); }
+  @keyframes signFlicker {
+    0%, 91%, 100% { opacity: 1; }
+    92% { opacity: .35; }
+    94% { opacity: 1; }
+    96% { opacity: .55; }
+    97% { opacity: 1; }
+  }
+
+  .door-frame {
+    position: relative;
+    width: clamp(60px, 11vmin, 96px);
+    aspect-ratio: 9 / 16;
+    perspective: 600px;
+    background: #0d0505;
+    border: 3px solid #2a0d0d;
+    border-radius: 8px 8px 0 0;
+    box-shadow: inset 0 0 24px rgba(0, 0, 0, .9), 0 0 26px rgba(255, 42, 42, .12);
+  }
+  .door-light {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(200, 255, 225, .95), rgba(57, 255, 136, .55) 70%, rgba(20, 120, 70, .8));
+    box-shadow: 0 0 60px rgba(57, 255, 136, .55);
+    opacity: var(--glow);
+    transition: opacity .9s;
+    border-radius: 5px 5px 0 0;
+  }
+  .door {
+    position: absolute; inset: 4px;
+    background: linear-gradient(160deg, #3a1112, #1c0808 60%, #2c0d0d);
+    border: 1px solid rgba(255, 42, 42, .28);
+    border-radius: 4px;
+    transform-origin: left center;
+    transform: rotateY(calc(var(--door) - 10deg * var(--surge)));
+    transition: transform 1.4s cubic-bezier(.2, .8, .2, 1);
+    box-shadow: inset 0 0 18px rgba(0, 0, 0, .7);
+    backface-visibility: hidden;
+  }
+  .door .handle {
+    position: absolute; right: 9%; top: 47%;
+    width: 7%; height: 6%;
+    border-radius: 3px;
+    background: #c9a24b;
+    box-shadow: 0 0 8px rgba(255, 200, 80, .6);
+  }
+
+  .light-spill {
+    position: absolute; right: 4%; bottom: 7%;
+    width: 44%; height: 20px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(57, 255, 136, calc(var(--glow) * .45)), transparent 70%);
+    filter: blur(5px);
+    transition: background .9s;
+    z-index: 1;
+  }
+
+  .person {
+    position: absolute; bottom: 9%; left: calc(var(--px) + 5% * var(--surge));
+    font-size: clamp(36px, 7vmin, 60px);
+    line-height: 1;
+    z-index: 1;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .65));
+    transition: left calc(1.4s - 1s * var(--surge)) cubic-bezier(.3, .7, .3, 1);
+  }
+  .person .avatar { display: inline-block; animation: bob calc(var(--bob) * (1 - .35 * var(--surge))) ease-in-out infinite; }
+  .person .avatar span { display: inline-block; transform: scaleX(-1); }
+  .person .runner { display: none; }
+  body.u-min10 .person .runner, body.u-min .person .runner,
+  body.u-final .person .runner, body.done .person .runner { display: inline-block; }
+  body.u-min10 .person .walker, body.u-min .person .walker,
+  body.u-final .person .walker, body.done .person .walker { display: none; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-8%) rotate(-3deg); }
+  }
+  body.u-min10 .person .avatar, body.u-min .person .avatar,
+  body.u-final .person .avatar, body.done .person .avatar { animation-name: bobRun; }
+  @keyframes bobRun {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50% { transform: translateY(-14%) rotate(-10deg); }
+  }
+
+  body.u-min .person::before, body.u-final .person::before,
+  body.u-min .person::after, body.u-final .person::after {
+    content: ''; position: absolute; right: 100%;
+    width: clamp(18px, 4vmin, 30px); height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(270deg, rgba(255, 255, 255, .75), transparent);
+    animation: dash calc(.32s - .16s * var(--surge)) linear infinite;
+  }
+  .person::before { top: 42%; margin-right: 6px; }
+  .person::after { top: 60%; margin-right: 14px; animation-delay: calc(.16s - .06s * var(--surge)); }
+  @keyframes dash { 0% { opacity: 1; transform: translateX(14px); } 100% { opacity: 0; transform: translateX(-8px); } }
+
+  body.done .person { animation: exitSprint 1.2s cubic-bezier(.6, 0, 1, .4) .15s forwards; }
+  @keyframes exitSprint {
+    0%, 60% { opacity: 1; }
+    100% { transform: translateX(30vw); opacity: 0; }
+  }
+
+  .scene-caption {
+    position: relative; z-index: 2;
+    margin-top: 8px;
+    min-height: 1.7em;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: .18em;
+    color: rgba(255, 255, 255, .8);
+    font-size: clamp(13px, 2.4vmin, 18px);
+    text-shadow: 0 0 12px rgba(255, 42, 42, .4);
+  }
+  .scene-caption.pop { animation: captionPop .45s cubic-bezier(.2, .9, .3, 1.4); }
+  @keyframes captionPop {
+    0% { transform: scale(.7); opacity: 0; filter: blur(6px); }
+    100% { transform: scale(1); opacity: 1; filter: blur(0); }
+  }
+
+  /* ---- 倒數結束 ---- */
+  .done-msg {
+    display: none;
+    margin-top: 10px;
+    font-size: clamp(24px, 5vw, 52px);
+    font-weight: 900;
+    letter-spacing: .3em;
+    color: var(--red);
+    text-shadow: 0 0 20px var(--red), 0 0 70px rgba(255, 0, 0, .7);
+  }
+  body.done .done-msg { display: block; animation: alarmShake .9s ease-in-out infinite; }
+  @keyframes alarmShake {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    25% { opacity: .5; transform: scale(.97) translateX(-4px); }
+    50% { opacity: .3; transform: scale(.95); }
+    75% { opacity: .5; transform: scale(.97) translateX(4px); }
+  }
+  body.done .countdown { opacity: .25; filter: grayscale(.6); }
+
+  /* ---- 撤場須知 ---- */
+  .notice-card {
+    position: relative; z-index: 2;
+    width: min(92vw, 560px);
+    padding: 12px 20px;
+    border-radius: 14px;
+    background: linear-gradient(145deg, rgba(40, 5, 5, .9), rgba(15, 2, 2, .9));
+    border: 1px solid rgba(255, 42, 42, .32);
+    box-shadow: 0 0 30px rgba(255, 20, 20, .12), inset 0 0 30px rgba(255, 20, 20, .05);
+    backdrop-filter: blur(4px);
+  }
+  .notice-card small {
+    display: block;
+    color: var(--red);
+    letter-spacing: .35em;
+    font-weight: 700;
+    font-size: 11px;
+    margin-bottom: 10px;
+  }
+  .notice-card ul { list-style: none; }
+  .notice-card li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 6px;
+    color: rgba(255, 255, 255, .75);
+    font-size: clamp(12px, 2vmin, 15px);
+    letter-spacing: .08em;
+    line-height: 1.5;
+  }
+  .notice-card li::before { content: '▸'; position: absolute; left: 0; color: var(--green); text-shadow: 0 0 8px var(--green-glow); }
+  .notice-card li:last-child { margin-bottom: 0; }
+  .notice-card li b { color: var(--green); font-weight: 800; }
+
+  footer {
+    position: relative; z-index: 2;
+    color: rgba(255, 255, 255, .25);
+    font-size: 11px;
+    letter-spacing: .25em;
+  }
+
+  @media (max-width: 560px) {
+    .colon { display: none; }
+    .beacon { width: 30vmin; height: 30vmin; margin-top: -15vmin; }
+    .alert-track span { font-size: 10px; letter-spacing: .25em; }
+    .scene { height: clamp(210px, 46vmin, 280px); }
+    .deadline { gap: 8px; padding: 8px 16px; }
+  }
+
+  /* 1920 x 1080 投影畫面：所有資訊維持在單一畫面內。 */
+  @media (min-width: 900px) and (min-height: 1000px) {
+    body { height: 100vh; min-height: 0; gap: 8px; padding: 44px 28px 10px; overflow: hidden; }
+    .eyebrow { margin-bottom: 5px; }
+    .target-time { margin-top: 5px; }
+    .deadline { margin-top: 6px; padding: 6px 16px; }
+    .phase-board { margin: 8px auto 0; padding: 8px 13px; }
+    .phase-track { margin: 7px 0 5px; }
+    .countdown { margin-top: 4px; }
+    .scene { height: min(24vh, 230px); margin-top: 2px; }
+    .scene-caption { margin-top: 4px; }
+    .notice-card { padding: 8px 18px; }
+    .notice-card small { margin-bottom: 5px; }
+    .notice-card li { margin-bottom: 2px; }
+    footer { font-size: 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01s !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .01s !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="alert-strip" aria-hidden="true">
+  <div class="alert-track">
+    <span>⚠ 17:00 最後撤場 ⚠ 請提前收拾裝備 ⚠ 帶走所有個人物品 ⚠&nbsp;</span>
+    <span>⚠ 17:00 最後撤場 ⚠ 請提前收拾裝備 ⚠ 帶走所有個人物品 ⚠&nbsp;</span>
+  </div>
+</div>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="scanline"></div>
+<div class="vignette"></div>
+<div class="beacon beacon-l"></div>
+<div class="beacon beacon-r"></div>
+<div id="embers"></div>
+<div class="alarm-flash"></div>
+<div class="surge-tint"></div>
+<div class="minute-flash" id="minuteFlash"></div>
+
+<div class="surge-meter" aria-hidden="true"><i class="surge-fill"></i></div>
+
+<div class="milestone" id="milestone" aria-hidden="true">
+  <span class="ms-text" id="msText"></span>
+</div>
+
+<div class="stage">
+  <div class="eyebrow">⚠ CHECKOUT 17:00 ⚠</div>
+  <h1 id="pageTitle">最後<span class="accent">撤場</span>倒數</h1>
+  <div class="target-time">撤場時間｜<b id="targetText">—</b></div>
+
+  <div class="deadline" role="timer">
+    <small>DEADLINE</small>
+    <strong id="deadlineTime">17:00</strong>
+  </div>
+
+  <div class="phase-board" aria-live="polite">
+    <div class="phase-head"><b id="phaseText">撤場準備中</b><span id="phaseNote">先整理，再移動</span></div>
+    <div class="phase-track" aria-hidden="true"><i class="phase-fill" id="phaseFill"></i></div>
+    <div class="phase-steps" aria-hidden="true">
+      <span data-at="120">2H</span><span data-at="60">1H</span><span data-at="50">50</span><span data-at="40">40</span><span data-at="30">30</span><span data-at="20">20</span><span data-at="10">10</span><span data-at="5">5</span><span data-at="3">3</span><span data-at="2">2</span><span data-at="1">1M</span>
+    </div>
+  </div>
+
+  <div class="countdown" role="timer" aria-label="倒數計時">
+    <div class="unit days"><span class="num" id="d"></span><span class="label">天</span></div>
+    <span class="colon">:</span>
+    <div class="unit hours"><span class="num" id="h"></span><span class="label">時</span></div>
+    <span class="colon">:</span>
+    <div class="unit minutes"><span class="num" id="m"></span><span class="label">分</span></div>
+    <span class="colon">:</span>
+    <div class="unit seconds"><span class="num" id="s"></span><span class="label">秒</span></div>
+  </div>
+
+  <div class="scene" aria-hidden="true">
+    <div class="floor"></div>
+    <div class="light-spill"></div>
+    <div class="door-unit">
+      <div class="exit-sign">EXIT</div>
+      <div class="door-frame">
+        <div class="door-light"></div>
+        <div class="door"><i class="handle"></i></div>
+      </div>
+    </div>
+    <div class="person">
+      <span class="avatar">
+        <span class="walker">🚶</span><span class="runner">🏃</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="scene-caption" id="caption">還有時間，慢慢收拾 🧹</div>
+
+  <div class="done-msg">🏁 17:00 撤場時間到！</div>
+</div>
+
+<div class="final-overlay" id="finalOverlay" aria-hidden="true">
+  <i class="final-ring"></i>
+  <span class="final-num" id="finalNum"></span>
+</div>
+
+<div class="notice-card">
+  <small>撤場須知 // CHECKOUT</small>
+  <ul>
+    <li>請帶走<b>所有裝備與個人物品</b>，現場不保管</li>
+    <li>垃圾請分類，帶走或放置至指定區域</li>
+    <li><b>17:00 準時離開會場</b>，留時間給自己從容逃生 🏃</li>
+  </ul>
+</div>
+
+<footer>FUTURE MODE // TEARDOWN COUNTDOWN</footer>
+
+<script>
+/* ================= 設定區（可直接修改） =================
+   也可用網址參數暫時覆蓋，不改檔案：
+   teardown.html?title=標題&date=2026-09-06T17:00
+   ====================================================== */
+const CONFIG = {
+  title: '最後<span class="accent">撤場</span>倒數',
+  date:  '2026-09-05T17:00:00'
+};
+/* ====================================================== */
+
+(() => {
+  const q = new URLSearchParams(location.search);
+  const title = q.get('title') ?? CONFIG.title;
+  const dateStr = q.get('date') ?? CONFIG.date;
+  const target = new Date(dateStr).getTime();
+  const targetDate = new Date(dateStr);
+
+  document.getElementById('pageTitle').innerHTML = title;
+  document.getElementById('targetText').textContent =
+    targetDate.toLocaleString('zh-TW', {
+      year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+  document.getElementById('deadlineTime').textContent =
+    String(targetDate.getHours()).padStart(2, '0') + ':' +
+    String(targetDate.getMinutes()).padStart(2, '0');
+
+  /* ---- 餘燼粒子 ---- */
+  const embersBox = document.getElementById('embers');
+  for (let i = 0; i < 26; i++) {
+    const e = document.createElement('i');
+    e.className = 'ember';
+    const size = 3 + Math.random() * 7;
+    e.style.width = e.style.height = size + 'px';
+    e.style.left = Math.random() * 100 + '%';
+    e.style.setProperty('--dur', (6 + Math.random() * 8) + 's');
+    e.style.animationDelay = -Math.random() * 14 + 's';
+    e.style.setProperty('--drift', (Math.random() * 140 - 70) + 'px');
+    embersBox.appendChild(e);
+  }
+
+  /* ---- 倒數 ---- */
+  const els = { d: document.getElementById('d'), h: document.getElementById('h'),
+                m: document.getElementById('m'), s: document.getElementById('s') };
+  const finalOverlay = document.getElementById('finalOverlay');
+  const finalNumEl = document.getElementById('finalNum');
+  const captionEl = document.getElementById('caption');
+  const phaseTextEl = document.getElementById('phaseText');
+  const phaseNoteEl = document.getElementById('phaseNote');
+  const phaseFillEl = document.getElementById('phaseFill');
+  const phaseSteps = document.querySelectorAll('.phase-steps span');
+  const CAPTIONS = {
+    '':        '還有時間，先規劃撤場順序 🧹',
+    'u-hours': '開始整理裝備，別留到最後 🎒',
+    'u-min10': '裝備上肩，往門口移動 🚶',
+    'u-min':   '最後 5 分鐘，直接往出口前進！🏃',
+    'u-final': '衝刺！！！🔥',
+    'done':    '已撤場 🎉 感謝參與！'
+  };
+  const PHASES = ['u-hours', 'u-min10', 'u-min', 'u-final'];
+  const PHASE_COPY = {
+    '':        ['撤場準備中', '先規劃，再收拾'],
+    'u-hours': ['2 小時警戒', '開始整理裝備與個人物品'],
+    'u-min10': ['30 分鐘行動', '裝備上肩，往出口移動'],
+    'u-min':   ['5 分鐘緊急', '停止整理，立刻離場'],
+    'u-final': ['最後 10 秒', '全速離開會場'],
+    'done':    ['撤場時間已到', '感謝你的配合']
+  };
+  const SURGE_WINDOW_MINUTES = 120;
+  const MILESTONES = [
+    { at: 120, text: '⚠ 剩 2 小時｜開始整理裝備' },
+    { at: 60, text: '⚠ 剩 1 小時｜加快收拾節奏' },
+    { at: 50, text: '⚠ 剩 50 分鐘｜確認個人物品' },
+    { at: 40, text: '⚠ 剩 40 分鐘｜完成裝備整理' },
+    { at: 30, text: '⚠ 剩 30 分鐘｜裝備上肩' },
+    { at: 20, text: '⚠ 剩 20 分鐘｜往門口移動' },
+    { at: 10, text: '⚠ 剩 10 分鐘｜停止整理，準備離場' },
+    { at: 5,  text: '⚠ 剩 5 分鐘｜全速撤離' },
+    { at: 3,  text: '⚠ 剩 3 分鐘｜直接往出口前進' },
+    { at: 2,  text: '⚠ 剩 2 分鐘｜開始奔跑' },
+    { at: 1,  text: '🔥 最後 1 分鐘｜衝刺！！！' }
+  ];
+  const shownMilestones = new Set();
+  const flashEl = document.getElementById('minuteFlash');
+  const msEl = document.getElementById('milestone');
+  const msTextEl = document.getElementById('msText');
+  let finished = false;
+  let lastPhase = null;
+  let lastFinal = null;
+  let lastSurgeBucket = null;
+  let lastMilestoneMinute = null;
+
+  function setNum(el, str) {
+    const chars = [...String(str)];
+    let changed = false;
+    while (el.children.length < chars.length) {
+      const d = document.createElement('span');
+      d.className = 'digit';
+      el.appendChild(d);
+    }
+    while (el.children.length > chars.length) el.lastElementChild.remove();
+    chars.forEach((ch, i) => {
+      const d = el.children[i];
+      if (d.textContent !== ch) {
+        changed = true;
+        d.textContent = ch;
+        d.classList.remove('roll'); void d.offsetWidth; d.classList.add('roll');
+      }
+    });
+    return changed;
+  }
+
+  function rePunch(el) {
+    el.classList.remove('punch'); void el.offsetWidth; el.classList.add('punch');
+  }
+
+  function phaseFor(ms) {
+    if (ms <= 0) return 'done';
+    if (ms <= 10e3) return 'u-final';
+    if (ms <= 300e3) return 'u-min';
+    if (ms <= 1800e3) return 'u-min10';
+    if (ms <= 7200e3) return 'u-hours';
+    return '';
+  }
+
+  function setPhaseCopy(phase, minutesLeft) {
+    const [title, note] = PHASE_COPY[phase];
+    const reached = [...phaseSteps].filter(step => minutesLeft <= Number(step.dataset.at)).length;
+    phaseTextEl.textContent = title;
+    phaseNoteEl.textContent = note;
+    phaseFillEl.style.setProperty('--phase-progress', (8 + reached / phaseSteps.length * 92) + '%');
+    phaseSteps.forEach(step => step.classList.toggle('active', minutesLeft <= Number(step.dataset.at)));
+  }
+
+  function showMilestone(text) {
+    msTextEl.textContent = text;
+    msEl.classList.remove('go'); void msEl.offsetWidth; msEl.classList.add('go');
+  }
+
+  function minuteFlash(surge) {
+    flashEl.style.setProperty('--flash-i', (0.08 + surge * 0.32).toFixed(3));
+    flashEl.classList.remove('go'); void flashEl.offsetWidth; flashEl.classList.add('go');
+  }
+
+  function updateSurge(minutesLeft) {
+    const bucket = Math.max(0, Math.min(SURGE_WINDOW_MINUTES, minutesLeft));
+    const previousMinute = lastMilestoneMinute;
+    const surgeChanged = bucket !== lastSurgeBucket;
+
+    if (surgeChanged) {
+      lastSurgeBucket = bucket;
+      let surge = 0;
+      if (bucket <= 1) surge = 1;
+      else if (bucket < SURGE_WINDOW_MINUTES) surge = 1 - (bucket - 1) / (SURGE_WINDOW_MINUTES - 1);
+      document.body.style.setProperty('--surge', surge.toFixed(3));
+      if (previousMinute !== null && surge > 0) minuteFlash(surge);
+    }
+
+    if (previousMinute === null) {
+      for (const ms of MILESTONES) {
+        if (minutesLeft <= ms.at) shownMilestones.add(ms.at);
+      }
+      lastMilestoneMinute = minutesLeft;
+      return;
+    }
+    for (const ms of MILESTONES) {
+      if (previousMinute > ms.at && minutesLeft <= ms.at && !shownMilestones.has(ms.at)) {
+        shownMilestones.add(ms.at);
+        showMilestone(ms.text);
+        break;
+      }
+    }
+    lastMilestoneMinute = minutesLeft;
+  }
+
+  function setCaption(phase) {
+    let text = CAPTIONS[phase] ?? CAPTIONS[''];
+    if (captionEl.textContent !== text) {
+      captionEl.textContent = text;
+      captionEl.classList.remove('pop'); void captionEl.offsetWidth; captionEl.classList.add('pop');
+    }
+  }
+
+  function render() {
+    const diff = target - Date.now();
+    if (diff <= 0) {
+      if (!finished) {
+        finished = true;
+        document.body.style.setProperty('--surge', '1');
+        PHASES.forEach(c => document.body.classList.remove(c));
+        document.body.classList.add('done');
+        Object.values(els).forEach(el => setNum(el, '00'));
+        finalOverlay.classList.remove('go');
+        setCaption('done');
+        setPhaseCopy('done', 0);
+        showMilestone('🏁 17:00｜撤場時間到');
+      }
+      return;
+    }
+
+    const phase = phaseFor(diff);
+    const remainingMinutes = Math.max(0, Math.ceil(diff / 6e4));
+    updateSurge(remainingMinutes);
+    if (phase !== lastPhase) {
+      lastPhase = phase;
+      PHASES.forEach(c => document.body.classList.toggle(c, c === phase));
+    }
+    setCaption(phase);
+    setPhaseCopy(phase, remainingMinutes);
+
+    const d = Math.floor(diff / 864e5);
+    const h = Math.floor(diff % 864e5 / 36e5);
+    const m = Math.floor(diff % 36e5 / 6e4);
+    const s = Math.floor(diff % 6e4 / 1e3);
+
+    [['d', d], ['h', h], ['m', m], ['s', s]].forEach(([k, v]) => {
+      const text = String(v).padStart(2, '0');
+      if (setNum(els[k], text) && k !== 'd') rePunch(els[k]);
+    });
+
+    if (phase === 'u-final') {
+      const secs = Math.ceil(diff / 1e3);
+      if (secs !== lastFinal) {
+        lastFinal = secs;
+        finalNumEl.textContent = secs;
+        finalOverlay.classList.remove('go'); void finalOverlay.offsetWidth; finalOverlay.classList.add('go');
+      }
+    } else if (lastFinal !== null) {
+      lastFinal = null;
+      finalOverlay.classList.remove('go');
+    }
+  }
+
+  render();
+  setInterval(render, 100);
+})();
+</script>
+
+</body>
+</html>

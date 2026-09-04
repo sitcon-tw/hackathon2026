@@ -20,6 +20,24 @@ function escapeTeamText(value) {
     .replaceAll("'", "&#039;");
 }
 
+function renderTrackSummary() {
+  const summary = document.querySelector("#track-summary");
+  const selectedTrack = document.querySelector("#team-track").value;
+  const tracks = Object.entries(teamTrackIds);
+
+  summary.innerHTML = tracks
+    .map(([track, id]) => {
+      const count = teams.filter((team) => team.tracks.includes(track)).length;
+      const isSelected = selectedTrack === id;
+      return `
+        <button class="track-summary-card${isSelected ? " is-selected" : ""}" type="button" data-track="${id}" aria-pressed="${isSelected}">
+          <span><b>${escapeTeamText(id)}</b>${escapeTeamText(track)}</span>
+          <strong>${count}<small>隊</small></strong>
+        </button>`;
+    })
+    .join("");
+}
+
 function renderTeams() {
   const list = document.querySelector("#team-list");
   const count = document.querySelector("#team-count");
@@ -40,10 +58,11 @@ function renderTeams() {
 
   const filtered = teams.filter((team) => {
     const matchesQuery = `${team.id} ${team.name}`.toLocaleLowerCase("zh-Hant").includes(query);
-    const matchesTrack = track === "all" || teamTrackIds[team.track] === track;
+    const matchesTrack = track === "all" || team.tracks.some((teamTrack) => teamTrackIds[teamTrack] === track);
     return matchesQuery && matchesTrack;
   });
 
+  renderTrackSummary();
   count.textContent = `${filtered.length} / ${teams.length} 隊`;
   if (!filtered.length) {
     list.innerHTML = `<div class="team-empty"><div><b>查無隊伍</b><p>請調整搜尋內容或賽道條件。</p></div></div>`;
@@ -52,12 +71,14 @@ function renderTeams() {
 
   list.innerHTML = filtered
     .map((team) => {
-      const trackId = teamTrackIds[team.track] || "—";
       return `
         <article class="team-card">
           <b class="team-id">${escapeTeamText(team.id)}</b>
           <h3>${escapeTeamText(team.name)}</h3>
-          <span class="team-track"><b>${escapeTeamText(trackId)}</b>${escapeTeamText(team.track)}</span>
+          <div class="team-tracks">${team.tracks
+            .map((teamTrack) => `
+              <span class="team-track"><b>${escapeTeamText(teamTrackIds[teamTrack] || "—")}</b><span>${escapeTeamText(teamTrack)}</span></span>`)
+            .join("")}</div>
         </article>`;
     })
     .join("");
@@ -87,6 +108,12 @@ async function loadTeams() {
 function initTeamsPage() {
   document.querySelector("#team-search").addEventListener("input", renderTeams);
   document.querySelector("#team-track").addEventListener("change", renderTeams);
+  document.querySelector("#track-summary").addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-track]");
+    if (!button) return;
+    document.querySelector("#team-track").value = button.dataset.track;
+    renderTeams();
+  });
   renderTeams();
   loadTeams();
 }
