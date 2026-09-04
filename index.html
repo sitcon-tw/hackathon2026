@@ -126,27 +126,36 @@
         <div class="section-kicker"><span>00</span> 重要連結</div>
         <div class="action-heading">
           <div>
-            <p class="hot-label">9/5 開放</p>
-            <h2 id="actions-title">重要表單</h2>
-          </div>
+          <p class="hot-label">9/4 16:30 截止</p>
+          <h2 id="actions-title">重要表單</h2>
+        </div>
           <p>
-            閃電講報名與作品繳交表單預計於 9/5 公布，連結上架後即可使用。
+            隊伍異動申請現已開放，9/4 16:30 截止；閃電講報名與作品繳交表單預計於 9/5 公布。
           </p>
         </div>
         <div class="action-grid">
-          <a id="lightning-action" class="action-card action-card--acid" href="#" aria-disabled="true">
+          <a id="team-change-action" class="action-card action-card--wide action-card--acid" href="#" aria-disabled="true">
             <span class="action-no">A/01</span>
             <span class="action-main">
               <small>表單 01</small>
+              <strong>隊伍異動申請</strong>
+              <em data-action-state>9/4 開放申請</em>
+            </span>
+            <span class="action-meta">9/4（五）16:30 截止 · 逾時不再受理隊伍成員與參賽主題異動</span>
+          </a>
+          <a id="lightning-action" class="action-card action-card--acid" href="#" aria-disabled="true">
+            <span class="action-no">A/02</span>
+            <span class="action-main">
+              <small>表單 02</small>
               <strong>閃電講報名</strong>
               <em data-action-state>9/5 開放投稿</em>
             </span>
             <span class="action-meta">每人一題 · 2 分鐘 · 預計抽選 10 位</span>
           </a>
           <a id="submission-action" class="action-card action-card--orange" href="#" aria-disabled="true">
-            <span class="action-no">A/02</span>
+            <span class="action-no">A/03</span>
             <span class="action-main">
-              <small>表單 02</small>
+              <small>表單 03</small>
               <strong>作品繳交</strong>
               <em data-action-state>9/5 公布連結</em>
             </span>
@@ -216,14 +225,90 @@
             <h3 id="tracks-title">7 個賽道</h3>
           </div>
           <ol class="track-list">
-            <li><b>01</b><div><h4>AI Agents &amp; Automation</h4><p>AI Agent 與自動化</p></div></li>
-            <li><b>02</b><div><h4>AI for Everyday Life</h4><p>日常生活 AI</p></div></li>
-            <li><b>03</b><div><h4>Future of Work</h4><p>未來工作</p></div></li>
+            <li>
+              <b>01</b>
+              <div class="track-cell">
+                <div>
+                  <h4>AI Agents &amp; Automation</h4>
+                  <p>AI Agent 與自動化</p>
+                  <em>AI 代理、自動化流程、生產力提升</em>
+                </div>
+                <div class="track-desc">
+                  <p>打造自主 AI 代理、工作流程與 AI 驅動系統，自動化任務、提升生產力，協助使用者更有效率地完成工作。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>AI Agents</span>
+                    <span>Workflow Automation 工作流程自動化</span>
+                    <span>Enterprise Copilots 企業 AI 助理</span>
+                    <span>Research Assistants 研究助理</span>
+                    <span>Multi-Agent Systems 多代理系統</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <b>02</b>
+              <div class="track-cell">
+                <div>
+                  <h4>AI for Everyday Life</h4>
+                  <p>日常生活 AI</p>
+                  <em>將 AI 融入日常生活與消費型服務</em>
+                </div>
+                <div class="track-desc">
+                  <p>打造改善人們生活、學習、溝通、購物、旅行、健康及日常體驗的 AI 產品。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>Consumer Apps 消費型應用</span>
+                    <span>Personal Productivity 個人生產力</span>
+                    <span>Wellness 健康與生活</span>
+                    <span>Education 教育</span>
+                    <span>Lifestyle Experiences 生活體驗</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <b>03</b>
+              <div class="track-cell">
+                <div>
+                  <h4>Future of Work</h4>
+                  <p>未來工作</p>
+                  <em>AI 改變企業、團隊與組織工作方式</em>
+                </div>
+                <div class="track-desc">
+                  <p>設計 AI 解決方案，改變團隊、企業、創作者與組織合作及營運的方式。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>Team Productivity 團隊生產力</span>
+                    <span>Knowledge Management 知識管理</span>
+                    <span>Sales &amp; Marketing 銷售與行銷</span>
+                    <span>Customer Support 客戶服務</span>
+                    <span>Operations 營運</span>
+                  </div>
+                </div>
+              </div>
+            </li>
             <li class="is-special">
               <b>04</b>
               <div class="track-special-content">
-                <h4>AI × Creative Technology</h4>
-                <p>音樂、短片與 AI 創作雲端聚合平台</p>
+                <div class="track-cell">
+                  <div>
+                    <h4>AI × Creative Technology</h4>
+                    <p>AI × 創意科技</p>
+                    <em>AI 與內容創作、設計、媒體科技結合</em>
+                  </div>
+                  <div class="track-desc">
+                    <p>探索 AI 與創意的交會，運用於設計、媒體、敘事、影像、遊戲、音樂、時尚與互動體驗。</p>
+                    <div class="track-examples">
+                      <small>Examples</small>
+                      <span>AI Filmmaking AI 影像創作</span>
+                      <span>Creative Tools 創意工具</span>
+                      <span>AI Music AI 音樂</span>
+                      <span>Design Copilots 設計 AI 助理</span>
+                      <span>Interactive Media 互動媒體</span>
+                    </div>
+                  </div>
+                </div>
                 <div class="track-special-rules">
                   <div>
                     <strong>作品規格 <small>Deliverable</small></strong>
@@ -238,9 +323,69 @@
               </div>
               <em>特殊規則 · 可額外加選</em>
             </li>
-            <li><b>05</b><div><h4>AI for Taiwan / Social Impact</h4><p>台灣與社會影響</p></div></li>
-            <li><b>06</b><div><h4>BUILDMODE Open</h4><p>硬體、Web3、空間運算</p></div></li>
-            <li><b>07</b><div><h4>AI × Creativity</h4><p>影像與 IP 遊戲創作</p></div></li>
+            <li>
+              <b>05</b>
+              <div class="track-cell">
+                <div>
+                  <h4>AI for Taiwan / Social Impact</h4>
+                  <p>台灣與社會影響</p>
+                  <em>AI 解決台灣與社會的實際問題</em>
+                </div>
+                <div class="track-desc">
+                  <p>運用 AI 解決教育、醫療、無障礙、永續、公共服務及在地社群等具社會意義的挑戰。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>Education 教育</span>
+                    <span>Healthcare 醫療健康</span>
+                    <span>Civic Technology 公民科技</span>
+                    <span>Accessibility 無障礙科技</span>
+                    <span>Sustainability 永續發展</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <b>06</b>
+              <div class="track-cell">
+                <div>
+                  <h4>BUILDMODE Open</h4>
+                  <p>開放創新</p>
+                  <em>前沿科技、跨領域實驗、自由創新</em>
+                </div>
+                <div class="track-desc">
+                  <p>結合機器人、硬體、空間運算、AI × Web3 與新興科技，探索 AI 的更多可能性，打造出乎意料的作品。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>Robotics 機器人</span>
+                    <span>Hardware Integrations 硬體整合</span>
+                    <span>Spatial Computing 空間運算</span>
+                    <span>AI × Web3</span>
+                    <span>Emerging Technologies 新興科技</span>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li>
+              <b>07</b>
+              <div class="track-cell">
+                <div>
+                  <h4>AI × Creativity</h4>
+                  <p>AI × 創意</p>
+                  <em>AI × IP 遊戲創作</em>
+                </div>
+                <div class="track-desc">
+                  <p>使用 AI 工具結合 NOXCAT 官方 IP 素材，製作可直接於瀏覽器遊玩的 Mini Game。單局需在 3 分鐘內完成，若支援手機瀏覽器觸控操作可獲額外加分。</p>
+                  <div class="track-examples">
+                    <small>Examples</small>
+                    <span>Browser Mini-games 網頁小遊戲</span>
+                    <span>Mobile Touch Games 手機觸控遊戲</span>
+                    <span>AI-generated Game Art AI 遊戲美術</span>
+                    <span>IP-based Characters IP 角色應用</span>
+                    <span>Casual Arcade Play 休閒小品</span>
+                  </div>
+                </div>
+              </div>
+            </li>
           </ol>
         </div>
       </section>

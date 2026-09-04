@@ -3,9 +3,11 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   actionRelease: "2026-09-05T09:00:00+08:00",
+  teamChangeDeadline: "2026-09-04T16:30:00+08:00",
   links: {
     lightningTalk: "",
     submission: "",
+    teamChange: "https://forms.gle/SpHnfC9MWNoPHJ2u6",
   },
 };
 
@@ -393,9 +395,17 @@ function updateActions(now) {
     isReleased,
     "前往作品繳交",
   );
+  const teamChangeDeadline = new Date(SITE_CONFIG.teamChangeDeadline).getTime();
+  setActionState(
+    document.querySelector("#team-change-action"),
+    SITE_CONFIG.links.teamChange,
+    now < teamChangeDeadline,
+    "前往異動申請",
+    now >= teamChangeDeadline ? "16:30 已截止" : "9/4 開放",
+  );
 }
 
-function setActionState(element, url, isReleased, liveText) {
+function setActionState(element, url, isReleased, liveText, closedText = "9/5 開放") {
   const state = element.querySelector("[data-action-state]");
   if (isReleased && url) {
     element.href = url;
@@ -412,7 +422,7 @@ function setActionState(element, url, isReleased, liveText) {
   element.removeAttribute("rel");
   element.setAttribute("aria-disabled", "true");
   element.classList.remove("is-live");
-  state.textContent = isReleased ? "連結待主辦補上" : "9/5 開放";
+  state.textContent = isReleased ? "連結待主辦補上" : closedText;
 }
 
 function updateClock() {
