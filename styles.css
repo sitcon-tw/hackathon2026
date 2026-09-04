@@ -778,11 +778,6 @@ select {
   background: var(--paper-bright);
 }
 
-.action-card--wide {
-  grid-column: 1 / -1;
-  min-height: 230px;
-}
-
 .action-no {
   font-family: var(--font-display);
   font-size: 25px;

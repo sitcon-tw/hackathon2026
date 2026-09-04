@@ -3,11 +3,12 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   actionRelease: "2026-09-05T09:00:00+08:00",
-  teamChangeDeadline: "2026-09-04T16:30:00+08:00",
+  changeDeadline: "2026-09-04T16:30:00+08:00",
   links: {
     lightningTalk: "",
     submission: "",
-    teamChange: "https://forms.gle/SpHnfC9MWNoPHJ2u6",
+    teamChange: "https://forms.gle/bTFc6scen2mHGUFx7",
+    topicChange: "https://forms.gle/SpHnfC9MWNoPHJ2u6",
   },
 };
 
@@ -25,7 +26,7 @@ const schedule = [
       { start: "10:20", end: "10:30", title: "開幕前提醒", detail: "請全員入座並確認官方公告管道。", tag: "舞台" },
       { start: "10:30", end: "11:10", title: "開幕與賽制說明", detail: "說明三日賽制、賽道與贊助商獎項。", tag: "舞台" },
       { start: "11:10", end: "16:30", title: "開發時間", detail: "參賽者可自由進出開發區或參加 FUTUREMODE 議程。", tag: "開發" },
-      { start: "16:30", end: "16:45", title: "隊伍與主題異動截止", detail: "16:30 後不再受理隊伍成員與參賽主題異動。", tag: "截止" },
+      { start: "16:30", end: "16:45", title: "隊伍與主題異動截止", detail: "隊伍與主題異動請於 16:30 前透過線上表單申請，逾時不再受理。", tag: "截止" },
       { start: "16:45", end: "17:00", title: "第一天公告與離場", detail: "場地於 17:00 關閉，不開放過夜。", tag: "離場" },
     ],
   },
@@ -395,13 +396,22 @@ function updateActions(now) {
     isReleased,
     "前往作品繳交",
   );
-  const teamChangeDeadline = new Date(SITE_CONFIG.teamChangeDeadline).getTime();
+  const changeDeadline = new Date(SITE_CONFIG.changeDeadline).getTime();
+  const changeOpen = now < changeDeadline;
+  const changeClosedText = now >= changeDeadline ? "16:30 已截止" : "9/4 開放";
   setActionState(
     document.querySelector("#team-change-action"),
     SITE_CONFIG.links.teamChange,
-    now < teamChangeDeadline,
-    "前往異動申請",
-    now >= teamChangeDeadline ? "16:30 已截止" : "9/4 開放",
+    changeOpen,
+    "前往隊伍異動",
+    changeClosedText,
+  );
+  setActionState(
+    document.querySelector("#topic-change-action"),
+    SITE_CONFIG.links.topicChange,
+    changeOpen,
+    "前往主題異動",
+    changeClosedText,
   );
 }
 
