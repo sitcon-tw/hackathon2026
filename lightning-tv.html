@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 閃電講報名現場公告。" />
+    <meta name="theme-color" content="#11120f" />
+    <title>閃電講報名開始｜BUILDMODE GEN-AI HACKATHON 2026</title>
+    <style>
+      :root {
+        --ink: #11120f;
+        --paper: #fffdf5;
+        --acid: #d9ff43;
+        --violet: #6978ff;
+        --font-sans: Arial, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", sans-serif;
+        --font-display: Impact, Haettenschweiler, "Arial Narrow Bold", "Arial Black", sans-serif;
+      }
+
+      * { box-sizing: border-box; }
+
+      html, body { height: 100%; }
+
+      body {
+        display: grid;
+        min-width: 900px;
+        margin: 0;
+        place-items: center;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 84% 18%, rgba(105, 120, 255, 0.52), transparent 20%),
+          linear-gradient(rgba(217, 255, 67, 0.07) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(217, 255, 67, 0.07) 1px, transparent 1px),
+          var(--ink);
+        background-size: auto, 46px 46px, 46px 46px, auto;
+        color: var(--paper);
+        font-family: var(--font-sans);
+      }
+
+      .board {
+        position: relative;
+        display: grid;
+        width: min(94vw, 1800px);
+        height: min(90vh, 980px);
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: clamp(40px, 6vw, 110px);
+        align-items: center;
+        padding: clamp(38px, 5vw, 88px);
+        border: 1px solid rgba(255, 255, 255, 0.34);
+        background: rgba(10, 11, 8, 0.8);
+        box-shadow: 22px 22px 0 rgba(217, 255, 67, 0.13);
+      }
+
+      .board::before {
+        position: absolute;
+        top: -15%;
+        left: 48%;
+        width: 37%;
+        height: 130%;
+        background: var(--acid);
+        clip-path: polygon(47% 0, 100% 0, 63% 43%, 89% 43%, 12% 100%, 38% 55%, 0 55%);
+        content: "";
+        opacity: 0.16;
+        transform: rotate(12deg);
+      }
+
+      .copy, .qr { position: relative; z-index: 1; }
+
+      .topline, .footer {
+        position: absolute;
+        right: clamp(38px, 5vw, 88px);
+        left: clamp(38px, 5vw, 88px);
+        display: flex;
+        justify-content: space-between;
+        font-size: clamp(13px, 1.4vw, 20px);
+        font-weight: 900;
+        letter-spacing: 0.14em;
+      }
+
+      .topline { top: clamp(26px, 3vw, 48px); color: var(--acid); }
+      .topline span:last-child, .footer { color: rgba(255, 255, 255, 0.58); }
+      .footer { bottom: clamp(24px, 3vw, 44px); padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.24); }
+
+      .live {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        margin: 0 0 28px;
+        color: var(--acid);
+        font-size: clamp(16px, 2vw, 28px);
+        font-weight: 900;
+        letter-spacing: 0.18em;
+      }
+
+      .live i {
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        background: var(--acid);
+        box-shadow: 0 0 0 8px rgba(217, 255, 67, 0.16);
+      }
+
+      h1 {
+        display: flex;
+        flex-direction: column;
+        margin: 0;
+        font-family: var(--font-display);
+        font-size: clamp(92px, 10.5vw, 182px);
+        font-weight: 500;
+        letter-spacing: -0.06em;
+        line-height: 0.72;
+      }
+
+      h1 span:last-child { color: transparent; -webkit-text-stroke: 2px var(--paper); }
+
+      .lead {
+        max-width: 720px;
+        margin: 42px 0 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: clamp(19px, 2vw, 30px);
+        font-weight: 700;
+        line-height: 1.55;
+      }
+
+      .info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 760px;
+        margin-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.27);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.27);
+      }
+
+      .info div { padding: 14px 18px; border-right: 1px solid rgba(255, 255, 255, 0.27); }
+      .info div:first-child { padding-left: 0; }
+      .info div:last-child { border-right: 0; }
+      .info small { display: block; color: rgba(255, 255, 255, 0.52); font-size: clamp(11px, 1.1vw, 15px); font-weight: 900; letter-spacing: 0.12em; }
+      .info strong { display: block; margin-top: 6px; color: var(--acid); font-size: clamp(18px, 1.8vw, 27px); }
+
+      .qr {
+        justify-self: end;
+        width: min(100%, 450px);
+        padding: clamp(18px, 2vw, 30px);
+        background: var(--paper);
+        color: var(--ink);
+        box-shadow: 14px 14px 0 var(--violet);
+        transform: rotate(2deg);
+      }
+
+      .qr img { display: block; width: 100%; height: auto; }
+      .qr h2 { margin: 20px 0 0; font-family: var(--font-display); font-size: clamp(42px, 4vw, 68px); font-weight: 500; letter-spacing: -0.04em; line-height: 0.8; }
+      .qr p { margin: 12px 0 0; font-size: clamp(15px, 1.4vw, 20px); font-weight: 900; }
+      .qr small { display: block; margin-top: 10px; color: rgba(17, 18, 15, 0.62); font-size: 12px; font-weight: 900; letter-spacing: 0.1em; }
+    </style>
+  </head>
+  <body>
+    <main class="board">
+      <header class="topline"><span>B/ BUILDMODE GEN-AI HACKATHON 2026</span><span>FUTUREMODE × SITCON</span></header>
+      <section class="copy" aria-labelledby="announcement-title">
+        <p class="live"><i aria-hidden="true"></i>報名現正開放</p>
+        <h1 id="announcement-title"><span>閃電講</span><span>報名開始</span></h1>
+        <p class="lead">技術、工具、經驗或任何想分享的內容都可以。兩分鐘，讓全場聽見你的想法。</p>
+        <div class="info">
+          <div><small>報名截止</small><strong>12:00</strong></div>
+          <div><small>分享開始</small><strong>16:05</strong></div>
+          <div><small>講者集合</small><strong>15:55</strong></div>
+        </div>
+      </section>
+      <section class="qr" aria-labelledby="qr-title">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=700x700&amp;format=svg&amp;data=https%3A%2F%2Fforms.gle%2FSvfyNtQSpe1aJkcK8" alt="閃電講報名表單 QR Code" width="700" height="700" />
+        <h2 id="qr-title">掃碼報名</h2>
+        <p>每人限時 2 分鐘，超時強制切斷訊號。</p>
+        <small>SCAN TO REGISTER / 2 MINUTES. YOUR STAGE.</small>
+      </section>
+      <footer class="footer"><span>OPEN TOPIC · HARD CUT · DATA BLITZ</span><span>台北花博爭艷館</span></footer>
+    </main>
+  </body>
+</html>
