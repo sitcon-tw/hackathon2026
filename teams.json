@@ -1101,7 +1101,7 @@
   },
   {
     "id": "T267",
-    "name": "未命名隊伍",
+    "name": "有溫度的科技",
     "tracks": [
       "AI for Taiwan／Social Impact"
     ]
@@ -1125,6 +1125,13 @@
     "name": "just the two of us",
     "tracks": [
       "AI for Everyday Life"
+    ]
+  },
+  {
+    "id": "T271",
+    "name": "OneOneTalk AI",
+    "tracks": [
+      "AI Agents & Automation"
     ]
   }
 ]
