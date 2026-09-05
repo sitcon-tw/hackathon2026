@@ -394,7 +394,7 @@ function updateActions(now) {
   setActionState(
     document.querySelector("#track4-submission-action"),
     SITE_CONFIG.links.track4Submission,
-    now >= submissionRelease,
+    SITE_CONFIG.submissionOpen || now >= submissionRelease,
     "前往 Track 04 繳交",
     "12:30 開放",
     submissionRelease,
