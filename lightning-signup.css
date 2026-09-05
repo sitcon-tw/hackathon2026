@@ -1,0 +1,354 @@
+.lightning-signup-body {
+  min-height: 100vh;
+  background: #11120f;
+  color: #fff;
+}
+
+.lightning-signup-header {
+  background: rgba(17, 18, 15, 0.94);
+}
+
+.lightning-signup-page {
+  padding-top: var(--header-height);
+}
+
+.lightning-signup-hero {
+  position: relative;
+  display: grid;
+  min-height: min(800px, calc(100svh - var(--header-height)));
+  grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.62fr);
+  gap: clamp(28px, 5vw, 88px);
+  align-items: center;
+  overflow: hidden;
+  padding: clamp(60px, 9vw, 120px) max(24px, calc((100vw - 1240px) / 2));
+  background:
+    radial-gradient(circle at 88% 21%, rgba(105, 120, 255, 0.55), transparent 18%),
+    radial-gradient(circle at 63% 77%, rgba(217, 255, 67, 0.16), transparent 24%),
+    #11120f;
+}
+
+.lightning-signup-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 80%, transparent);
+}
+
+.lightning-signup-bolt {
+  position: absolute;
+  top: -28%;
+  left: 49%;
+  width: min(42vw, 600px);
+  height: 145%;
+  background: var(--acid);
+  clip-path: polygon(47% 0, 100% 0, 63% 43%, 89% 43%, 12% 100%, 38% 55%, 0 55%);
+  opacity: 0.16;
+  transform: rotate(12deg);
+}
+
+.lightning-signup-copy,
+.signup-countdown-panel,
+.signup-qr-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.lightning-signup-kicker,
+.signup-panel-head,
+.signup-qr-head,
+.signup-rules > div > span {
+  color: var(--acid);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.16em;
+}
+
+.lightning-signup-kicker {
+  margin: 0 0 24px;
+}
+
+.lightning-signup-copy h1 {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(70px, 10vw, 154px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 0.72;
+}
+
+.lightning-signup-copy h1 span:last-child {
+  color: transparent;
+  -webkit-text-stroke: 2px #fff;
+}
+
+.lightning-signup-lead {
+  max-width: 610px;
+  margin: 38px 0 0;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: clamp(16px, 1.7vw, 21px);
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.lightning-signup-status {
+  display: flex;
+  width: fit-content;
+  gap: 10px;
+  align-items: center;
+  margin-top: 35px;
+  padding: 10px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+}
+
+.lightning-signup-status i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 0 5px rgba(217, 255, 67, 0.16);
+}
+
+.signup-countdown-panel {
+  padding: clamp(24px, 3vw, 42px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(7, 8, 6, 0.74);
+  box-shadow: 16px 16px 0 rgba(105, 120, 255, 0.34);
+  backdrop-filter: blur(12px);
+}
+
+.signup-panel-head,
+.signup-qr-head {
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.signup-panel-head time,
+.signup-qr-head b {
+  color: var(--acid);
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.signup-countdown-panel h2,
+.signup-qr-panel h2,
+.signup-rules h2 {
+  margin: 36px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(35px, 4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+}
+
+.signup-countdown {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.signup-countdown > span {
+  display: flex;
+  flex-direction: column;
+  padding: 17px 8px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+}
+
+.signup-countdown > span:last-child {
+  border-right: 0;
+}
+
+.signup-countdown b {
+  font-family: var(--font-display);
+  font-size: clamp(42px, 5vw, 64px);
+  font-weight: 500;
+  line-height: 0.85;
+}
+
+.signup-countdown small {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+}
+
+.signup-countdown-panel > p {
+  margin: 17px 0 0;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.signup-link {
+  display: block;
+  margin-top: 26px;
+  padding: 14px 18px;
+  background: var(--acid);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-align: center;
+  text-decoration: none;
+}
+
+.signup-link[aria-disabled="true"] {
+  background: rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.signup-qr-panel {
+  align-self: end;
+  justify-self: end;
+  width: min(100%, 250px);
+  margin-top: -42px;
+  padding: 15px;
+  background: var(--paper-bright);
+  color: var(--ink);
+  box-shadow: 10px 10px 0 var(--acid);
+  transform: rotate(2deg);
+}
+
+.signup-qr-head {
+  color: var(--ink);
+}
+
+.signup-qr-head span {
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+}
+
+.signup-qr-panel a {
+  display: block;
+  margin-top: 12px;
+}
+
+.signup-qr-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.signup-qr-panel h2 {
+  margin-top: 16px;
+  font-size: 35px;
+}
+
+.signup-qr-panel p {
+  margin: 9px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.signup-rules {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.75fr) 1.25fr;
+  gap: 55px;
+  padding: clamp(64px, 8vw, 110px) max(24px, calc((100vw - 1240px) / 2));
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.signup-rules h2 {
+  margin-top: 19px;
+}
+
+.signup-rules ol {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin: 0;
+  padding: 0;
+  border-top: 2px solid var(--ink);
+  border-left: 2px solid var(--ink);
+  list-style: none;
+}
+
+.signup-rules li {
+  display: flex;
+  min-height: 185px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-right: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+
+.signup-rules b {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 4vw, 47px);
+  font-weight: 500;
+  line-height: 0.85;
+}
+
+.signup-rules span {
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.is-signup-open .lightning-signup-status,
+.is-signup-open .signup-countdown-panel {
+  border-color: var(--acid);
+}
+
+@media (max-width: 820px) {
+  .lightning-signup-hero,
+  .signup-rules {
+    grid-template-columns: 1fr;
+  }
+
+  .lightning-signup-hero {
+    min-height: 0;
+    padding-top: 78px;
+  }
+
+  .signup-countdown-panel {
+    max-width: 540px;
+  }
+
+  .signup-qr-panel {
+    justify-self: start;
+    margin-top: 0;
+  }
+
+  .signup-rules {
+    gap: 42px;
+  }
+}
+
+@media (max-width: 520px) {
+  .lightning-signup-copy h1 {
+    font-size: clamp(62px, 20vw, 96px);
+  }
+
+  .signup-countdown-panel {
+    padding: 22px 18px;
+    box-shadow: 8px 8px 0 rgba(105, 120, 255, 0.34);
+  }
+
+  .signup-countdown b {
+    font-size: clamp(38px, 13vw, 55px);
+  }
+
+  .signup-rules ol {
+    grid-template-columns: 1fr;
+  }
+
+  .signup-rules li {
+    min-height: 130px;
+  }
+}

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="BUILDMODE GEN-AI HACKATHON 2026 閃電講報名倒數與 QR Code。" />
+    <meta name="theme-color" content="#11120f" />
+    <title>閃電講報名倒數｜BUILDMODE GEN-AI HACKATHON 2026</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="lightning-signup.css" />
+    <script src="lightning-signup.js" defer></script>
+  </head>
+  <body class="lightning-signup-body">
+    <a class="skip-link" href="#signup-main">跳至主要內容</a>
+    <header class="site-header lightning-signup-header">
+      <a class="brand" href="index.html" aria-label="返回活動資訊首頁">
+        <span class="brand-mark" aria-hidden="true">B/</span>
+        <span><strong>BUILDMODE</strong><small>FUTUREMODE × SITCON</small></span>
+      </a>
+      <a class="results-back" href="lightning.html">講者名單</a>
+    </header>
+
+    <main id="signup-main" class="lightning-signup-page">
+      <section class="lightning-signup-hero" aria-labelledby="signup-title">
+        <div class="lightning-signup-grid" aria-hidden="true"></div>
+        <div class="lightning-signup-bolt" aria-hidden="true"></div>
+        <div class="lightning-signup-copy">
+          <p class="lightning-signup-kicker">LIGHTNING TALK / DATA BLITZ</p>
+          <h1 id="signup-title"><span>2 MINUTES.</span><span>ALL EYES.</span></h1>
+          <p class="lightning-signup-lead">技術、工具、經驗或任何想分享的內容都可以。兩分鐘，讓全場聽見你的想法。</p>
+          <div id="signup-status" class="lightning-signup-status" aria-live="polite">
+            <i aria-hidden="true"></i><span>報名將於 09:00 開放</span>
+          </div>
+        </div>
+
+        <section class="signup-countdown-panel" aria-labelledby="countdown-title">
+          <div class="signup-panel-head">
+            <span>REGISTRATION WINDOW</span>
+            <time id="signup-release" datetime="2026-09-05T09:00:00+08:00">09:00</time>
+          </div>
+          <h2 id="countdown-title">報名倒數</h2>
+          <div class="signup-countdown" aria-label="距離閃電講報名開放的倒數">
+            <span><b id="signup-hours">00</b><small>時</small></span>
+            <span><b id="signup-minutes">00</b><small>分</small></span>
+            <span><b id="signup-seconds">00</b><small>秒</small></span>
+          </div>
+          <p id="signup-countdown-note">倒數結束後頁面會自動更新。</p>
+          <a id="signup-link" class="signup-link" href="#signup-status" aria-disabled="true">09:00 開放報名</a>
+        </section>
+
+        <aside class="signup-qr-panel" aria-labelledby="signup-qr-title">
+          <div class="signup-qr-head">
+            <span>SCAN / REGISTER</span>
+            <b>01</b>
+          </div>
+          <a href="https://forms.gle/SvfyNtQSpe1aJkcK8" target="_blank" rel="noreferrer" aria-label="開啟閃電講報名表單">
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=600x600&amp;format=svg&amp;data=https%3A%2F%2Fforms.gle%2FSvfyNtQSpe1aJkcK8"
+              alt="閃電講報名表單 QR Code"
+              width="600"
+              height="600"
+            />
+          </a>
+          <h2 id="signup-qr-title">掃碼報名</h2>
+          <p>報名開放後，用手機掃描 QR Code，或點擊上方連結直接填寫。</p>
+        </aside>
+      </section>
+
+      <section class="signup-rules" aria-labelledby="signup-rules-title">
+        <div><span>THE RULES</span><h2 id="signup-rules-title">快。準。直接。</h2></div>
+        <ol>
+          <li><b>120</b><span>每人限時 2 分鐘</span></li>
+          <li><b>HARD CUT</b><span>逾時強制切斷訊號</span></li>
+          <li><b>15:55</b><span>請至 ONBOARD 後台集合</span></li>
+        </ol>
+      </section>
+    </main>
+  </body>
+</html>
