@@ -3,8 +3,9 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   actionRelease: "2026-09-05T09:00:00+08:00",
+  submissionRelease: "2026-09-05T12:00:00+08:00",
   links: {
-    lightningTalk: "",
+    lightningTalk: "https://forms.gle/SvfyNtQSpe1aJkcK8",
     submission: "",
   },
 };
@@ -380,23 +381,37 @@ function setupMapPopup() {
 }
 
 function updateActions(now) {
-  const isReleased = now >= new Date(SITE_CONFIG.actionRelease).getTime();
+  const lightningRelease = new Date(SITE_CONFIG.actionRelease).getTime();
+  const submissionRelease = new Date(SITE_CONFIG.submissionRelease).getTime();
   setActionState(
     document.querySelector("#lightning-action"),
     SITE_CONFIG.links.lightningTalk,
-    isReleased,
+    now >= lightningRelease,
     "前往投稿表單",
     "9:00 開放報名",
+    lightningRelease,
+    now,
   );
   setActionState(
     document.querySelector("#submission-action"),
     SITE_CONFIG.links.submission,
-    isReleased,
+    now >= submissionRelease,
     "前往作品繳交",
+    "12:00 開放",
+    submissionRelease,
+    now,
   );
 }
 
-function setActionState(element, url, isReleased, liveText, closedText = "9/5 開放") {
+function formatActionCountdown(releaseAt, now) {
+  const seconds = Math.max(0, Math.ceil((releaseAt - now) / 1000));
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+  return `倒數 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
+}
+
+function setActionState(element, url, isReleased, liveText, closedText, releaseAt, now) {
   const state = element.querySelector("[data-action-state]");
   if (isReleased && url) {
     element.href = url;
@@ -413,7 +428,17 @@ function setActionState(element, url, isReleased, liveText, closedText = "9/5 �
   element.removeAttribute("rel");
   element.setAttribute("aria-disabled", "true");
   element.classList.remove("is-live");
-  state.textContent = isReleased ? "連結待主辦補上" : closedText;
+  state.textContent = isReleased ? "連結待主辦補上" : `${closedText} · ${formatActionCountdown(releaseAt, now)}`;
+}
+
+function scheduleActionReleaseRefresh() {
+  const nextRelease = [SITE_CONFIG.actionRelease, SITE_CONFIG.submissionRelease]
+    .map((release) => new Date(release).getTime())
+    .filter((release) => release > Date.now())
+    .sort((first, second) => first - second)[0];
+
+  if (!nextRelease) return;
+  window.setTimeout(() => window.location.reload(), nextRelease - Date.now() + 250);
 }
 
 function updateClock() {
@@ -1273,6 +1298,7 @@ function init() {
   setupScrollStack();
   updateNextEvent(Date.now());
   updateClock();
+  scheduleActionReleaseRefresh();
   setupAnimations();
   window.setInterval(updateClock, 1000);
 }
