@@ -74,6 +74,26 @@ const tracks = [
     lyrics: "assets/audio/閃電短講.lrc",
     language: "zh-Hant",
   },
+  {
+    title: "最後十分鐘",
+    titleLines: ["最後", "十分鐘"],
+    note: "不要等最後一秒。把作品交出去。",
+    prompt: "按下播放，進入最後衝刺。",
+    prelude: "前奏 / FINAL COUNTDOWN INCOMING",
+    audio: "assets/audio/最後十分鐘.mp3",
+    lyrics: "assets/audio/最後十分鐘.lrc",
+    language: "zh-Hant",
+  },
+  {
+    title: "最後一個 Commit",
+    titleLines: ["最後一個", "Commit"],
+    note: "最後一個 Commit，不是故事的句點。",
+    prompt: "按下播放，奔向下一個未來。",
+    prelude: "前奏 / FINAL COMMIT INCOMING",
+    audio: "assets/audio/最後一個Commit.mp3",
+    lyrics: "assets/audio/最後一個Commit.lrc",
+    language: "zh-Hant",
+  },
 ];
 
 let audioContext = null;
