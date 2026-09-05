@@ -3,6 +3,7 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   submissionRelease: "2026-09-05T12:30:00+08:00",
+  submissionOpen: true,
   links: {
     submission: "https://forms.gle/dRoB2Ejkr9wGXrJP8",
     track4Submission: "https://forms.gle/P6ZwFhU8KynDuQSb7",
@@ -384,7 +385,7 @@ function updateActions(now) {
   setActionState(
     document.querySelector("#submission-action"),
     SITE_CONFIG.links.submission,
-    now >= submissionRelease,
+    SITE_CONFIG.submissionOpen || now >= submissionRelease,
     "前往作品繳交",
     "12:30 開放",
     submissionRelease,
