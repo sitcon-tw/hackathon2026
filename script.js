@@ -3,10 +3,11 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   actionRelease: "2026-09-05T09:00:00+08:00",
-  submissionRelease: "2026-09-05T12:00:00+08:00",
+  submissionRelease: "2026-09-05T12:30:00+08:00",
   links: {
     lightningTalk: "https://forms.gle/SvfyNtQSpe1aJkcK8",
     submission: "",
+    track4Submission: "",
   },
 };
 
@@ -397,7 +398,16 @@ function updateActions(now) {
     SITE_CONFIG.links.submission,
     now >= submissionRelease,
     "前往作品繳交",
-    "12:00 開放",
+    "12:30 開放",
+    submissionRelease,
+    now,
+  );
+  setActionState(
+    document.querySelector("#track4-submission-action"),
+    SITE_CONFIG.links.track4Submission,
+    now >= submissionRelease,
+    "前往 Track 04 繳交",
+    "12:30 開放",
     submissionRelease,
     now,
   );

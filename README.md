@@ -21,6 +21,7 @@ python3 serve.py
 
 - `SITE_CONFIG.actionRelease` 與 `SITE_CONFIG.links.lightningTalk`：閃電講表單開放時間與 URL
 - `SITE_CONFIG.submissionRelease` 與 `SITE_CONFIG.links.submission`：作品繳交表單開放時間與 URL
+- `SITE_CONFIG.links.track4Submission`：Track 04 科幻賽道作品繳交表單 URL
 - `schedule`：三日時程與高亮時間區間
 - `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
 - `teams.html`：獨立隊伍名單頁
