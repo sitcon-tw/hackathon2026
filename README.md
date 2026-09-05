@@ -19,7 +19,6 @@ python3 serve.py
 
 活動資料主要位於 `script.js` 頂部：
 
-- `SITE_CONFIG.actionRelease` 與 `SITE_CONFIG.links.lightningTalk`：閃電講表單開放時間與 URL
 - `SITE_CONFIG.submissionRelease` 與 `SITE_CONFIG.links.submission`：作品繳交表單開放時間與 URL
 - `SITE_CONFIG.links.track4Submission`：Track 04 科幻賽道作品繳交表單 URL
 - `schedule`：三日時程與高亮時間區間

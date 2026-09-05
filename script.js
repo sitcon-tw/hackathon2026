@@ -2,12 +2,10 @@ const SITE_CONFIG = {
   timeZone: "Asia/Taipei",
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
-  actionRelease: "2026-09-05T09:00:00+08:00",
   submissionRelease: "2026-09-05T12:30:00+08:00",
   links: {
-    lightningTalk: "https://forms.gle/SvfyNtQSpe1aJkcK8",
-    submission: "",
-    track4Submission: "",
+    submission: "https://forms.gle/dRoB2Ejkr9wGXrJP8",
+    track4Submission: "https://forms.gle/P6ZwFhU8KynDuQSb7",
   },
 };
 
@@ -382,17 +380,7 @@ function setupMapPopup() {
 }
 
 function updateActions(now) {
-  const lightningRelease = new Date(SITE_CONFIG.actionRelease).getTime();
   const submissionRelease = new Date(SITE_CONFIG.submissionRelease).getTime();
-  setActionState(
-    document.querySelector("#lightning-action"),
-    SITE_CONFIG.links.lightningTalk,
-    now >= lightningRelease,
-    "前往投稿表單",
-    "9:00 開放報名",
-    lightningRelease,
-    now,
-  );
   setActionState(
     document.querySelector("#submission-action"),
     SITE_CONFIG.links.submission,
@@ -442,7 +430,7 @@ function setActionState(element, url, isReleased, liveText, closedText, releaseA
 }
 
 function scheduleActionReleaseRefresh() {
-  const nextRelease = [SITE_CONFIG.actionRelease, SITE_CONFIG.submissionRelease]
+  const nextRelease = [SITE_CONFIG.submissionRelease]
     .map((release) => new Date(release).getTime())
     .filter((release) => release > Date.now())
     .sort((first, second) => first - second)[0];

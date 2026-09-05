@@ -1,20 +1,15 @@
 const selectedSpeakers = [
-  { name: "待填入講者 01", topic: "講題待公布" },
-  { name: "待填入講者 02", topic: "講題待公布" },
-  { name: "待填入講者 03", topic: "講題待公布" },
-  { name: "待填入講者 04", topic: "講題待公布" },
-  { name: "待填入講者 05", topic: "講題待公布" },
-  { name: "待填入講者 06", topic: "講題待公布" },
-  { name: "待填入講者 07", topic: "講題待公布" },
-  { name: "待填入講者 08", topic: "講題待公布" },
-  { name: "待填入講者 09", topic: "講題待公布" },
-  { name: "待填入講者 10", topic: "講題待公布" },
+  { name: "孫靖崴 / sujiwi", topic: "methmetica 專案...的吉祥物和 Logo 介紹。" },
+  { name: "微崩", topic: "擁有一個微縮世界的夢想" },
+  { name: "Aidan", topic: "我以為在養 AI Agent，結果在養一群超鳥實習生" },
+  { name: "Steve", topic: "Ai 離彼此的生活有多近？" },
+  { name: "Warren", topic: "開發製作多專案管理環境工具" },
+  { name: "Richard", topic: "全世界 GPU 都台灣做的，AI 也可以是！" },
+  { name: "Zanna", topic: "新加坡 Ai 開發者的生存手札" },
+  { name: "陳羿瑄", topic: "ai 影片" },
 ];
 
-const standbySpeakers = [
-  { name: "待填入候補 01", topic: "講題待公布" },
-  { name: "待填入候補 02", topic: "講題待公布" },
-];
+const standbySpeakers = [];
 
 function escapeLightningText(value) {
   return String(value)
@@ -27,6 +22,11 @@ function escapeLightningText(value) {
 
 function renderSpeakers(containerId, speakers, label) {
   const container = document.querySelector(containerId);
+  if (!speakers.length) {
+    container.innerHTML = '<div class="results-empty"><strong>候補名單待公布</strong><p>候補講者與順位確認後將於此更新。</p></div>';
+    return;
+  }
+
   container.innerHTML = speakers
     .map(
       (speaker, index) => `
@@ -82,6 +82,7 @@ function initLightningRoster() {
   renderSpeakers("#standby-list", standbySpeakers, "候補");
   document.querySelector("#speaker-count").textContent = `${selectedSpeakers.length} / 10 位`;
   document.querySelector("#standby-count").textContent = `${standbySpeakers.length} 位`;
+  document.querySelector("#lightning-status").textContent = `已公布 ${selectedSpeakers.length} 位講者`;
   setupLightningAnimations();
 }
 
