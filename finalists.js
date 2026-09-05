@@ -6,6 +6,11 @@ const waitlistTeams = [
   // { id: "T011", name: "隊伍名稱", track: "03" },
 ];
 
+const track4Teams = [
+  // 請依上台順序填入；此順序不代表排名。
+  // { id: "T001", name: "隊伍名稱", track: "04" },
+];
+
 function escapeResultText(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -63,7 +68,7 @@ function setupResultAnimations() {
     ease: "inOut(3)",
   });
 
-  const cards = document.querySelectorAll(".ranking-card, .results-empty");
+  const cards = document.querySelectorAll(".ranking-card, .results-empty, .results-order-note");
   animate(cards, {
     opacity: { from: 0 },
     y: { from: 18 },
@@ -75,10 +80,12 @@ function setupResultAnimations() {
 
 function initResults() {
   renderRanking("#finalist-list", finalistTeams, "第一輪評選完成後公布前 10 名隊伍。");
+  renderRanking("#track04-list", track4Teams, "Track04 科幻協會賽道評選完成後公布前 8 名隊伍。");
   renderRanking("#waitlist-list", waitlistTeams, "候補隊伍與順序將於評選完成後公布。");
   document.querySelector("#finalist-count").textContent = `${finalistTeams.length} / 10 隊`;
+  document.querySelector("#track04-count").textContent = `${track4Teams.length} / 8 隊`;
   document.querySelector("#waitlist-count").textContent = `${waitlistTeams.length} 隊`;
-  if (finalistTeams.length) document.querySelector("#results-status").textContent = "名單已公布";
+  if (finalistTeams.length || track4Teams.length) document.querySelector("#results-status").textContent = "名單已公布";
   setupResultAnimations();
 }
 
