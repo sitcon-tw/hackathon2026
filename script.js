@@ -3,6 +3,7 @@ const SITE_CONFIG = {
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
   submissionRelease: "2026-09-05T12:30:00+08:00",
+  submissionDeadline: "2026-09-06T10:00:00+08:00",
   submissionOpen: true,
   links: {
     submission: "https://forms.gle/dRoB2Ejkr9wGXrJP8",
@@ -402,6 +403,14 @@ function updateActions(now) {
   );
 }
 
+function updateSubmissionDeadline(now) {
+  const countdown = document.querySelector("#submission-deadline-countdown");
+  if (!countdown) return;
+
+  const deadline = new Date(SITE_CONFIG.submissionDeadline).getTime();
+  countdown.textContent = now >= deadline ? "繳交期限已截止" : formatActionCountdown(deadline, now);
+}
+
 function formatActionCountdown(releaseAt, now) {
   const seconds = Math.max(0, Math.ceil((releaseAt - now) / 1000));
   const hours = Math.floor(seconds / 3600);
@@ -458,6 +467,7 @@ function updateClock() {
 
   updateEventState(now);
   updateActions(now);
+  updateSubmissionDeadline(now);
 
   const currentMinute = Math.floor(now / 60000);
   if (currentMinute !== lastRenderedMinute) {
