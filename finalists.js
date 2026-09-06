@@ -7,8 +7,14 @@ const waitlistTeams = [
 ];
 
 const track4Teams = [
-  // 請依上台順序填入；此順序不代表排名。
-  // { id: "T001", name: "隊伍名稱", track: "04" },
+  { id: "T130", name: "融慧貫通", entryType: "仿真人科幻故事", project: "人字旁", track: "04" },
+  { id: "T261", name: "AIIA", entryType: "科幻音樂MV", project: "ALIVE", track: "04" },
+  { id: "T142", name: "體感溫度快熱死", entryType: "科幻音樂MV", project: "LUNA•下一個舞台", track: "04" },
+  { id: "T265", name: "Auromake", entryType: "仿真人科幻故事", project: "愛。AI", track: "04" },
+  { id: "T227", name: "RhythME AI", entryType: "科幻音樂MV", project: "CSFCCA LIVE AI_T227", track: "04" },
+  { id: "T119", name: "詭像依依GXYY", entryType: "科幻仿真人", project: "戲偶", track: "04" },
+  { id: "T059", name: "有Token就好", entryType: "科幻卡通動畫", project: "最後100分鐘", track: "04" },
+  { id: "T092", name: "草莓舒芙蕾教宗", entryType: "科幻卡通動畫", project: "明天也會見到你嗎？", track: "04" },
 ];
 
 function escapeResultText(value) {
@@ -32,7 +38,11 @@ function renderRanking(containerId, teams, emptyMessage) {
       (team, index) => `
         <article class="ranking-card">
           <b>${String(index + 1).padStart(2, "0")}</b>
-          <div><small>${escapeResultText(team.id)}</small><h3>${escapeResultText(team.name)}</h3></div>
+          <div>
+            <small>${escapeResultText(team.id)}</small>
+            <h3>${escapeResultText(team.name)}</h3>
+            ${team.entryType ? `<p class="ranking-card-meta"><span>${escapeResultText(team.entryType)}</span><strong>${escapeResultText(team.project)}</strong></p>` : ""}
+          </div>
           <span>賽道 ${escapeResultText(team.track)}</span>
         </article>`,
     )
@@ -80,7 +90,7 @@ function setupResultAnimations() {
 
 function initResults() {
   renderRanking("#finalist-list", finalistTeams, "第一輪評選完成後公布前 10 名隊伍。");
-  renderRanking("#track04-list", track4Teams, "Track04 科幻協會賽道評選完成後公布前 8 名隊伍。");
+  renderRanking("#track04-list", track4Teams, "Track04 科幻協會賽道評選完成後公布決賽 8 組。");
   renderRanking("#waitlist-list", waitlistTeams, "候補隊伍與順序將於評選完成後公布。");
   document.querySelector("#finalist-count").textContent = `${finalistTeams.length} / 10 隊`;
   document.querySelector("#track04-count").textContent = `${track4Teams.length} / 8 隊`;

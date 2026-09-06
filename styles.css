@@ -3384,6 +3384,20 @@ body.score-explorer-open {
   font-size: clamp(21px, 2vw, 29px);
 }
 
+.ranking-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 28px;
+  margin: 9px 0 0;
+  color: rgba(17, 18, 15, 0.65);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ranking-card-meta strong {
+  color: var(--ink);
+}
+
 .ranking-card > span {
   padding: 6px 9px;
   border: 1px solid currentcolor;
