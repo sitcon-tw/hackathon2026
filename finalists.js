@@ -11,10 +11,6 @@ const finalistTeams = [
   { id: "T232", name: "Safari" },
 ];
 
-const waitlistTeams = [
-  // { id: "T011", name: "隊伍名稱", track: "03" },
-];
-
 const track4Teams = [
   { id: "T130", name: "融慧貫通", entryType: "仿真人科幻故事", project: "人字旁", track: "04" },
   { id: "T261", name: "AIIA", entryType: "科幻音樂MV", project: "ALIVE", track: "04" },
@@ -100,10 +96,8 @@ function setupResultAnimations() {
 function initResults() {
   renderRanking("#finalist-list", finalistTeams, "第一輪評選完成後公布總排名決賽 10 組。");
   renderRanking("#track04-list", track4Teams, "Track04 科幻協會賽道評選完成後公布決賽 8 組。");
-  renderRanking("#waitlist-list", waitlistTeams, "候補隊伍與順序將於評選完成後公布。");
   document.querySelector("#finalist-count").textContent = `${finalistTeams.length} / 10 組`;
   document.querySelector("#track04-count").textContent = `${track4Teams.length} / 8 隊`;
-  document.querySelector("#waitlist-count").textContent = `${waitlistTeams.length} 隊`;
   if (finalistTeams.length || track4Teams.length) document.querySelector("#results-status").textContent = "名單已公布";
   setupResultAnimations();
 }
