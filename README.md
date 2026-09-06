@@ -19,8 +19,7 @@ python3 serve.py
 
 活動資料主要位於 `script.js` 頂部：
 
-- `SITE_CONFIG.submissionOpen`、`SITE_CONFIG.submissionRelease`、`SITE_CONFIG.submissionDeadline` 與 `SITE_CONFIG.links.submission`：作品繳交表單開放狀態、時間、截止期限與 URL
-- `SITE_CONFIG.links.track4Submission`：Track 04 科幻賽道作品繳交表單 URL
+- `SITE_CONFIG.links.feedback`：會後心得建議表單 URL
 - `schedule`：三日時程與高亮時間區間
 - `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
 - `teams.html`：獨立隊伍名單頁
@@ -35,7 +34,7 @@ python3 serve.py
 {"id":"T001","name":"Team Name","track":"AI for Everyday Life"}
 ```
 
-表單 URL 設定完成後，按鈕會在各自指定時間開放。開放前會顯示倒數，倒數結束時頁面會自動重新整理；若 URL 仍為空字串，按鈕會安全維持停用並顯示「連結待主辦補上」。
+表單 URL 設定完成後，按鈕會開放填寫；若 URL 為空字串，按鈕會安全維持停用並顯示「連結待主辦補上」。
 
 ## 主題曲檔案
 

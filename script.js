@@ -2,12 +2,8 @@ const SITE_CONFIG = {
   timeZone: "Asia/Taipei",
   eventStart: "2026-09-04T09:00:00+08:00",
   eventEnd: "2026-09-06T16:45:00+08:00",
-  submissionRelease: "2026-09-05T12:30:00+08:00",
-  submissionDeadline: "2026-09-06T10:00:00+08:00",
-  submissionOpen: true,
   links: {
-    submission: "https://forms.gle/dRoB2Ejkr9wGXrJP8",
-    track4Submission: "https://forms.gle/P6ZwFhU8KynDuQSb7",
+    feedback: "https://forms.gle/hYhq35nMYh3jTZ9E6",
   },
 };
 
@@ -381,47 +377,17 @@ function setupMapPopup() {
   });
 }
 
-function updateActions(now) {
-  const submissionRelease = new Date(SITE_CONFIG.submissionRelease).getTime();
+function updateActions() {
   setActionState(
-    document.querySelector("#submission-action"),
-    SITE_CONFIG.links.submission,
-    SITE_CONFIG.submissionOpen || now >= submissionRelease,
-    "前往作品繳交",
-    "12:30 開放",
-    submissionRelease,
-    now,
-  );
-  setActionState(
-    document.querySelector("#track4-submission-action"),
-    SITE_CONFIG.links.track4Submission,
-    SITE_CONFIG.submissionOpen || now >= submissionRelease,
-    "前往 Track 04 繳交",
-    "12:30 開放",
-    submissionRelease,
-    now,
+    document.querySelector("#feedback-action"),
+    SITE_CONFIG.links.feedback,
+    "前往填寫會後心得建議",
   );
 }
 
-function updateSubmissionDeadline(now) {
-  const countdown = document.querySelector("#submission-deadline-countdown");
-  if (!countdown) return;
-
-  const deadline = new Date(SITE_CONFIG.submissionDeadline).getTime();
-  countdown.textContent = now >= deadline ? "繳交期限已截止" : formatActionCountdown(deadline, now);
-}
-
-function formatActionCountdown(releaseAt, now) {
-  const seconds = Math.max(0, Math.ceil((releaseAt - now) / 1000));
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-  return `倒數 ${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(remainingSeconds).padStart(2, "0")}`;
-}
-
-function setActionState(element, url, isReleased, liveText, closedText, releaseAt, now) {
+function setActionState(element, url, liveText) {
   const state = element.querySelector("[data-action-state]");
-  if (isReleased && url) {
+  if (url) {
     element.href = url;
     element.target = "_blank";
     element.rel = "noreferrer";
@@ -436,17 +402,7 @@ function setActionState(element, url, isReleased, liveText, closedText, releaseA
   element.removeAttribute("rel");
   element.setAttribute("aria-disabled", "true");
   element.classList.remove("is-live");
-  state.textContent = isReleased ? "連結待主辦補上" : `${closedText} · ${formatActionCountdown(releaseAt, now)}`;
-}
-
-function scheduleActionReleaseRefresh() {
-  const nextRelease = [SITE_CONFIG.submissionRelease]
-    .map((release) => new Date(release).getTime())
-    .filter((release) => release > Date.now())
-    .sort((first, second) => first - second)[0];
-
-  if (!nextRelease) return;
-  window.setTimeout(() => window.location.reload(), nextRelease - Date.now() + 250);
+  state.textContent = "連結待主辦補上";
 }
 
 function updateClock() {
@@ -466,8 +422,7 @@ function updateClock() {
   }).format(nowDate);
 
   updateEventState(now);
-  updateActions(now);
-  updateSubmissionDeadline(now);
+  updateActions();
 
   const currentMinute = Math.floor(now / 60000);
   if (currentMinute !== lastRenderedMinute) {
@@ -1307,7 +1262,6 @@ function init() {
   setupScrollStack();
   updateNextEvent(Date.now());
   updateClock();
-  scheduleActionReleaseRefresh();
   setupAnimations();
   window.setInterval(updateClock, 1000);
 }
