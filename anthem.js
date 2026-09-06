@@ -94,6 +94,16 @@ const tracks = [
     lyrics: "assets/audio/最後一個Commit.lrc",
     language: "zh-Hant",
   },
+  {
+    title: "做不完了",
+    titleLines: ["做不完", "了"],
+    note: "Bug 修不完，Code 寫不完，Demo 也做不完了。",
+    prompt: "按下播放，繼續把它做完。",
+    prelude: "前奏 / DEADLINE INCOMING",
+    audio: "assets/audio/做不完了.mp3",
+    lyrics: "assets/audio/做不完了.lrc",
+    language: "zh-Hant",
+  },
 ];
 
 let audioContext = null;
