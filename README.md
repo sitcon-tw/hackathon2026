@@ -24,7 +24,7 @@ python3 serve.py
 - `teams.json`：正式隊伍編號、名稱與賽道；頁面會動態載入並提供搜尋與篩選
 - `teams.html`：獨立隊伍名單頁
 - `resources`：下載項目與檔案路徑
-- `finalists.js` 的 `finalistTeams`：總排名決賽 10 組
+- `finalists.js` 的 `finalistTeams` 與 `track4Teams`：Overall 與科幻協會賽道決賽名單及最終獎項
 - `lightning.js` 的 `selectedSpeakers`：閃電講 10 位入選講者
 - `lightning.js` 的 `standbySpeakers`：閃電講 2 位候補講者
 
