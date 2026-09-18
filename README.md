@@ -25,6 +25,7 @@ python3 serve.py
 - `teams.html`：獨立隊伍名單頁
 - `resources`：下載項目與檔案路徑
 - `finalists.js` 的 `finalistTeams` 與 `track4Teams`：Overall 與科幻協會賽道決賽名單及最終獎項
+- `finalists.js` 的 `sponsorAwards`：NOXCAT、國泰金控與 ElevenLabs 贊助賽道獲獎名單
 - `lightning.js` 的 `selectedSpeakers`：閃電講 10 位入選講者
 - `lightning.js` 的 `standbySpeakers`：閃電講 2 位候補講者
 

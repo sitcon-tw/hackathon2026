@@ -22,6 +22,23 @@ const track4Teams = [
   { id: "T092", name: "草莓舒芙蕾教宗", entryType: "科幻卡通動畫", project: "明天也會見到你嗎？", award: "優選" },
 ];
 
+const sponsorAwards = {
+  noxcat: [
+    { id: "T098", name: "掉到世界外面的米粒", award: "第一名" },
+    { id: "T024", name: "Physical AI Forge", award: "第二名" },
+    { id: "T155", name: "Baeka", award: "第三名" },
+  ],
+  cathay: [
+    { id: "T089", name: "時律之繭 Tempo Casing", award: "第一名" },
+    { id: "T004", name: "RWACE", award: "第二名" },
+  ],
+  elevenlabs: [
+    { id: "T043", name: "分身有術", award: "第一名" },
+    { id: "T030", name: "Context & Agent Lab", award: "第二名" },
+    { id: "T080", name: "阿鳥為", award: "第三名" },
+  ],
+};
+
 function escapeResultText(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -96,6 +113,10 @@ function setupResultAnimations() {
 function initResults() {
   renderRanking("#finalist-list", finalistTeams, "第一輪評選完成後公布總排名決賽 10 組。");
   renderRanking("#track04-list", track4Teams, "Track04 科幻協會賽道評選完成後公布決賽 8 組。");
+  Object.entries(sponsorAwards).forEach(([sponsor, teams]) => {
+    renderRanking(`#${sponsor}-list`, teams, "贊助賽道獎項評選完成後公布。");
+    document.querySelector(`#${sponsor}-count`).textContent = `${teams.length} 組獲獎`;
+  });
   document.querySelector("#finalist-count").textContent = `${finalistTeams.length} / 10 組`;
   document.querySelector("#track04-count").textContent = `${track4Teams.length} / 8 隊`;
   if (finalistTeams.length || track4Teams.length) document.querySelector("#results-status").textContent = "名單及結果已公布";
