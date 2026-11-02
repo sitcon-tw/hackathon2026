@@ -13,7 +13,10 @@ python3 serve.py
 ## 正式網站
 
 - GitHub repository：<https://github.com/sitcon-tw/hackathon2026>
-- GitHub Pages：<https://hackathon2026.sitcon.org>
+- 正式網站：<https://hackathon.sitcon.org/2026/>
+- 部署儲存庫：<https://github.com/sitcon-tw/hackathon>（`2026` submodule，追蹤本儲存庫的 `main`）
+
+網站更新後，需在部署儲存庫更新 `2026` submodule 指向的 commit，才會發布到正式網址。`CNAME` 保留舊網域供既有連結使用；正式網域由部署儲存庫管理。
 
 ## 更新活動資料
 
